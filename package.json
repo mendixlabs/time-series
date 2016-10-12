@@ -1,0 +1,38 @@
+{
+  "name": "TimeSeriesChart",
+  "version": "0.1.0",
+  "description": "Plot and track your data across different time periods on an nv.d3 powered chart",
+  "author": "Derrick Kwagala <derrick.kwagala@flockofbirds.org",
+  "copyright": "Flock of Birds",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/djkwagala/TimeSeries.git"
+  },
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/djkwagala/TimeSeries/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-cli": "~0.1",
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-compress": "~0.11.0",
+    "grunt-contrib-copy": "~0.8.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-xsltproc": "^0.6.1",
+    "load-grunt-tasks": "^3.1.0",
+    "tslint-eslint-rules": "^2.1.0",
+    "typescript": "^2.0.3"
+  },
+  "dependencies": {
+    "@types/big.js": "0.0.31",
+    "@types/d3": "^3.5.36",
+    "@types/dojo": "^1.9.34",
+    "@types/react": "^0.14.37",
+    "@types/react-dom": "^0.14.17"
+  }
+}
