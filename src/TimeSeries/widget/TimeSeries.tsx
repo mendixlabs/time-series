@@ -7,9 +7,8 @@ import * as React from "TimeSeries/lib/react";
 import ReactDOM = require ("TimeSeries/lib/react-dom");
 
 import { Data, HeightUnits, SerieConfig, WidthUnits } from "../TimeSeries.d";
-import { WidgetProps, TimeSeries } from "./components/TimeSeries";
+import { TimeSeries, WidgetProps } from "./components/TimeSeries";
 
-// TODO rename class
 export class TimeSeriesWrapper extends _WidgetBase {
     // Parameters configured in the Modeler    
     private showXAxis: boolean;
@@ -58,15 +57,12 @@ export class TimeSeriesWrapper extends _WidgetBase {
     }
 
     public postCreate() {
-        logger.debug(this.id + ".postCreate");
         this.updateRendering();
-        this.smartDefaults();
     }
     /**
      * called when context is changed or initialized
      */
     public update(object: mendix.lib.MxObject, callback?: Function) {
-        logger.debug(this.id + ".update");
         this.contextObject = object;
         this.updateData(() => {
             this.dataLoaded = true;
@@ -74,19 +70,11 @@ export class TimeSeriesWrapper extends _WidgetBase {
         });
         this.resetSubscriptions();
     }
-    /**
-     * called when the widget is destroyed
-     * will need to unmount react components
-     */
     public uninitialize() {
-        logger.debug(this.id + ".uninitialize");
         ReactDOM.unmountComponentAtNode(this.domNode);
     }
-    /**
-     * retrieves series data depending on its data source.
-     */
+
     private updateData(callback: Function) {
-        logger.debug(this.id + ".updateData");
         const serie = this.seriesConfig[0];
         // TODO do this in a async parallel way for all series, in the future.
         if (serie.serieSource === "xpath" && serie.serieEntity) {
@@ -106,32 +94,22 @@ export class TimeSeriesWrapper extends _WidgetBase {
         }
     }
 
-    // Set store value, could trigger a re-render the interface.
     private updateRendering (callback?: Function) {
-        logger.debug(this.id + ".updateRendering");
         ReactDOM.render(<TimeSeries {...this.createProps() } />, this.domNode);
-    // The callback, coming from update, needs to be executed, to let the page know it finished rendering
         mxLang.nullExec(callback);
     }
 
-    // Reset subscriptions.
     private resetSubscriptions () {
-        logger.debug(this.id + "._resetSubscriptions");
-        // When a mendix object exists create subscriptions.
         if (this.contextObject) {
             this.subscribe({
                 callback: (guid: string) => {
-                    logger.debug(this.id + "._resetSubscriptions object subscription update MxId " + guid);
                     this.updateRendering();
                 },
                 guid: this.contextObject.getGuid(),
             });
         }
     }
-
-    // Fetch data
     private fetchDataFromXpath(serieConfig: SerieConfig, callback: Function) {
-        logger.debug(this.id + ".fetchDataFromXpath ");
         if (this.contextObject) {
             const guid = this.contextObject ? this.contextObject.getGuid() : "";
             const constraint = serieConfig.entityConstraint.replace("[%CurrentObject%]", guid);
@@ -144,7 +122,6 @@ export class TimeSeriesWrapper extends _WidgetBase {
                 xpath : xpathString,
             });
         } else {
-            logger.debug(this.id + ".fetchDataFromXpath empty context");
             callback([]);
         }
     }
@@ -153,18 +130,14 @@ export class TimeSeriesWrapper extends _WidgetBase {
      * transforms mendix object into item properties and set new state
      */
     private setDataFromObjects(objects: mendix.lib.MxObject[], serieConfig: SerieConfig): void {
-        logger.debug(this.id + ".getCarouselItemsFromObject");
-        logger.debug(objects);
         serieConfig.serieData = objects.map((itemObject): Data => ({
             xPoint: itemObject.get(serieConfig.serieXAttribute) as number,
             yPoint: parseFloat(itemObject.get (serieConfig.serieYAttribute)), // convert Big to float or number
         }));
-        
     }
 
 
     private fetchDataFromMicroflow(serieConfig: SerieConfig, callback: Function) {
-        logger.debug(this.id + ".fetchDataFromMicroflow");
         if (serieConfig.dataSourceMicroflow) {
             mx.data.action({
                 callback: callback.bind(this),
@@ -178,17 +151,8 @@ export class TimeSeriesWrapper extends _WidgetBase {
                 },
             });
         } else {
-            logger.debug(this.id + ".getDataFromMicroflow, empty context");
             callback([]);
         }
-    }
-
-    private smartDefaults() {
-        this.showXAxis = true;
-        this.showYAxis = true;
-        this.useInteractiveGuidelines = true;
-        this.showLegend = true;
-        this.staggerLabels = true;
     }
 }
 // Declare widget's prototype the Dojo way
@@ -196,12 +160,6 @@ export class TimeSeriesWrapper extends _WidgetBase {
 // tslint:disable : only-arrow-functions
 let dojoTimeSeries = dojoDeclare("TimeSeries.widget.TimeSeries", [ _WidgetBase ], (function (Source: any) {
     let result: any = {};
-    // dojo.declare.constructor is called to construct the widget instance. 
-    // Implement to initialize non-primitive properties.
-    result.constructor = function () {
-        logger.debug( this.id + ".constructor dojo");
-        this.dataLoaded = false;
-    };
     for (let i in Source.prototype) {
         if (i !== "constructor" && Source.prototype.hasOwnProperty(i) ) {
             result[i] = Source.prototype[i];
