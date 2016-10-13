@@ -10,11 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/djkwagala/TimeSeries.git"
+    "url": "https://github.com/mendixlabs/time-series.git"
   },
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/djkwagala/TimeSeries/issues"
+    "url": "https://github.com/mendixlabs/time-series/issues"
   },
   "devDependencies": {
     "grunt": "~0.4.5",

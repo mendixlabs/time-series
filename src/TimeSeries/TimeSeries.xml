@@ -53,18 +53,6 @@
                         <enumerationValue key="microflow">Microflow</enumerationValue>
                     </enumerationValues> 
                 </property>
-                <property key="entityConstraint" type="entityConstraint" entityProperty="serieEntity" required="false">
-                    <caption>Constraint</caption>
-                    <category>Source - XPath</category>
-                    <description>Constraint on the data from data-entity</description>
-                </property> 
-                <property key="dataSourceMicroflow" type="microflow" required="false">
-                    <caption>Data source microflow </caption>
-                    <category>Source - microflow</category>
-                    <description>Returns a serie's coordinates</description>
-                    <returnType type="Object" entityProperty="serieEntity" isList="true"/>
-                </property>
-
                 <property key="serieXAttribute" type="attribute" entityProperty="serieEntity">
                     <caption>X-Axis data</caption>
                     <category>Data source</category>
@@ -85,6 +73,17 @@
                     <caption>Serie key</caption>
                     <category>Data source</category>
                     <description>Used in the legend to interact with the chart</description>                
+                </property>
+                <property key="entityConstraint" type="entityConstraint" entityProperty="serieEntity" required="false">
+                    <caption>Constraint</caption>
+                    <category>Source - XPath</category>
+                    <description>Constraint on the data from data-entity</description>
+                </property> 
+                <property key="dataSourceMicroflow" type="microflow" required="false">
+                    <caption>Data source microflow </caption>
+                    <category>Source - microflow</category>
+                    <description>Returns a serie's coordinates</description>
+                    <returnType type="Object" entityProperty="serieEntity" isList="true"/>
                 </property>
                 <property key="serieColor" type="string" required="false">
                     <caption>Serie color</caption>
