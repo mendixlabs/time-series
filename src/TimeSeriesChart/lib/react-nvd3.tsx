@@ -1,9 +1,9 @@
-import * as d3 from "TimeSeriesChart/lib/d3";
-import * as React from "TimeSeriesChart/lib/react";
+import * as d3 from "TimeSeries/lib/d3";
+import * as React from "TimeSeries/lib/react";
 
 import { ObjectAssign } from "./Polyfills";
 
-import "TimeSeriesChart/lib/nv.d3";
+import "TimeSeries/lib/nv.d3";
 
 import {
     bindFunctions,

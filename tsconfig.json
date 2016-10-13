@@ -18,6 +18,6 @@
 		"out",
 		"nbproject",
 		"typings/redux"
-		// "src/TimeSeriesChart/lib"
+		// "src/TimeSeries/lib"
   ]
 }

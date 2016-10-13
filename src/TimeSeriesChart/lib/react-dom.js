@@ -17,7 +17,7 @@
 
   // RequireJS
   } else if (typeof define === "function" && define.amd) {
-    define(['TimeSeriesChart/lib/react'], f);
+    define(['TimeSeries/lib/react'], f);
 
   // <script>
   } else {
