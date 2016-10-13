@@ -6,7 +6,7 @@ import * as _WidgetBase from "mxui/widget/_WidgetBase";
 import * as React from "TimeSeries/lib/react";
 import ReactDOM = require ("TimeSeries/lib/react-dom");
 
-import { Data, HeightUnits, SerieConfig, WidthUnits } from "../TimeSeries.d";
+import { Data, HeightUnits, SeriesConfig, WidthUnits } from "../TimeSeries.d";
 import { WidgetProps, Wrapper } from "./components/TimeSeries";
 
 // TODO rename class
@@ -21,7 +21,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
     private staggerLabels: boolean;
     private yAxisLabel: string;
     private yAxisFormat: string;
-    private seriesConfig: SerieConfig[];
+    private seriesConfig: SeriesConfig[];
     private width: number;
     private height: number;
     private widthUnits: WidthUnits;
@@ -87,16 +87,16 @@ export class TimeSeriesWrapper extends _WidgetBase {
      */
     private updateData(callback: Function) {
         logger.debug(this.id + ".updateData");
-        const serie = this.seriesConfig[0];
+        const series = this.seriesConfig[0];
         // TODO do this in a async parallel way for all series, in the future.
-        if (serie.serieSource === "xpath" && serie.serieEntity) {
-            this.fetchDataFromXpath(serie, (data: mendix.lib.MxObject[]) => {
-                this.setDataFromObjects(data, serie);
+        if (series.seriesSource === "xpath" && series.seriesEntity) {
+            this.fetchDataFromXpath(series, (data: mendix.lib.MxObject[]) => {
+                this.setDataFromObjects(data, series);
                 callback();
             });
-        } else if (serie.serieSource === "microflow" && serie.dataSourceMicroflow) {
-             this.fetchDataFromMicroflow(serie, (data: mendix.lib.MxObject[]) => {
-                 this.setDataFromObjects(data, serie);
+        } else if (series.seriesSource === "microflow" && series.dataSourceMicroflow) {
+             this.fetchDataFromMicroflow(series, (data: mendix.lib.MxObject[]) => {
+                 this.setDataFromObjects(data, series);
                  callback();
              });
         } else {
@@ -128,14 +128,13 @@ export class TimeSeriesWrapper extends _WidgetBase {
             });
         }
     }
-
     // Fetch data
-    private fetchDataFromXpath(serieConfig: SerieConfig, callback: Function) {
+    private fetchDataFromXpath(seriesConfig: SeriesConfig, callback: Function) {
         logger.debug(this.id + ".fetchDataFromXpath ");
         if (this.contextObject) {
             const guid = this.contextObject ? this.contextObject.getGuid() : "";
-            const constraint = serieConfig.entityConstraint.replace("[%CurrentObject%]", guid);
-            const xpathString = "//" + serieConfig.serieEntity + constraint;
+            const constraint = seriesConfig.entityConstraint.replace("[%CurrentObject%]", guid);
+            const xpathString = "//" + seriesConfig.seriesEntity + constraint;
             mx.data.get({
                 callback: callback.bind(this),
                 error: (error) => {
@@ -152,26 +151,25 @@ export class TimeSeriesWrapper extends _WidgetBase {
     /**
      * transforms mendix object into item properties and set new state
      */
-    private setDataFromObjects(objects: mendix.lib.MxObject[], serieConfig: SerieConfig): void {
+    private setDataFromObjects(objects: mendix.lib.MxObject[], seriesConfig: SeriesConfig): void {
         logger.debug(this.id + ".getCarouselItemsFromObject");
         logger.debug(objects);
-        serieConfig.serieData = objects.map((itemObject): Data => ({
-            xPoint: itemObject.get(serieConfig.serieXAttribute) as number,
-            yPoint: parseFloat(itemObject.get (serieConfig.serieYAttribute)), // convert Big to float or number
+        seriesConfig.seriesData = objects.map((itemObject): Data => ({
+            xPoint: itemObject.get(seriesConfig.seriesXAttribute) as number,
+            yPoint: parseFloat(itemObject.get (seriesConfig.seriesYAttribute)), // convert Big to float or number
         }));
     }
 
-
-    private fetchDataFromMicroflow(serieConfig: SerieConfig, callback: Function) {
+    private fetchDataFromMicroflow(seriesConfig: SeriesConfig, callback: Function) {
         logger.debug(this.id + ".fetchDataFromMicroflow");
-        if (serieConfig.dataSourceMicroflow) {
+        if (seriesConfig.dataSourceMicroflow) {
             mx.data.action({
                 callback: callback.bind(this),
                 error: (error) => {
                     logger.error(this.id + ": An error occurred while executing microflow: " + error);
                 },
                 params: {
-                    actionname: serieConfig.dataSourceMicroflow,
+                    actionname: seriesConfig.dataSourceMicroflow,
                     applyto: "selection",
                     guids: [ this.contextObject.getGuid() ],
                 },

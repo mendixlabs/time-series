@@ -6,7 +6,7 @@ import * as d3 from "TimeSeries/lib/d3";
 
 import { Data, ModelProps } from "../../TimeSeries.d";
 
-export interface Serie {
+export interface Series {
     values?: Data[];
     key?: any;
     color?: string;
@@ -14,7 +14,7 @@ export interface Serie {
 }
 export interface WidgetProps extends ModelProps {
     widgetId: string;
-    seriesData?: Serie[];
+    seriesData?: Series[];
     dataLoaded?: boolean;
 }
 export class Wrapper extends React.Component<WidgetProps, {}> {
@@ -94,21 +94,21 @@ export class Wrapper extends React.Component<WidgetProps, {}> {
     private getDatum() {
         logger.debug(this.props.widgetId + ".getDatum");
         const seriesConfig = this.props.seriesConfig;
-        let returnDatum: Serie[] = [];
+        let returnDatum: Series[] = [];
         // TODO replace with seriesConfig.map((serieConfig)=>{})
         for (let count = 0; count < seriesConfig.length; count++) {
-            let serieConfig = seriesConfig[count];
-            let serie: Serie = {
-                key: serieConfig.serieKey,
-                values: serieConfig.serieData,
+            let config = seriesConfig[count];
+            let series: Series = {
+                key: config.seriesKey,
+                values: config.seriesData,
             };
-            if (serieConfig.serieColor) {
-                serie.color = serieConfig.serieColor;
+            if (config.seriesColor) {
+                series.color = config.seriesColor;
             }
-            if (serieConfig.area) {
-                serie.area = serieConfig.area;
+            if (config.area) {
+                series.area = config.area;
             }
-            returnDatum.push(serie);
+            returnDatum.push(series);
         }
         logger.debug(this.props.widgetId + ".getDatum Data: ");
         logger.debug(returnDatum);

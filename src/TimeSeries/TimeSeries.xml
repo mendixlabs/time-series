@@ -51,12 +51,12 @@ jOEGUIIBf5BxjDvwFIUAAAAASUVORK5CYII=</icon>
             <category>Series config</category>
             <description>Add a series and configure its properties</description>
             <properties>
-                <property key="serieEntity" type="entity" pathType="reference" isPath="optional">
+                <property key="seriesEntity" type="entity" pathType="reference" isPath="optional">
                     <caption>Data entity</caption>
                     <category>Data source</category>
-                    <description>The entity containing serie points</description>
+                    <description>The entity containing series points</description>
                 </property>
-                <property key="serieSource" type="enumeration" defaultValue="xpath">
+                <property key="seriesSource" type="enumeration" defaultValue="xpath">
                     <caption>Source</caption>
                     <category>Data source</category>
                     <description>Type of source</description>                
@@ -65,47 +65,47 @@ jOEGUIIBf5BxjDvwFIUAAAAASUVORK5CYII=</icon>
                         <enumerationValue key="microflow">Microflow</enumerationValue>
                     </enumerationValues> 
                 </property>
-                <property key="serieXAttribute" type="attribute" entityProperty="serieEntity">
-                    <caption>X-Axis data</caption>
+                <property key="seriesXAttribute" type="attribute" entityProperty="seriesEntity">
+                    <caption>X-axis data</caption>
                     <category>Data source</category>
                     <description>Attribute containing dates for x-axis</description>
                     <attributeTypes>
                         <attributeType name="DateTime"/>
                     </attributeTypes>
                 </property>
-               <property key="serieYAttribute" type="attribute" entityProperty="serieEntity">
-                    <caption>Y-Axis data</caption>
+               <property key="seriesYAttribute" type="attribute" entityProperty="seriesEntity">
+                    <caption>Y-axis data</caption>
                     <category>Data source</category>
                     <description>Attribute containing data for y-axis</description>
                     <attributeTypes>
                         <attributeType name="Decimal"/>
                     </attributeTypes>
                 </property>
-                <property key="serieKey" type="string">
-                    <caption>Serie key</caption>
+                <property key="seriesKey" type="string">
+                    <caption>Series key</caption>
                     <category>Data source</category>
                     <description>Used in the legend to interact with the chart</description>                
                 </property>
-                <property key="entityConstraint" type="entityConstraint" entityProperty="serieEntity" required="false">
+                <property key="entityConstraint" type="entityConstraint" entityProperty="seriesEntity" required="false">
                     <caption>Constraint</caption>
                     <category>Source - XPath</category>
-                    <description>Constraint on the data from data-entity</description>
+                    <description>Constraint on the data from the data entity</description>
                 </property> 
                 <property key="dataSourceMicroflow" type="microflow" required="false">
                     <caption>Data source microflow </caption>
                     <category>Source - microflow</category>
-                    <description>Returns a serie's coordinates</description>
-                    <returnType type="Object" entityProperty="serieEntity" isList="true"/>
+                    <description>Returns a series' coordinates</description>
+                    <returnType type="Object" entityProperty="seriesEntity" isList="true"/>
                 </property>
-                <property key="serieColor" type="string" required="false">
-                    <caption>Serie color</caption>
+                <property key="seriesColor" type="string" required="false">
+                    <caption>Series color</caption>
                     <category>Appearance</category>
-                    <description>Color of the serie line in the chart</description>                
+                    <description>Color of the series line on the chart</description>
                 </property>
-                <property key="serieFill" type="boolean" defaultValue="false">
-                    <caption>Fill serie area</caption>
+                <property key="seriesFill" type="boolean" defaultValue="false">
+                    <caption>Fill series area</caption>
                     <category>Appearance</category>
-                    <description>Should serie area be filled</description>                
+                    <description>Should series area be filled</description>
                 </property>
 
             </properties>
