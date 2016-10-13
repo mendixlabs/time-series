@@ -51,9 +51,9 @@ interface NVD3ChartProps {
     showYAxis: boolean;
     duration?: number;
     useInteractiveGuideline?: boolean;
-    xDomain: [any, any];
-    xScale: d3.time.Scale<number, number>;
-    yDomain: any[];
+    xDomain?: [any, any];
+    xScale?: d3.time.Scale<number, number>;
+    yDomain?: any[];
 }
 
 interface AnyObject extends Object {

@@ -10,14 +10,14 @@ export interface Serie {
     values?: Data[];
     key?: any;
     color?: string;
-    area?: boolean;
+    isArea?: boolean;
 }
 export interface WidgetProps extends ModelProps {
     widgetId: string;
     seriesData?: Serie[];
     dataLoaded?: boolean;
 }
-export class Wrapper extends React.Component<WidgetProps, {}> {
+export class TimeSeries extends React.Component<WidgetProps, {}> {
     public static defaultProps: WidgetProps = {
         widgetId: "",
     };
@@ -43,38 +43,38 @@ export class Wrapper extends React.Component<WidgetProps, {}> {
         const xFormat = props.xAxisFormat ? props.xAxisFormat : "%d-%b-%y";
         const yFormat = props.yAxisFormat ? props.yAxisFormat : "";
 
-        const xEncoding = d3.time.scale().range([ 0, this.props.width ]);
-        const yEncoding = d3.scale.linear().range([ this.props.height, 0 ]);
+        // const xEncoding = d3.time.scale().range([ 0, this.props.width ]);
+        // const yEncoding = d3.scale.linear().range([ this.props.height, 0 ]);
 
         if (props.dataLoaded) {
             logger.debug(props.widgetId + ".render dataLoaded");
             chart = React.createElement(NVD3Chart, {
                 datum,
                 duration: 1,
-                height: this.props.height,
+                height: this.props.heightUnits === "auto" ? undefined : this.props.height,
                 showLegend: props.showLegend,
                 showXAxis: props.showXAxis,
                 showYAxis: props.showYAxis,
                 type: "lineChart",
                 useInteractiveGuideline: props.useInteractiveGuidelines,
-                width: this.props.width,
+                width: this.props.widthUnits === "auto" ? undefined : this.props.width,
                 x: "xPoint",
                 xAxis: {
                     axisLabel: this.props.xAxisLabel,
-                    scale: xEncoding,
+                    // scale: xEncoding,
                     showMaxMin: true,
                     tickFormat: (dataPoint: any) => {
                         return d3.time.format(xFormat)(new Date(dataPoint));
                     },
                 },
-                xDomain: d3.extent(datum[0].values, (d: any) => {
-                     return d.xPoint;
-                    }),
+                // xDomain: d3.extent(datum[0].values, (d: any) => {
+                //     return d.xPoint;
+                //    }),
                 xScale: d3.time.scale(),
                 y: "yPoint",
                 yAxis: {
                     axisLabel: this.props.yAxisLabel,
-                    scale: yEncoding,
+                   // scale: yEncoding,
                     tickFormat: (dataPoint: any) => {
                         if (yFormat) {
                             return d3.format(yFormat)(dataPoint);
@@ -82,36 +82,20 @@ export class Wrapper extends React.Component<WidgetProps, {}> {
                             return dataPoint;
                         }
                     },
-                },
-                yDomain: [ 0, d3.max(datum[0].values, (d: any) => {
-                    return d.yPoint;
-                }) ],
+                }
+               // yDomain: [ 0, d3.max(datum[0].values, (d: any) => {
+               //     return d.yPoint;
+               // }) ],
             });
         }
         return (<div>{chart}</div>);
     }
-    // TODO: get your data from seriesConfig, seriesData, model configuration (Need to be combined)
-    private getDatum() {
-        logger.debug(this.props.widgetId + ".getDatum");
-        const seriesConfig = this.props.seriesConfig;
-        let returnDatum: Serie[] = [];
-        // TODO replace with seriesConfig.map((serieConfig)=>{})
-        for (let count = 0; count < seriesConfig.length; count++) {
-            let serieConfig = seriesConfig[count];
-            let serie: Serie = {
-                key: serieConfig.serieKey,
-                values: serieConfig.serieData,
-            };
-            if (serieConfig.serieColor) {
-                serie.color = serieConfig.serieColor;
-            }
-            if (serieConfig.area) {
-                serie.area = serieConfig.area;
-            }
-            returnDatum.push(serie);
-        }
-        logger.debug(this.props.widgetId + ".getDatum Data: ");
-        logger.debug(returnDatum);
-        return returnDatum;
+    private getDatum(): Serie[] {
+        return this.props.seriesConfig.map(serieConfig => ({
+            area: serieConfig.isArea,
+            color: serieConfig.serieColor ? serieConfig.serieColor : undefined,
+            key: serieConfig.serieKey,
+            values: serieConfig.serieData,
+        }));
     }
 }

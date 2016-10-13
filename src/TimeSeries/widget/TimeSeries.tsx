@@ -7,7 +7,7 @@ import * as React from "TimeSeries/lib/react";
 import ReactDOM = require ("TimeSeries/lib/react-dom");
 
 import { Data, HeightUnits, SerieConfig, WidthUnits } from "../TimeSeries.d";
-import { WidgetProps, Wrapper } from "./components/TimeSeries";
+import { WidgetProps, TimeSeries } from "./components/TimeSeries";
 
 // TODO rename class
 export class TimeSeriesWrapper extends _WidgetBase {
@@ -109,7 +109,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
     // Set store value, could trigger a re-render the interface.
     private updateRendering (callback?: Function) {
         logger.debug(this.id + ".updateRendering");
-        ReactDOM.render(<Wrapper {...this.createProps() } />, this.domNode);
+        ReactDOM.render(<TimeSeries {...this.createProps() } />, this.domNode);
     // The callback, coming from update, needs to be executed, to let the page know it finished rendering
         mxLang.nullExec(callback);
     }
@@ -159,6 +159,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
             xPoint: itemObject.get(serieConfig.serieXAttribute) as number,
             yPoint: parseFloat(itemObject.get (serieConfig.serieYAttribute)), // convert Big to float or number
         }));
+        
     }
 
 
@@ -202,7 +203,7 @@ let dojoTimeSeries = dojoDeclare("TimeSeries.widget.TimeSeries", [ _WidgetBase ]
         this.dataLoaded = false;
     };
     for (let i in Source.prototype) {
-        if (i !== "constructor" && Source.prototype.hasOwnProperty(i)) {
+        if (i !== "constructor" && Source.prototype.hasOwnProperty(i) ) {
             result[i] = Source.prototype[i];
         }
     }

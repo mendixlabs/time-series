@@ -16,7 +16,7 @@ export interface SerieConfig {
     serieKey?: string;
     serieData?: Data[];
     serieColor?: string;
-    area?: boolean;
+    isArea?: boolean;
 }
 
 export interface ModelProps {
@@ -35,12 +35,6 @@ export interface ModelProps {
     height?: number;
     heightUnits?: HeightUnits;
 } 
-
-declare let NVD3Chart: React.ComponentClass<any>;
-declare module "TimeSeries/lib/react-nvd3" {
-    export = NVD3Chart;
-}
-
 
 export type WidthUnits = "auto" | "pixels" | "percent";
 export type HeightUnits = "auto" | "pixels" | "percent";
