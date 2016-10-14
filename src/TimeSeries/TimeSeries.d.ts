@@ -16,7 +16,7 @@ export interface SeriesConfig {
     seriesKey?: string;
     seriesData?: Data[];
     seriesColor?: string;
-    isArea?: boolean;
+    seriesFill?: boolean;
 }
 
 export interface ModelProps {

@@ -10,7 +10,7 @@ export interface Series {
     values?: Data[];
     key?: any;
     color?: string;
-    isArea?: boolean;
+    area?: boolean;
 }
 
 export interface WidgetProps extends ModelProps {
@@ -79,7 +79,7 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
 
     private getDatum(): Series[] {
         return this.props.seriesConfig.map(serieConfig => ({
-            area: serieConfig.isArea,
+            area: serieConfig.seriesFill,
             color: serieConfig.seriesColor ? serieConfig.seriesColor : undefined,
             key: serieConfig.seriesKey,
             values: serieConfig.seriesData,
