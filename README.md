@@ -1,11 +1,4 @@
 # TimeSeries
-Author: Derrick Kwagala, Flock of Birds
-
-Type: Mendix widget
-Latest version: 0.1.0
-Package file name: TimeSeries.mpk
-
-## Description
 
 Plot and track your data across different time periods on an nv.d3 powered chart.
 
@@ -19,18 +12,18 @@ Plot and track your data across different time periods on an nv.d3 powered chart
 
 ## Dependencies
 
-* Mendix 6 environment. Tested on 6.8.0
+* Mendix 6
 
 ## Properties
-* X-axis config
+* X-axis
   * X-axis label; Label for the x-axis
   * X-axis data format; Formats of date on x-axis (use NVD3 date formatting)
   * Enable stagger-labels; Display values on x-axis so they all fit
-* Y-axis config
+* Y-axis
   * Y-axis label; Label for the y-axis
   * Y-axis data format; Format of data on y-axis
 * Series config
-  * Series
+  * Data series
      - Data source
         - Data entity; The entity containing serie points
         - Source; Type of source
@@ -59,8 +52,6 @@ https://github.com/mendixlabs/time-series/
 
 
 ## Known bugs
-
-* None so far. Please let me know when there are any issues or suggestions.
 
 Please report any issues via the github issue tracker:
 https://github.com/mendixlabs/time-series/issues 

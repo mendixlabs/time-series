@@ -6,16 +6,16 @@ export interface Data {
     yPoint: number;
 }
 
-export interface SerieConfig {    
-    serieEntity?: string;
-    serieSource?: SerieSource;
+export interface SeriesConfig {
+    seriesEntity?: string;
+    seriesSource?: SeriesSource;
     entityConstraint?: string;
     dataSourceMicroflow?: string;
-    serieXAttribute?: string;
-    serieYAttribute?: string;
-    serieKey?: string;
-    serieData?: Data[];
-    serieColor?: string;
+    seriesXAttribute?: string;
+    seriesYAttribute?: string;
+    seriesKey?: string;
+    seriesData?: Data[];
+    seriesColor?: string;
     isArea?: boolean;
 }
 
@@ -29,13 +29,13 @@ export interface ModelProps {
     staggerLabels?: boolean;
     yAxisLabel?: string;
     yAxisFormat?: string;
-    seriesConfig?: SerieConfig[];
+    seriesConfig?: SeriesConfig[];
     width?: number;
-    widthUnits?:WidthUnits;
+    widthUnits?: WidthUnits;
     height?: number;
     heightUnits?: HeightUnits;
-} 
+}
 
 export type WidthUnits = "auto" | "pixels" | "percent";
 export type HeightUnits = "auto" | "pixels" | "percent";
-export type SerieSource = "xpath" | "microflow";
+export type SeriesSource = "xpath" | "microflow";

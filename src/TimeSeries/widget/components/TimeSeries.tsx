@@ -2,37 +2,39 @@
 import * as React from "TimeSeries/lib/react";
 
 import NVD3Chart from "../../lib/react-nvd3";
-import * as d3 from "TimeSeries/lib/d3";
+import { format, time } from "TimeSeries/lib/d3";
 
 import { Data, ModelProps } from "../../TimeSeries.d";
 
-export interface Serie {
+export interface Series {
     values?: Data[];
     key?: any;
     color?: string;
     isArea?: boolean;
 }
+
 export interface WidgetProps extends ModelProps {
     widgetId: string;
-    seriesData?: Serie[];
+    seriesData?: Series[];
     dataLoaded?: boolean;
 }
+
 export class TimeSeries extends React.Component<WidgetProps, {}> {
-    public static defaultProps: WidgetProps = {
-        widgetId: "",
-    };
 
     public constructor(props: WidgetProps) {
         super(props);
+
         this.getDatum = this.getDatum.bind(this);
     }
 
     public componentWillMount() {
         this.checkConfig();
     }
+
     private checkConfig() {
         // TODO add validation on config if needed.
     }
+
     public render() {
         let chart = <div>Loading ...</div>;
         const props = this.props;
@@ -55,16 +57,16 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
                     axisLabel: this.props.xAxisLabel,
                     showMaxMin: true,
                     tickFormat: (dataPoint: any) => {
-                        return d3.time.format(xFormat)(new Date(dataPoint));
+                        return time.format(xFormat)(new Date(dataPoint));
                     },
                 },
-                xScale: d3.time.scale(),
+                xScale: time.scale(),
                 y: "yPoint",
                 yAxis: {
                     axisLabel: this.props.yAxisLabel,
                     tickFormat: (dataPoint: any) => {
                         if (yFormat) {
-                            return d3.format(yFormat)(dataPoint);
+                            return format(yFormat)(dataPoint);
                         } else {
                             return dataPoint;
                         }
@@ -74,12 +76,13 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
         }
         return (<div>{chart}</div>);
     }
-    private getDatum(): Serie[] {
+
+    private getDatum(): Series[] {
         return this.props.seriesConfig.map(serieConfig => ({
             area: serieConfig.isArea,
-            color: serieConfig.serieColor ? serieConfig.serieColor : undefined,
-            key: serieConfig.serieKey,
-            values: serieConfig.serieData,
+            color: serieConfig.seriesColor ? serieConfig.seriesColor : undefined,
+            key: serieConfig.seriesKey,
+            values: serieConfig.seriesData,
         }));
     }
 }

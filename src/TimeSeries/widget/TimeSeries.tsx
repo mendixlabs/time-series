@@ -6,7 +6,7 @@ import * as _WidgetBase from "mxui/widget/_WidgetBase";
 import * as React from "TimeSeries/lib/react";
 import ReactDOM = require ("TimeSeries/lib/react-dom");
 
-import { Data, HeightUnits, SerieConfig, WidthUnits } from "../TimeSeries.d";
+import { Data, HeightUnits, SeriesConfig, WidthUnits } from "../TimeSeries.d";
 import { TimeSeries, WidgetProps } from "./components/TimeSeries";
 
 export class TimeSeriesWrapper extends _WidgetBase {
@@ -20,7 +20,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
     private staggerLabels: boolean;
     private yAxisLabel: string;
     private yAxisFormat: string;
-    private seriesConfig: SerieConfig[];
+    private seriesConfig: SeriesConfig[];
     private width: number;
     private height: number;
     private widthUnits: WidthUnits;
@@ -30,12 +30,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
     private contextObject: mendix.lib.MxObject;
     private dataLoaded: boolean;
 
-    constructor(args?: Object, elem?: HTMLElement) {
-        // Do not add any default value here... it wil not run in dojo!     
-        super() ;
-        return new dojoTimeSeries(args, elem);
-    }
-    public createProps(): WidgetProps {
+    private createProps(): WidgetProps {
         return {
             dataLoaded: this.dataLoaded,
             height: this.height,
@@ -59,9 +54,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
     public postCreate() {
         this.updateRendering();
     }
-    /**
-     * called when context is changed or initialized
-     */
+
     public update(object: mendix.lib.MxObject, callback?: Function) {
         this.contextObject = object;
         this.updateData(() => {
@@ -70,21 +63,23 @@ export class TimeSeriesWrapper extends _WidgetBase {
         });
         this.resetSubscriptions();
     }
+
     public uninitialize() {
         ReactDOM.unmountComponentAtNode(this.domNode);
     }
 
     private updateData(callback: Function) {
-        const serie = this.seriesConfig[0];
+        logger.debug(this.id + ".updateData");
+        const series = this.seriesConfig[0];
         // TODO do this in a async parallel way for all series, in the future.
-        if (serie.serieSource === "xpath" && serie.serieEntity) {
-            this.fetchDataFromXpath(serie, (data: mendix.lib.MxObject[]) => {
-                this.setDataFromObjects(data, serie);
+        if (series.seriesSource === "xpath" && series.seriesEntity) {
+            this.fetchDataFromXpath(series, (data: mendix.lib.MxObject[]) => {
+                this.setDataFromObjects(data, series);
                 callback();
             });
-        } else if (serie.serieSource === "microflow" && serie.dataSourceMicroflow) {
-             this.fetchDataFromMicroflow(serie, (data: mendix.lib.MxObject[]) => {
-                 this.setDataFromObjects(data, serie);
+        } else if (series.seriesSource === "microflow" && series.dataSourceMicroflow) {
+             this.fetchDataFromMicroflow(series, (data: mendix.lib.MxObject[]) => {
+                 this.setDataFromObjects(data, series);
                  callback();
              });
         } else {
@@ -109,15 +104,19 @@ export class TimeSeriesWrapper extends _WidgetBase {
             });
         }
     }
-    private fetchDataFromXpath(serieConfig: SerieConfig, callback: Function) {
+
+    private fetchDataFromXpath(seriesConfig: SeriesConfig, callback: Function) {
         if (this.contextObject) {
             const guid = this.contextObject ? this.contextObject.getGuid() : "";
-            const constraint = serieConfig.entityConstraint.replace("[%CurrentObject%]", guid);
-            const xpathString = "//" + serieConfig.serieEntity + constraint;
+            const constraint = seriesConfig.entityConstraint.replace("[%CurrentObject%]", guid);
+            const xpathString = "//" + seriesConfig.seriesEntity + constraint;
             mx.data.get({
                 callback: callback.bind(this),
                 error: (error) => {
                     logger.error(this.id + ": An error occurred while retrieving items: " + error);
+                },
+                filter: {
+                    sort: [ [ seriesConfig.seriesXAttribute, "asc" ] ],
                 },
                 xpath : xpathString,
             });
@@ -126,26 +125,23 @@ export class TimeSeriesWrapper extends _WidgetBase {
         }
     }
 
-    /**
-     * transforms mendix object into item properties and set new state
-     */
-    private setDataFromObjects(objects: mendix.lib.MxObject[], serieConfig: SerieConfig): void {
-        serieConfig.serieData = objects.map((itemObject): Data => ({
-            xPoint: itemObject.get(serieConfig.serieXAttribute) as number,
-            yPoint: parseFloat(itemObject.get (serieConfig.serieYAttribute)), // convert Big to float or number
+    private setDataFromObjects(objects: mendix.lib.MxObject[], seriesConfig: SeriesConfig): void {
+        logger.debug(objects);
+        seriesConfig.seriesData = objects.map((itemObject): Data => ({
+            xPoint: itemObject.get(seriesConfig.seriesXAttribute) as number,
+            yPoint: parseFloat(itemObject.get (seriesConfig.seriesYAttribute)), // convert Big to float or number
         }));
     }
 
-
-    private fetchDataFromMicroflow(serieConfig: SerieConfig, callback: Function) {
-        if (serieConfig.dataSourceMicroflow) {
+    private fetchDataFromMicroflow(seriesConfig: SeriesConfig, callback: Function) {
+        if (seriesConfig.dataSourceMicroflow) {
             mx.data.action({
                 callback: callback.bind(this),
                 error: (error) => {
                     logger.error(this.id + ": An error occurred while executing microflow: " + error);
                 },
                 params: {
-                    actionname: serieConfig.dataSourceMicroflow,
+                    actionname: seriesConfig.dataSourceMicroflow,
                     applyto: "selection",
                     guids: [ this.contextObject.getGuid() ],
                 },
@@ -158,7 +154,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
 // Declare widget's prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
 // tslint:disable : only-arrow-functions
-let dojoTimeSeries = dojoDeclare("TimeSeries.widget.TimeSeries", [ _WidgetBase ], (function (Source: any) {
+dojoDeclare("TimeSeries.widget.TimeSeries", [ _WidgetBase ], (function (Source: any) {
     let result: any = {};
     for (let i in Source.prototype) {
         if (i !== "constructor" && Source.prototype.hasOwnProperty(i) ) {

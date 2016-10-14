@@ -58,13 +58,13 @@ declare module mx {
 			callback: Function,
 			error: (e:Error) => void,
 			filter?:{
-				id:string,
-				attributes: any[],
-				offset: number,
-				sort: any[],
-				amount:number,
-				distinct: boolean,
-				references: Object
+				id?:string,
+				attributes?: any[],
+				offset?: number,
+				sort?: any[],
+				amount?:number,
+				distinct?: boolean,
+				references?: Object
 			}
 		}, scope?:Object):void;
 		getBacktrackConstraints(metaobj: any, context: any, callback: Function):void;

@@ -1,11 +1,9 @@
 
-declare module "TimeSeries/lib/react-dom"
-{
+declare module "TimeSeries/lib/react-dom" {
 	export = ReactDOM;
 }
 
-declare module "TimeSeries/lib/react"
-{
+declare module "TimeSeries/lib/react" {
 	export = React;
 }
 
