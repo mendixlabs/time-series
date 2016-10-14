@@ -1,4 +1,4 @@
-# TimeSeries
+# Time Series
 
 Plot and track your data across different time periods on an nv.d3 powered chart.
 
@@ -55,3 +55,4 @@ https://github.com/mendixlabs/time-series/
 
 Please report any issues via the github issue tracker:
 https://github.com/mendixlabs/time-series/issues 
+
