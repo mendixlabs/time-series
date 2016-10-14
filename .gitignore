@@ -25,8 +25,8 @@ node_modules/
 *.map
 *.tmp
 
-src/TimeSeriesChart/widget/TimeSeriesChart.js
-src/TimeSeriesChart/widget/components/Wrapper.js
-src/TimeSeriesChart/lib/utils.js
-src/TimeSeriesChart/lib/Polyfills.js
-src/TimeSeriesChart/lib/react-nvd3.js
+src/TimeSeries/widget/TimeSeries.js
+src/TimeSeries/lib/utils.js
+src/TimeSeries/lib/Polyfills.js
+src/TimeSeries/lib/react-nvd3.js
+src/TimeSeries/widget/components/TimeSeries.js 

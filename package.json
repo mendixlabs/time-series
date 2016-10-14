@@ -1,5 +1,5 @@
 {
-  "name": "TimeSeriesChart",
+  "name": "TimeSeries",
   "version": "0.1.0",
   "description": "Plot and track your data across different time periods on an nv.d3 powered chart",
   "author": "Derrick Kwagala <derrick.kwagala@flockofbirds.org",
@@ -10,11 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/djkwagala/TimeSeries.git"
+    "url": "https://github.com/mendixlabs/time-series.git"
   },
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/djkwagala/TimeSeries/issues"
+    "url": "https://github.com/mendixlabs/time-series/issues"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
@@ -26,7 +26,12 @@
     "grunt-xsltproc": "^0.6.1",
     "load-grunt-tasks": "^3.1.0",
     "tslint-eslint-rules": "^2.1.0",
-    "typescript": "^2.0.3"
+    "typescript": "^2.0.3",
+    "node-base64-image": "^0.1.0",
+    "shelljs": "^0.7.0",
+    "xml2js": "^0.4.15",
+    "semver": "^5.1.0",
+    "node-mendix-modeler-path": "https://github.com/JelteMX/node-mendix-modeler-path/archive/v1.0.0.tar.gz"
   },
   "dependencies": {
     "@types/big.js": "0.0.31",
