@@ -36,8 +36,9 @@
   "dependencies": {
     "@types/big.js": "0.0.31",
     "@types/d3": "^3.5.36",
-    "@types/dojo": "^1.9.34",
+    "@types/dojo": "^1.9.35",
     "@types/react": "^0.14.37",
-    "@types/react-dom": "^0.14.17"
+    "@types/react-dom": "^0.14.17",
+    "mendix-client": "git+https://github.com/FlockOfBirds/Mendix-client-typing.git"
   }
 }

@@ -27,14 +27,6 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
         this.getDatum = this.getDatum.bind(this);
     }
 
-    public componentWillMount() {
-        this.checkConfig();
-    }
-
-    private checkConfig() {
-        // TODO add validation on config if needed.
-    }
-
     public render() {
         let chart = <div>Loading ...</div>;
         const props = this.props;
@@ -58,7 +50,7 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
                     showMaxMin: true,
                     tickFormat: (dataPoint: any) => {
                         return time.format(xFormat)(new Date(dataPoint));
-                    },
+                    }
                 },
                 xScale: time.scale(),
                 y: "yPoint",
@@ -70,8 +62,8 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
                         } else {
                             return dataPoint;
                         }
-                    },
-                },
+                    }
+                }
             });
         }
         return (<div>{chart}</div>);
@@ -82,7 +74,7 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
             area: serieConfig.seriesFill,
             color: serieConfig.seriesColor ? serieConfig.seriesColor : undefined,
             key: serieConfig.seriesKey,
-            values: serieConfig.seriesData,
+            values: serieConfig.seriesData
         }));
     }
 }

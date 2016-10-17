@@ -1,3 +1,6 @@
+/// <reference path="../../node_modules/mendix-client/mendix-client/mendix.d.ts" />
+/// <reference path="../../node_modules/mendix-client/mendix-client/mxui.d.ts" />
+/// <reference path="../../node_modules/mendix-client/mendix-client/mx.d.ts" />
 
 export default ModelProps;
 
@@ -36,6 +39,6 @@ export interface ModelProps {
     heightUnits?: HeightUnits;
 }
 
-export type WidthUnits = "auto" | "pixels" | "percent";
-export type HeightUnits = "auto" | "pixels" | "percent";
+export type WidthUnits = "auto" | "pixels";
+export type HeightUnits = "auto" | "pixels";
 export type SeriesSource = "xpath" | "microflow";

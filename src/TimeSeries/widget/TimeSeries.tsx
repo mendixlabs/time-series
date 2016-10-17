@@ -47,7 +47,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
             xAxisFormat: this.xAxisFormat,
             xAxisLabel: this.xAxisLabel,
             yAxisFormat: this.yAxisFormat,
-            yAxisLabel: this.yAxisLabel,
+            yAxisLabel: this.yAxisLabel
         };
     }
 
@@ -57,21 +57,26 @@ export class TimeSeriesWrapper extends _WidgetBase {
 
     public update(object: mendix.lib.MxObject, callback?: Function) {
         this.contextObject = object;
+        if (this.contextObject && this.checkConfig()) {
         this.updateData(() => {
             this.dataLoaded = true;
             this.updateRendering(callback);
         });
+        } else {
+            this.updateRendering(callback);
+        }
         this.resetSubscriptions();
     }
 
     public uninitialize() {
         ReactDOM.unmountComponentAtNode(this.domNode);
+        return true;
     }
 
     private updateData(callback: Function) {
         logger.debug(this.id + ".updateData");
         const series = this.seriesConfig[0];
-        // TODO do this in a async parallel way for all series, in the future.
+        // TODO: do this in a async parallel way for all series, in the future.
         if (series.seriesSource === "xpath" && series.seriesEntity) {
             this.fetchDataFromXpath(series, (data: mendix.lib.MxObject[]) => {
                 this.setDataFromObjects(data, series);
@@ -83,10 +88,28 @@ export class TimeSeriesWrapper extends _WidgetBase {
                  callback();
              });
         } else {
-            // TODO improve error message, add config check in widget component.
+            // TODO: improve error message, add config check in widget component.
             logger.error(this.id + ".updateData unknown source or error in widget configuration");
             callback();
         }
+    }
+
+    /**
+     * Validate the widget configurations from the modeler
+     */
+    private checkConfig() {
+        let valid = true;
+        const incorrectSeries = this.seriesConfig.filter(series =>
+        (series.seriesSource === "microflow" && !series.dataSourceMicroflow));
+
+        if (incorrectSeries.length) {
+            valid = false;
+            mx.ui.error("Configuration error for series : '" + incorrectSeries[0].seriesKey +
+                        "'. Source is set to 'Microflow' but 'Source - microflow' is missing ", true);
+        }
+
+        return valid;
+
     }
 
     private updateRendering (callback?: Function) {
@@ -100,7 +123,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
                 callback: (guid: string) => {
                     this.updateRendering();
                 },
-                guid: this.contextObject.getGuid(),
+                guid: this.contextObject.getGuid()
             });
         }
     }
@@ -116,9 +139,9 @@ export class TimeSeriesWrapper extends _WidgetBase {
                     logger.error(this.id + ": An error occurred while retrieving items: " + error);
                 },
                 filter: {
-                    sort: [ [ seriesConfig.seriesXAttribute, "asc" ] ],
+                    sort: [ [ seriesConfig.seriesXAttribute, "asc" ] ]
                 },
-                xpath : xpathString,
+                xpath : xpathString
             });
         } else {
             callback([]);
@@ -129,7 +152,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
         logger.debug(objects);
         seriesConfig.seriesData = objects.map((itemObject): Data => ({
             xPoint: itemObject.get(seriesConfig.seriesXAttribute) as number,
-            yPoint: parseFloat(itemObject.get (seriesConfig.seriesYAttribute)), // convert Big to float or number
+            yPoint: parseFloat(itemObject.get (seriesConfig.seriesYAttribute)) // convert Big to float or number
         }));
     }
 
@@ -143,8 +166,8 @@ export class TimeSeriesWrapper extends _WidgetBase {
                 params: {
                     actionname: seriesConfig.dataSourceMicroflow,
                     applyto: "selection",
-                    guids: [ this.contextObject.getGuid() ],
-                },
+                    guids: [ this.contextObject.getGuid() ]
+                }
             });
         } else {
             callback([]);
