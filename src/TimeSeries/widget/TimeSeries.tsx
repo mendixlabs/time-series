@@ -29,6 +29,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
     private contextObject: mendix.lib.MxObject;
     private dataLoaded: boolean;
+    private handle: number;
 
     private createProps(): WidgetProps {
         return {
@@ -118,8 +119,11 @@ export class TimeSeriesWrapper extends _WidgetBase {
     }
 
     private resetSubscriptions () {
+        mx.data.unsubscribe(this.handle);
+        this.handle = 0;
+
         if (this.contextObject) {
-            this.subscribe({
+            this.handle = this.subscribe({
                 callback: (guid: string) => {
                     this.updateRendering();
                 },
