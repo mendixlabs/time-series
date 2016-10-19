@@ -21,7 +21,7 @@ export interface WidgetProps extends ModelProps {
 
 export class TimeSeries extends React.Component<WidgetProps, {}> {
 
-    public constructor(props: WidgetProps) {
+    constructor(props: WidgetProps) {
         super(props);
 
         this.getDatum = this.getDatum.bind(this);
@@ -37,13 +37,13 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
             chart = React.createElement(NVD3Chart, {
                 datum,
                 duration: 1,
-                height: this.props.heightUnits === "auto" ? undefined : this.props.height,
-                showLegend: props.showLegend,
-                showXAxis: props.showXAxis,
-                showYAxis: props.showYAxis,
+                height: this.props.heightUnit === "auto" ? undefined : this.props.height,
+                showLegend: true,
+                showXAxis: true,
+                showYAxis: true,
                 type: "lineChart",
-                useInteractiveGuideline: props.useInteractiveGuidelines,
-                width: this.props.widthUnits === "auto" ? undefined : this.props.width,
+                useInteractiveGuideline: true,
+                width: this.props.widthUnit === "auto" ? undefined : this.props.width,
                 x: "xPoint",
                 xAxis: {
                     axisLabel: this.props.xAxisLabel,

@@ -26,7 +26,7 @@
         </property>        
         <property key="seriesConfig" type="object" isList="true">
             <caption>Series</caption>
-            <category>Data series</category>
+            <category>Series Configuration</category>
             <description>Add a series and configure its properties</description>
             <properties>
                 <property key="seriesEntity" type="entity" pathType="reference" isPath="optional">
@@ -92,8 +92,8 @@
             <category>Appearance</category>
             <description>Width of the chart</description>
         </property>
-        <property key="widthUnits" type="enumeration" defaultValue="pixels">
-            <caption>Width units</caption>
+        <property key="widthUnit" type="enumeration" defaultValue="auto">
+            <caption>Width unit</caption>
             <category>Appearance</category>
             <description></description>
             <enumerationValues>
@@ -106,8 +106,8 @@
             <category>Appearance</category>
             <description>Height of the chart</description>
         </property>
-        <property key="heightUnits" type="enumeration" defaultValue="pixels">
-            <caption>Height units</caption>
+        <property key="heightUnit" type="enumeration" defaultValue="auto">
+            <caption>Height unit</caption>
             <category>Appearance</category>
             <description></description>
             <enumerationValues>

@@ -6,25 +6,20 @@ import * as _WidgetBase from "mxui/widget/_WidgetBase";
 import * as React from "TimeSeries/lib/react";
 import ReactDOM = require ("TimeSeries/lib/react-dom");
 
-import { Data, HeightUnits, SeriesConfig, WidthUnits } from "../TimeSeries.d";
+import { Data, HeightUnit, SeriesConfig, WidthUnit } from "../TimeSeries.d";
 import { TimeSeries, WidgetProps } from "./components/TimeSeries";
 
 export class TimeSeriesWrapper extends _WidgetBase {
-    // Parameters configured in the Modeler    
-    private showXAxis: boolean;
-    private showYAxis: boolean;
-    private useInteractiveGuidelines: boolean;
-    private showLegend: boolean;
+    // Parameters configured in the Modeler  
     private xAxisLabel: string;
     private xAxisFormat: string;
-    private staggerLabels: boolean;
     private yAxisLabel: string;
     private yAxisFormat: string;
     private seriesConfig: SeriesConfig[];
     private width: number;
     private height: number;
-    private widthUnits: WidthUnits;
-    private heightUnits: HeightUnits;
+    private widthUnit: WidthUnit;
+    private heightUnit: HeightUnit;
 
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
     private contextObject: mendix.lib.MxObject;
@@ -35,16 +30,11 @@ export class TimeSeriesWrapper extends _WidgetBase {
         return {
             dataLoaded: this.dataLoaded,
             height: this.height,
-            heightUnits: this.heightUnits,
+            heightUnit: this.heightUnit,
             seriesConfig: this.seriesConfig,
-            showLegend: this.showLegend,
-            showXAxis: this.showXAxis,
-            showYAxis: this.showYAxis,
-            staggerLabels: this.staggerLabels,
-            useInteractiveGuidelines: this.useInteractiveGuidelines,
             widgetId: this.id + "_Wrapper",
             width: this.width,
-            widthUnits: this.widthUnits,
+            widthUnit: this.widthUnit,
             xAxisFormat: this.xAxisFormat,
             xAxisLabel: this.xAxisLabel,
             yAxisFormat: this.yAxisFormat,
@@ -52,11 +42,11 @@ export class TimeSeriesWrapper extends _WidgetBase {
         };
     }
 
-    public postCreate() {
+    postCreate() {
         this.updateRendering();
     }
 
-    public update(object: mendix.lib.MxObject, callback?: Function) {
+    update(object: mendix.lib.MxObject, callback?: Function) {
         this.contextObject = object;
         if (this.contextObject && this.checkConfig()) {
         this.updateData(() => {
@@ -69,7 +59,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
         this.resetSubscriptions();
     }
 
-    public uninitialize() {
+    uninitialize() {
         ReactDOM.unmountComponentAtNode(this.domNode);
         return true;
     }
@@ -138,7 +128,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
             const constraint = seriesConfig.entityConstraint.replace("[%CurrentObject%]", guid);
             const xpathString = "//" + seriesConfig.seriesEntity + constraint;
             mx.data.get({
-                callback: callback.bind(this),
+                callback: callback,
                 error: (error) => {
                     logger.error(this.id + ": An error occurred while retrieving items: " + error);
                 },

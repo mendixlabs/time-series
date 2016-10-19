@@ -25,7 +25,7 @@ export interface SeriesConfig {
 export interface ModelProps {
     showXAxis?: boolean;
     showYAxis?: boolean;
-    useInteractiveGuidelines?: boolean;
+    useInteractiveGuideline?: boolean;
     showLegend?: boolean;
     xAxisLabel?: string;
     xAxisFormat?: string;
@@ -34,11 +34,11 @@ export interface ModelProps {
     yAxisFormat?: string;
     seriesConfig?: SeriesConfig[];
     width?: number;
-    widthUnits?: WidthUnits;
+    widthUnit?: WidthUnit;
     height?: number;
-    heightUnits?: HeightUnits;
+    heightUnit?: HeightUnit;
 }
 
-export type WidthUnits = "auto" | "pixels";
-export type HeightUnits = "auto" | "pixels";
+export type WidthUnit = "auto" | "pixels";
+export type HeightUnit = "auto" | "pixels";
 export type SeriesSource = "xpath" | "microflow";

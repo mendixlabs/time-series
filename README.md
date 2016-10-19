@@ -8,7 +8,7 @@ Plot and track your data across different time periods on an nv.d3 powered chart
 * Formatting of numbers on y-axis
 * Interactive guidelines
 * Different line color
-* Filling of serie area
+* Filling of series area
 
 ## Dependencies
 
@@ -17,7 +17,7 @@ Plot and track your data across different time periods on an nv.d3 powered chart
 ## Properties
 * X-axis
   * X-axis label; Label for the x-axis
-  * X-axis data format; Formats of date on x-axis (use NVD3 date formatting)
+  * X-axis time format; Formats of date on x-axis (use NVD3 date formatting)
   * Enable stagger-labels; Display values on x-axis so they all fit
 * Y-axis
   * Y-axis label; Label for the y-axis
@@ -25,23 +25,23 @@ Plot and track your data across different time periods on an nv.d3 powered chart
 * Series config
   * Data series
      - Data source
-        - Data entity; The entity containing serie points
-        - Source; Type of source
-        - X-Axis data; Attribute containing dates for x-axis
-        - Y-Axis data; Attribute containing data for y-axis
-        - Serie key; Used in the legend to interact with the chart
-     - Source - XPath
+        - Data entity; The entity containing series points
+        - SourceType; XPath or microflow
+        - X-axis data; Attribute containing dates for x-axis
+        - Y-axis data; Attribute containing data for y-axis
+        - Series key; Used in the legend to interact with the chart
+     - XPath
         - Constraint; Constraint on the data from data-entity
      - Source - microflow
-        - Data source microflow; Returns a serie's coordinates
+        - Data source microflow; Returns a series' coordinates
      - Appearance
-        - Serie color; Color of the serie line in the chart
-        - Fill serie area; Should serie area be filled
+        - Series color; Color of the series line in the chart
+        - Fill series area; Should series area be filled
 * Appearance
   * Chart width; Width of the chart
-  * Width units; Measurement for width pixels or auto
+  * Width unit; Measurement for width pixels or auto
   * Chart height; Height of the chart
-  * Height units; Measurement for Height pixels or auto
+  * Height unit; Measurement for height pixels or auto
 
 ## Source
 
