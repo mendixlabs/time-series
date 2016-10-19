@@ -1,9 +1,9 @@
 {
   "name": "TimeSeries",
   "version": "0.1.0",
-  "description": "Plot and track your data across different time periods on an nv.d3 powered chart",
+  "description": "Displays discrete-time data in a time-series chart using nv.d3",
   "author": "Derrick Kwagala <derrick.kwagala@flockofbirds.org",
-  "copyright": "Flock of Birds",
+  "copyright": "Mendix",
   "main": "Gruntfile.js",
   "directories": {
     "test": "test"
