@@ -1,21 +1,12 @@
 {
     "rulesDirectory": ["node_modules/tslint-eslint-rules/dist/rules"],
-    "extends": "tslint:latest", // Widget dev rules base
+    "extends": "tslint:latest", 
     "rules": {
         "class-name": true,
-        "comment-format": [
-            true,
-            "check-space"
-        ],
+        "comment-format": [ true, "check-space" ],
         "eofline": true,
-        "indent": [
-            true,
-            "spaces"
-        ],
-        "member-ordering": [
-            true,
-            "variables-before-functions"
-        ],
+        "indent": [ true, "spaces" ],
+        "member-ordering": [ true, "variables-before-functions" ],
         "no-arg": true,
         "no-bitwise": true,
         "no-conditional-assignment": true,
@@ -40,25 +31,11 @@
             "check-open-brace",
             "check-whitespace"
         ],
-        "quotemark": [
-            true,
-            "double"
-        ],
-        "semicolon": [
-            true,
-            "always"
-        ],
-        "trailing-comma": [
-            true, {
-                "multiline": "never", "singleline": "never"
-            }
-        ],
-        "triple-equals": [
-            true,
-            "allow-null-check"
-        ],
-        "typedef-whitespace": [
-            true,
+        "quotemark": [ true, "double" ],
+        "semicolon": [ true, "always" ],
+        "trailing-comma": [ true, { "multiline": "never", "singleline": "never" } ],
+        "triple-equals": [ true, "allow-null-check" ],
+        "typedef-whitespace": [ true,
             {
                 "call-signature": "nospace",
                 "index-signature": "nospace",
@@ -67,10 +44,7 @@
                 "variable-declaration": "nospace"
             }
         ],
-        "variable-name": [
-            true,
-            "ban-keywords"
-        ],
+        "variable-name": [ true, "ban-keywords" ],
         "whitespace": [
             true,
             "check-branch",
@@ -81,10 +55,7 @@
             "check-type"
         ],
         // Rules for Widget development
-        "interface-name": [
-            false,
-            "always-prefix"
-        ],
+        "interface-name": [ false, "always-prefix" ],
         // https://www.npmjs.com/package/tslint-eslint-rules
         "no-multi-spaces": [true],
         "no-extra-semi": true,
@@ -101,12 +72,8 @@
         "valid-typeof": true,
         "array-bracket-spacing": [ true, "always" ],
         "block-spacing": [ true, "always" ],
-        "brace-style": [
-            true,
-            "1tbs", {
-                "allowSingleLine": true
-            }
-        ],
-        "object-curly-spacing": [ true, "always" ]
+        "brace-style": [ true, "1tbs", { "allowSingleLine": true } ],
+        "object-curly-spacing": [ true, "always" ],
+        "member-access": false
     }
 }
