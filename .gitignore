@@ -1,19 +1,4 @@
-test/deployment/
-test/.classpath
-test/.project
-test/*.lock
-test/*.launch
-test/.svn/
-test/.mendix-cache/
-
-!test/
 test/*
-!test/javasource/
-test/javasource/*
-!test/javasource/*/
-test/javasource/*/*
-!test/javasource/*/actions
-!test/*.mpr
 
 .vscode/
 dist/
@@ -21,9 +6,7 @@ out/
 nbproject/
 node_modules/
 .idea
-*.bak
 *.map
-*.tmp
 
 src/TimeSeries/lib/utils.js
 src/TimeSeries/lib/Polyfills.js
