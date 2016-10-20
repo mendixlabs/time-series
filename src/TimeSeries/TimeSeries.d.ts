@@ -1,35 +1,13 @@
-/// <reference path="../../node_modules/mendix-client/mendix-client/mendix.d.ts" />
-/// <reference path="../../node_modules/mendix-client/mendix-client/mxui.d.ts" />
-/// <reference path="../../node_modules/mendix-client/mendix-client/mx.d.ts" />
+
+// WARNING do not make manual Changes to this file.
+// widget.d.ts files is auto generated from the params in the widget.xml
+// use > 'grunt xsltproc' or > 'grunt watch' to generate a new file
 
 export default ModelProps;
 
-export interface Data {
-    xPoint: number;
-    yPoint: number;
-}
-
-export interface SeriesConfig {
-    seriesEntity?: string;
-    seriesSource?: SeriesSource;
-    entityConstraint?: string;
-    dataSourceMicroflow?: string;
-    seriesXAttribute?: string;
-    seriesYAttribute?: string;
-    seriesKey?: string;
-    seriesData?: Data[];
-    seriesColor?: string;
-    seriesFill?: boolean;
-}
-
 export interface ModelProps {
-    showXAxis?: boolean;
-    showYAxis?: boolean;
-    useInteractiveGuideline?: boolean;
-    showLegend?: boolean;
     xAxisLabel?: string;
     xAxisFormat?: string;
-    staggerLabels?: boolean;
     yAxisLabel?: string;
     yAxisFormat?: string;
     seriesConfig?: SeriesConfig[];
@@ -39,6 +17,20 @@ export interface ModelProps {
     heightUnit?: HeightUnit;
 }
 
+export interface SeriesConfig {
+    seriesEntity?: string;
+    seriesSource?: SeriesConfigSeriesSource;
+    seriesXAttribute?: string;
+    seriesYAttribute?: string;
+    seriesKey?: string;
+    entityConstraint?: string;
+    dataSourceMicroflow?: string;
+    seriesColor?: string;
+    seriesFill?: boolean;
+}
+
 export type WidthUnit = "auto" | "pixels";
+
 export type HeightUnit = "auto" | "pixels";
-export type SeriesSource = "xpath" | "microflow";
+
+export type SeriesConfigSeriesSource = "xpath" | "microflow";

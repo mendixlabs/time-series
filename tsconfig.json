@@ -18,6 +18,5 @@
 		"out",
 		"nbproject",
 		"typings/redux"
-		// "src/TimeSeries/lib"
   ]
 }

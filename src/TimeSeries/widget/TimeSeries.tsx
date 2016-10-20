@@ -6,8 +6,8 @@ import * as _WidgetBase from "mxui/widget/_WidgetBase";
 import * as React from "TimeSeries/lib/react";
 import ReactDOM = require ("TimeSeries/lib/react-dom");
 
-import { Data, HeightUnit, SeriesConfig, WidthUnit } from "../TimeSeries.d";
-import { TimeSeries, WidgetProps } from "./components/TimeSeries";
+import { HeightUnit, SeriesConfig, WidthUnit } from "../TimeSeries.d";
+import { DataPoint, TimeSeries, WidgetProps } from "./components/TimeSeries";
 
 export class TimeSeriesWrapper extends _WidgetBase {
     // Parameters configured in the Modeler  
@@ -24,11 +24,13 @@ export class TimeSeriesWrapper extends _WidgetBase {
     // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
     private contextObject: mendix.lib.MxObject;
     private dataLoaded: boolean;
+    private dataStore: any;
     private handle: number;
 
     private createProps(): WidgetProps {
         return {
             dataLoaded: this.dataLoaded,
+            dataStore: this.dataStore,
             height: this.height,
             heightUnit: this.heightUnit,
             seriesConfig: this.seriesConfig,
@@ -144,9 +146,9 @@ export class TimeSeriesWrapper extends _WidgetBase {
 
     private setDataFromObjects(objects: mendix.lib.MxObject[], seriesConfig: SeriesConfig): void {
         logger.debug(objects);
-        seriesConfig.seriesData = objects.map((itemObject): Data => ({
-            xPoint: itemObject.get(seriesConfig.seriesXAttribute) as number,
-            yPoint: parseFloat(itemObject.get (seriesConfig.seriesYAttribute)) // convert Big to float or number
+        this.dataStore[seriesConfig.seriesKey] = objects.map((itemObject): DataPoint => ({
+            x: itemObject.get(seriesConfig.seriesXAttribute) as number,
+            y: parseFloat(itemObject.get (seriesConfig.seriesYAttribute)) // convert Big to float or number
         }));
     }
 
