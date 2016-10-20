@@ -128,7 +128,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
             const constraint = seriesConfig.entityConstraint.replace("[%CurrentObject%]", guid);
             const xpathString = "//" + seriesConfig.seriesEntity + constraint;
             mx.data.get({
-                callback: callback,
+                callback: callback.bind(this),
                 error: (error) => {
                     logger.error(this.id + ": An error occurred while retrieving items: " + error);
                 },
