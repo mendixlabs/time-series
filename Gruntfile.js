@@ -1,31 +1,5 @@
-// In case you seem to have trouble starting Mendix through `grunt start-mendix`, you might have to set the path to the Mendix application.
-// If it works, leave MODELER_PATH at null
-var MODELER_PATH = null;
-var MODELER_ARGS = "/file:{path}";
-
-/********************************************************************************
- * Do not edit anything below, unless you know what you are doing
- ********************************************************************************/
-
-var path = require("path"),
-    mendixApp = require("node-mendix-modeler-path"),
-    base64 = require("node-base64-image"),
-    semver = require("semver"),
-    xml2js = require("xml2js"),
-    parser = new xml2js.Parser(),
-    builder = new xml2js.Builder({
-        renderOpts: { pretty: true, indent: "    ", newline: "\n" },
-        xmldec:     { standalone: null, encoding: "utf-8" }
-    }),
-    shelljs = require("shelljs"),
-    pkg = require("./package.json"),
-    currentFolder = shelljs.pwd().toString();
-
-var TEST_PATH = path.join(currentFolder, "/test/Test.mpr");
-var WIDGET_XML = path.join(currentFolder, "/src/", pkg.name, "/", pkg.name + ".xml");
-var PACKAGE_XML = path.join(currentFolder, "/src/package.xml");
-var TEST_WIDGETS_FOLDER = path.join(currentFolder, "./test/widgets");
-var TEST_WIDGETS_DEPLOYMENT_FOLDER = path.join(currentFolder, "./test/deployment/web/widgets");
+"use strict";
+var webpackConfig = require("./webpack.config");
 
 module.exports = function (grunt) {
     var pkg = grunt.file.readJSON("package.json");
@@ -33,18 +7,22 @@ module.exports = function (grunt) {
         pkgName: pkg.name,
         name: pkg.name,
         watch: {
-            autoDeployUpdate: {
-                "files": ["./src/**/*", "!./src/**/*.ts", "!./src/**/*.tsx",  "!./src/**/*.map"],
-                "tasks": ["compress:makezip", "copy:deployment", "copy:mpks"],
+            updateWidgetFiles: {
+                "files": [ "./dist/tmp/src/**/*" ],
+                "tasks": [ "compress:dist", "copy:distDeployment", "copy:mpk" ],
                 options: {
                     debounceDelay: 250,
                     livereload: true
                 }
+            },
+            sourceFiles: {
+                "files": [ "./src/**/*" ],
+                "tasks": [ "copy:source" ]
             }
         },
-
+        
         compress: {
-            makezip: {
+            dist: {
                 options: {
                     archive: "./dist/" + pkg.version + "/" + pkg.name + ".mpk",
                     mode: "zip"
@@ -53,54 +31,44 @@ module.exports = function (grunt) {
                     expand: true,
                     date: new Date(),
                     store: false,
-                    cwd: "./src",
-                    src: ["**/*"]
-                }]
-            },
-            out: {
-                options: {
-                    archive: "./dist/" + pkg.version + "/" + pkg.name + ".mpk",
-                    mode: "zip"
-                },
-                files: [{
-                    expand: true,
-                    date: new Date(),
-                    store: false,
-                    cwd: "./out",
-                    src: ["**/*"]
+                    cwd: "./dist/tmp/src",
+                    src: [ "**/*" ]
                 }]
             }
         },
-
+        
         copy: {
-            deployment: {
+            distDeployment: {
                 files: [
-                    {dest: "./test/deployment/web/widgets", cwd: "./src/", src: ["**/*"], expand: true}
+                    { dest: "./MxTestProject/deployment/web/widgets", cwd: "./dist/tmp/src/", src: ["**/*"], expand: true }
                 ]
             },
-            mpks: {
+            mpk: {
                 files: [
-                    {dest: "./test/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true}
+                    { dest: "./MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true }
                 ]
             },
-            out: {
+            source: {
                 files: [
-                    {dest: "./out", cwd: "./src/", src: ["**/*"], expand: true}
+                    { dest: "./dist/tmp/src", cwd: "./src/", src: ["**/*", "!**/*.ts", "!**/*.tsx"], expand: true }
                 ]
-            }
+            }         
+        },
+        
+        webpack: {
+            renderer: webpackConfig
         },
 
         clean: {
             build: [
-                "./dist/" + pkg.version + "/" + pkg.name + "/*",
-                "./test/deployment/web/widgets/" + pkg.name + "/*",
-                "./test/widgets/" + pkg.name + ".mpk"
-            ],
-            out : "./out/**/*"
+                "./MxTestProject/deployment/web/widgets/" + pkg.name + "/*",
+                "./MxTestProject/widgets/" + pkg.name + ".mpk"
+            ], 
+            dist : "./dist/**/*"               
         },
         xsltproc: {
             options: {
-                stylesheet: 'widget.xsl'
+                stylesheet: "widget.xsl"
             },
             compile: {
                 files: {
@@ -109,119 +77,18 @@ module.exports = function (grunt) {
             }
         }
     });
-
+    
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-xsltproc");
-    grunt.registerTask("default", ["build", "watch:autoDeployUpdate"]);
-    grunt.registerTask("distribute", ["clean:out", "copy:out", "compress:out", "copy:mpks" ]);
+    grunt.loadNpmTasks("grunt-webpack");
+
+    grunt.registerTask("default", [ "clean build", "watch" ]);    
     grunt.registerTask(
         "clean build",
-        "Compiles all the assets and copies the files to the build directory.", ["clean:build","compress:makezip", "copy:mpks" ]
+        "Compiles all the assets and copies the files to the build directory.", ["clean:build", "webpack" ,"compress:dist", "copy:mpk"]
     );
-    grunt.registerTask("build", ["clean build"]);
-
-    grunt.registerTask("start-modeler", function () {
-        var done = this.async();
-        if (MODELER_PATH !== null || (mendixApp.err === null && mendixApp.output !== null && mendixApp.output.cmd && mendixApp.output.arg)) {
-            grunt.util.spawn({
-                cmd: MODELER_PATH || mendixApp.output.cmd,
-                args: [
-                    (MODELER_PATH !== null ? MODELER_ARGS : mendixApp.output.arg).replace("{path}", TEST_PATH)
-                ]
-            }, function () {
-                done();
-            });
-        } else {
-            console.error("Cannot start Modeler, see error:");
-            console.log(mendixApp.err);
-            done();
-        }
-    });
-
-    grunt.registerTask("version", function (version) {
-        var done = this.async();
-        if (!grunt.file.exists(PACKAGE_XML)) {
-            grunt.log.error("Cannot find " + PACKAGE_XML);
-            return done();
-        }
-
-        var xml = grunt.file.read(PACKAGE_XML);
-        parser.parseString(xml, function (err, res) {
-            if (err) {
-                grunt.log.error(err);
-                return done();
-            }
-            if (res.package.clientModule[0]["$"]["version"]) {
-                var currentVersion = res.package.clientModule[0]["$"]["version"];
-                if (!version) {
-                    grunt.log.writeln("\nCurrent version is " + currentVersion);
-                    grunt.log.writeln("Set new version by running 'grunt version:x.y.z'");
-                    done();
-                } else {
-                    if (!semver.valid(version) || !semver.satisfies(version, ">= 1.0.0")) {
-                        grunt.log.error("\nPlease provide a valid version that is higher than 1.0.0. Current version: " + currentVersion);
-                        done();
-                    } else {
-                        res.package.clientModule[0]["$"]["version"] = version;
-                        pkg.version = version;
-                        var xmlString = builder.buildObject(res);
-                        grunt.file.write(PACKAGE_XML, xmlString);
-                        grunt.file.write("package.json", JSON.stringify(pkg, null, 2));
-                        done();
-                    }
-                }
-            } else {
-                grunt.log.error("Cannot find current version number");
-            }
-        });
-
-    });
-
-    grunt.registerTask("generate-icon", function () {
-        var iconPath = path.join(currentFolder, "/icon.png"),
-            options = {localFile: true, string: true},
-            done = this.async();
-
-        grunt.log.writeln("Processing icon");
-
-        if (!grunt.file.exists(iconPath) || !grunt.file.exists(WIDGET_XML)) {
-            grunt.log.error("can\'t generate icon");
-            return done();
-        }
-
-        base64.base64encoder(iconPath, options, function (err, image) {
-            if (!err) {
-                var xmlOld = grunt.file.read(WIDGET_XML);
-                parser.parseString(xmlOld, function (err, result) {
-                    if (!err) {
-                        if (result && result.widget && result.widget.icon) {
-                            result.widget.icon[0] = image;
-                        }
-                        var xmlString = builder.buildObject(result);
-                        grunt.file.write(WIDGET_XML, xmlString);
-                        done();
-                    }
-                });
-            } else {
-                grunt.log.error("can\'t generate icon");
-                return done();
-            }
-        });
-    });
-
-    grunt.registerTask("folders", function () {
-        var done = this.async();
-        grunt.log.writeln("\nShowing file paths that Grunt will use. You can edit the package.json accordingly\n");
-        grunt.log.writeln("TEST_PATH:                      ", TEST_PATH);
-        grunt.log.writeln("WIDGET_XML:                     ", WIDGET_XML);
-        grunt.log.writeln("PACKAGE_XML:                    ", PACKAGE_XML);
-        grunt.log.writeln("TEST_WIDGETS_FOLDER:            ", TEST_WIDGETS_FOLDER);
-        grunt.log.writeln("TEST_WIDGETS_DEPLOYMENT_FOLDER: ", TEST_WIDGETS_DEPLOYMENT_FOLDER);
-        return done();
-    });
-
-    grunt.registerTask("start-mendix", [ "start-modeler" ]);
+    grunt.registerTask("build", [ "clean build" ]);
 };

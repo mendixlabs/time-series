@@ -1,8 +1,7 @@
+import * as React from "react";
 
-import * as React from "TimeSeries/lib/react";
-
-import { NVD3LineChart } from "./nvd3-linechart";
-import { format, time } from "TimeSeries/lib/d3";
+import { NVD3LineChart } from "./NVD3LineChart";
+import { format, time } from "d3";
 
 import { ModelProps, SeriesConfig } from "../../TimeSeries.d";
 
@@ -75,10 +74,10 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
 
     private getDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
         return this.props.seriesConfig.map(serieConfig => ({
-            area: serieConfig.series,
+            area: serieConfig.seriesFill,
             color: serieConfig.seriesColor ? serieConfig.seriesColor : undefined,
             key: serieConfig.seriesKey,
-            values: dataStore.series[serieConfig.seriesKey].data
+            values: dataStore.series[serieConfig.seriesKey]
         }));
     }
 }

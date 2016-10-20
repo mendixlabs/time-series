@@ -1,15 +1,14 @@
-
 import * as dojoDeclare from "dojo/_base/declare";
 import * as mxLang from "mendix/lang";
-import * as _WidgetBase from "mxui/widget/_WidgetBase";
-//tslint:disable-next-line
-import * as React from "TimeSeries/lib/react";
-import ReactDOM = require ("TimeSeries/lib/react-dom");
+import * as WidgetBase from "mxui/widget/_WidgetBase";
+
+import { createElement } from "react";
+import { render, unmountComponentAtNode } from "react-dom";
 
 import { HeightUnit, SeriesConfig, WidthUnit } from "../TimeSeries.d";
 import { DataPoint, TimeSeries, WidgetProps } from "./components/TimeSeries";
 
-export class TimeSeriesWrapper extends _WidgetBase {
+export class TimeSeriesWrapper extends WidgetBase {
     // Parameters configured in the Modeler  
     private xAxisLabel: string;
     private xAxisFormat: string;
@@ -45,6 +44,10 @@ export class TimeSeriesWrapper extends _WidgetBase {
     }
 
     postCreate() {
+        this.dataStore = {};
+        this.dataStore.series = this.seriesConfig.reduce((previousValue: any, currentValue: SeriesConfig ) => {
+            return previousValue[currentValue.seriesKey] = [];
+        }, {});
         this.updateRendering();
     }
 
@@ -62,7 +65,7 @@ export class TimeSeriesWrapper extends _WidgetBase {
     }
 
     uninitialize() {
-        ReactDOM.unmountComponentAtNode(this.domNode);
+        unmountComponentAtNode(this.domNode);
         return true;
     }
 
@@ -98,15 +101,15 @@ export class TimeSeriesWrapper extends _WidgetBase {
         if (incorrectSeries.length) {
             valid = false;
             mx.ui.error("Configuration error for series : '" + incorrectSeries[0].seriesKey +
-                        "'. Source is set to 'Microflow' but 'Source - microflow' is missing ", true);
+                "'. Source is set to 'Microflow' but 'Source - microflow' is missing ", true);
         }
 
         return valid;
-
     }
 
     private updateRendering (callback?: Function) {
-        ReactDOM.render(<TimeSeries {...this.createProps() } />, this.domNode);
+        render(createElement(TimeSeries, this.createProps()), this.domNode);
+
         mxLang.nullExec(callback);
     }
 
@@ -145,10 +148,9 @@ export class TimeSeriesWrapper extends _WidgetBase {
     }
 
     private setDataFromObjects(objects: mendix.lib.MxObject[], seriesConfig: SeriesConfig): void {
-        logger.debug(objects);
-        this.dataStore[seriesConfig.seriesKey] = objects.map((itemObject): DataPoint => ({
+        this.dataStore.series[seriesConfig.seriesKey] = objects.map((itemObject): DataPoint => ({
             x: itemObject.get(seriesConfig.seriesXAttribute) as number,
-            y: parseFloat(itemObject.get (seriesConfig.seriesYAttribute)) // convert Big to float or number
+            y: parseFloat(itemObject.get(seriesConfig.seriesYAttribute) as string)
         }));
     }
 
@@ -170,10 +172,11 @@ export class TimeSeriesWrapper extends _WidgetBase {
         }
     }
 }
+
 // Declare widget's prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
 // tslint:disable : only-arrow-functions
-dojoDeclare("TimeSeries.widget.TimeSeries", [ _WidgetBase ], (function (Source: any) {
+dojoDeclare("TimeSeries.widget.TimeSeries", [ WidgetBase ], (function (Source: any) {
     let result: any = {};
     for (let i in Source.prototype) {
         if (i !== "constructor" && Source.prototype.hasOwnProperty(i) ) {

@@ -1,15 +1,8 @@
 test/*
-
 .vscode/
 dist/
 out/
-nbproject/
 node_modules/
 .idea
-*.map
+MxTestProject/
 
-src/TimeSeries/lib/utils.js
-src/TimeSeries/lib/Polyfills.js
-src/TimeSeries/lib/react-nvd3.js
-src/TimeSeries/widget/TimeSeries.js
-src/TimeSeries/widget/components/TimeSeries.js
