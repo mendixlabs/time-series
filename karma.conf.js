@@ -26,14 +26,13 @@ module.exports = function(config) {
         },
         webpack: webpackConfig,
         webpackServer: { noInfo: true },
-        reporters: ["progress"],
+        reporters: [ "progress", "kjhtml" ],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: [ "Chrome" ],
         singleRun: false,
-        concurrency: Infinity,
-        reporters: ["kjhtml"]
+        concurrency: Infinity
     })
 };

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Component, DOM, createElement } from "react";
 
 import { NVD3LineChart } from "./NVD3LineChart";
 import { format, time } from "d3";
@@ -23,12 +23,11 @@ export interface Series {
 
 export interface WidgetProps extends ModelProps {
     widgetId: string;
-    seriesData?: Series[];
     dataLoaded?: boolean;
     dataStore?: DataStore;
 }
 
-export class TimeSeries extends React.Component<WidgetProps, {}> {
+export class TimeSeries extends Component<WidgetProps, {}> {
 
     constructor(props: WidgetProps) {
         super(props);
@@ -36,13 +35,12 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
         this.getDatum = this.getDatum.bind(this);
     }
 
-    public render() {
+    render() {
         const props = this.props;
         const datum = this.getDatum(props.seriesConfig, props.dataStore);
         const xFormat = props.xAxisFormat ? props.xAxisFormat : "%d-%b-%y";
         const yFormat = props.yAxisFormat ? props.yAxisFormat : "";
-        if (props.dataLoaded) {
-            return React.createElement(NVD3LineChart, {
+        let chart: any = {
                 chartProps: {
                     xAxis: {
                         axisLabel: props.xAxisLabel,
@@ -66,14 +64,12 @@ export class TimeSeries extends React.Component<WidgetProps, {}> {
                 datum,
                 height: props.height,
                 width: props.width
-            });
-        } else {
-            return (<div>Loading ...</div>);
-        }
+            };
+        return createElement (NVD3LineChart, chart);
     }
 
-    private getDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
-        return this.props.seriesConfig.map(serieConfig => ({
+    public getDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
+        return seriesConfig.map(serieConfig => ({
             area: serieConfig.seriesFill,
             color: serieConfig.seriesColor ? serieConfig.seriesColor : undefined,
             key: serieConfig.seriesKey,

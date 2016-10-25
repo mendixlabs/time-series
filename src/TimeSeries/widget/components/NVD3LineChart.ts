@@ -11,7 +11,7 @@ interface Nvd3LineChartProps {
     datum: Series[];
 }
 
-function isPlainObject(object: any): boolean {
+export function isPlainObject(object: any): boolean {
     if (typeof object === "object" && object !== null) {
         if (typeof Object.getPrototypeOf === "function") {
             const proto = Object.getPrototypeOf(object);
@@ -27,7 +27,7 @@ function isPlainObject(object: any): boolean {
  * @param chart A nvd3 chart instance
  * @param options A key value object
  */
-function configureComponents(chart: any, options: any) {
+export function configureComponents(chart: any, options: any) {
     for (let optionName in options) {
         if (options.hasOwnProperty(optionName)) {
             let optionValue = options[optionName];

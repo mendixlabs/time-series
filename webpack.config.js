@@ -2,7 +2,7 @@ var webpack = require("webpack");
 var CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-    entry: "./src/TimeSeries/widget/TimeSeries.tsx",
+    entry: "./src/TimeSeries/widget/TimeSeries.ts",
     output: {
         path: __dirname + "/dist/tmp",
         filename: "src/TimeSeries/widget/TimeSeries.js",
@@ -16,7 +16,7 @@ module.exports = {
     errorDetails: true,
     module: {
         loaders: [
-            { test: /\.tsx?$/, loaders: [ "ts-loader" ] },
+            { test: [/\.tsx?$/, /\.ts?$/], loaders: [ "ts-loader" ] },
             { test: /\.json$/, loader: "json" }
         ]
     },

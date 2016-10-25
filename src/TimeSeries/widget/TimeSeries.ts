@@ -70,7 +70,6 @@ export class TimeSeriesWrapper extends WidgetBase {
     }
 
     private updateData(callback: Function) {
-        logger.debug(this.id + ".updateData");
         const series = this.seriesConfig[0];
         // TODO: do this in a async parallel way for all series, in the future.
         if (series.seriesSource === "xpath" && series.seriesEntity) {
