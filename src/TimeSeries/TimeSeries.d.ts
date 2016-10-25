@@ -1,41 +1,36 @@
 
+// WARNING do not make manual Changes to this file.
+// widget.d.ts files is auto generated from the params in the widget.xml
+// use > 'grunt xsltproc' or > 'grunt watch' to generate a new file
+
 export default ModelProps;
 
-export interface Data {
-    xPoint: number;
-    yPoint: number;
-}
-
-export interface SeriesConfig {
-    seriesEntity?: string;
-    seriesSource?: SeriesSource;
-    entityConstraint?: string;
-    dataSourceMicroflow?: string;
-    seriesXAttribute?: string;
-    seriesYAttribute?: string;
-    seriesKey?: string;
-    seriesData?: Data[];
-    seriesColor?: string;
-    isArea?: boolean;
-}
-
 export interface ModelProps {
-    showXAxis?: boolean;
-    showYAxis?: boolean;
-    useInteractiveGuidelines?: boolean;
-    showLegend?: boolean;
     xAxisLabel?: string;
     xAxisFormat?: string;
-    staggerLabels?: boolean;
     yAxisLabel?: string;
     yAxisFormat?: string;
     seriesConfig?: SeriesConfig[];
     width?: number;
-    widthUnits?: WidthUnits;
+    widthUnit?: WidthUnit;
     height?: number;
-    heightUnits?: HeightUnits;
+    heightUnit?: HeightUnit;
 }
 
-export type WidthUnits = "auto" | "pixels" | "percent";
-export type HeightUnits = "auto" | "pixels" | "percent";
-export type SeriesSource = "xpath" | "microflow";
+export interface SeriesConfig {
+    seriesEntity?: string;
+    seriesSource?: SeriesConfigSeriesSource;
+    seriesXAttribute?: string;
+    seriesYAttribute?: string;
+    seriesKey?: string;
+    entityConstraint?: string;
+    dataSourceMicroflow?: string;
+    seriesColor?: string;
+    seriesFill?: boolean;
+}
+
+export type WidthUnit = "auto" | "pixels";
+
+export type HeightUnit = "auto" | "pixels";
+
+export type SeriesConfigSeriesSource = "xpath" | "microflow";
