@@ -22,17 +22,25 @@ module.exports = function(config) {
         ],
         exclude: [],
         preprocessors: {
-            "tests/test-index.js": [ "webpack", "sourcemap" ]
+            "tests/test-index.js": [ "webpack", "sourcemap" ],
+            "**/*.ts": [ "karma-typescript" ]
         },
         webpack: webpackConfig,
         webpackServer: { noInfo: true },
-        reporters: [ "progress", "kjhtml" ],
+        reporters: [ "progress", "kjhtml", "karma-typescript" ],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: [ "Chrome" ],
         singleRun: false,
-        concurrency: Infinity
+        concurrency: Infinity,
+        karmaTypescriptConfig: {
+            reports: {
+                "html": "./dist/coverage",
+                "text-summary": ""
+            }
+        },
+        // singleRun: true
     })
 };
