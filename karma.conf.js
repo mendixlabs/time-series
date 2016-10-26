@@ -17,7 +17,6 @@ module.exports = function(config) {
         files: [
             { pattern: "src/**/*.ts", watched: true, included: false, served: false },
             { pattern: "tests/**/*.ts", watched: true, included: false, served: false },
-
             "tests/test-index.js"
         ],
         exclude: [],
@@ -41,6 +40,9 @@ module.exports = function(config) {
                 "text-summary": ""
             }
         },
+        jasmineNodeOpts: {
+            defaultTimeoutInterval: 2500000
+        }
         // singleRun: true
     })
 };

@@ -6,6 +6,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkgName: pkg.name,
         name: pkg.name,
+
         watch: {
             updateWidgetFiles: {
                 "files": [ "./dist/tmp/src/**/*" ],
@@ -40,12 +41,12 @@ module.exports = function (grunt) {
         copy: {
             distDeployment: {
                 files: [
-                    { dest: "./MxTestProject/deployment/web/widgets", cwd: "./dist/tmp/src/", src: ["**/*"], expand: true }
+                    { dest: "./dist/MxTestProject/deployment/web/widgets", cwd: "./dist/tmp/src/", src: ["**/*"], expand: true }
                 ]
             },
             mpk: {
                 files: [
-                    { dest: "./MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true }
+                    { dest: "./dist/MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true }
                 ]
             },
             source: {
@@ -61,18 +62,20 @@ module.exports = function (grunt) {
 
         clean: {
             build: [
-                "./MxTestProject/deployment/web/widgets/" + pkg.name + "/*",
-                "./MxTestProject/widgets/" + pkg.name + ".mpk"
+                "./dist/" + pkg.version + "/*",
+                "./dist/MxTestProject/deployment/web/widgets/" + pkg.name + "/*",
+                "./dist/MxTestProject/widgets/" + pkg.name + ".mpk"
             ], 
             dist : "./dist/**/*"               
         },
+        
         xsltproc: {
             options: {
                 stylesheet: "widget.xsl"
             },
             compile: {
                 files: {
-                    "src/<%=pkgName%>/<%=name%>.auto.d.ts" : ["src/" + pkg.name + "/" + pkg.name + ".xml"]
+                    "src/<%=pkgName%>/<%=name%>.generated.d.ts" : ["src/" + pkg.name + "/" + pkg.name + ".xml"]
                 }
             }
         }

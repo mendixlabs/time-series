@@ -55,4 +55,3 @@ https://github.com/mendixlabs/time-series/
 
 Please report any issues via the github issue tracker:
 https://github.com/mendixlabs/time-series/issues 
-

@@ -4,7 +4,7 @@ import { Component, DOM } from "react";
 
 import { Series } from "./TimeSeries";
 
-interface Nvd3LineChartProps {
+export interface Nvd3LineChartProps {
     height?: number;
     width?: number;
     chartProps?: any;
@@ -49,6 +49,17 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private selection: Selection<any>;
     private svg: Node;
 
+    render() {
+        // TODO check if handles height and width correctly.
+        const style = {
+            height: this.props.height,
+            width: this.props.width
+        };
+        return (DOM.div({ className: "nv-chart", style },
+            DOM.svg({ ref: n => this.svg = n })
+        ));
+    }
+
     componentDidMount() {
         nv.addGraph(this.renderChart.bind(this));
     }
@@ -63,16 +74,6 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         }
     }
 
-    render() {
-        // TODO check if handles height and width correctly.
-        const style = {
-            height: this.props.height,
-            width: this.props.width
-        };
-        return (DOM.div({ className: "nv-chart", style },
-            DOM.svg({ ref: n => this.svg = n })
-        ));
-    }
 
     private renderChart() {
         this.chart = (this.chart && !this.rendering) ? this.chart : nv.models.lineChart();
