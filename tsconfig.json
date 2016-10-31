@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "rootDir": "./",
-        "outDir": "dist/tmp",
+        "outDir": "dist/tsc/",
         "noEmitOnError": true,
         "sourceMap": true,
         "module": "amd",
@@ -13,7 +13,6 @@
         "removeComments": true,
         "noLib": false,
         "watch": true,
-        "jsx": "react",
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
@@ -23,8 +22,6 @@
     },
     "exclude": [
         "node_modules/",
-        "MxTestProject/",
-        "test/",
         "dist/"
     ]
 }

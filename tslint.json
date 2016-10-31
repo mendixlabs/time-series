@@ -54,9 +54,7 @@
             "check-separator",
             "check-type"
         ],
-        // Rules for Widget development
         "interface-name": [ false, "always-prefix" ],
-        // https://www.npmjs.com/package/tslint-eslint-rules
         "no-multi-spaces": [true],
         "no-extra-semi": true,
         "no-irregular-whitespace": true,

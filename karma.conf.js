@@ -21,28 +21,27 @@ module.exports = function(config) {
         ],
         exclude: [],
         preprocessors: {
-            "tests/test-index.js": [ "webpack", "sourcemap" ],
-            "**/*.ts": [ "karma-typescript" ]
+            "tests/test-index.js": [ "webpack", "sourcemap" ]
         },
         webpack: webpackConfig,
         webpackServer: { noInfo: true },
-        reporters: [ "progress", "kjhtml", "karma-typescript" ],
+        reporters: [ "progress", "kjhtml", "coverage" ],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: [ "Chrome" ],
-        singleRun: false,
+        browsers: [ "Chrome" ],        
+        singleRun: true,
         concurrency: Infinity,
-        karmaTypescriptConfig: {
-            reports: {
-                "html": "./dist/coverage",
-                "text-summary": ""
-            }
+        coverageReporter: {
+            dir: "./dist/testresults", 
+            reporters: [
+                { type: "json", subdir: ".", file: "coverage.json" },
+                { type: "text" }
+            ]
         },
         jasmineNodeOpts: {
             defaultTimeoutInterval: 2500000
         }
-        // singleRun: true
     })
 };
