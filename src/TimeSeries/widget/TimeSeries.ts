@@ -46,7 +46,7 @@ export class TimeSeriesWrapper extends WidgetBase {
     postCreate() {
         this.dataStore = {};
         this.dataStore.series = this.seriesConfig.reduce((previousValue: any, currentValue: SeriesConfig ) => {
-            return previousValue[currentValue.seriesKey] = [];
+            return previousValue[currentValue.name] = [];
         }, {});
         this.updateRendering();
     }
@@ -72,12 +72,12 @@ export class TimeSeriesWrapper extends WidgetBase {
     private updateData(callback: Function) {
         const series = this.seriesConfig[0];
         // TODO: do this in a async parallel way for all series, in the future.
-        if (series.seriesSource === "xpath" && series.seriesEntity) {
+        if (series.sourceType === "xpath" && series.entity) {
             this.fetchDataFromXpath(series, (data: mendix.lib.MxObject[]) => {
                 this.setDataFromObjects(data, series);
                 callback();
             });
-        } else if (series.seriesSource === "microflow" && series.dataSourceMicroflow) {
+        } else if (series.sourceType === "microflow" && series.dataSourceMicroflow) {
              this.fetchDataFromMicroflow(series, (data: mendix.lib.MxObject[]) => {
                  this.setDataFromObjects(data, series);
                  callback();
@@ -95,11 +95,11 @@ export class TimeSeriesWrapper extends WidgetBase {
     private checkConfig() {
         let valid = true;
         const incorrectSeries = this.seriesConfig.filter(series =>
-        (series.seriesSource === "microflow" && !series.dataSourceMicroflow));
+        (series.sourceType === "microflow" && !series.dataSourceMicroflow));
 
         if (incorrectSeries.length) {
             valid = false;
-            mx.ui.error("Configuration error for series : '" + incorrectSeries[0].seriesKey +
+            mx.ui.error("Configuration error for series : '" + incorrectSeries[0].name +
                 "'. Source is set to 'Microflow' but 'Source - microflow' is missing ", true);
         }
 
@@ -130,14 +130,14 @@ export class TimeSeriesWrapper extends WidgetBase {
         if (this.contextObject) {
             const guid = this.contextObject ? this.contextObject.getGuid() : "";
             const constraint = seriesConfig.entityConstraint.replace("[%CurrentObject%]", guid);
-            const xpathString = "//" + seriesConfig.seriesEntity + constraint;
+            const xpathString = "//" + seriesConfig.entity + constraint;
             mx.data.get({
                 callback: callback.bind(this),
                 error: (error) => {
                     logger.error(this.id + ": An error occurred while retrieving items: " + error);
                 },
                 filter: {
-                    sort: [ [ seriesConfig.seriesXAttribute, "asc" ] ]
+                    sort: [ [ seriesConfig.xAttribute, "asc" ] ]
                 },
                 xpath : xpathString
             });
@@ -147,9 +147,9 @@ export class TimeSeriesWrapper extends WidgetBase {
     }
 
     private setDataFromObjects(objects: mendix.lib.MxObject[], seriesConfig: SeriesConfig): void {
-        this.dataStore.series[seriesConfig.seriesKey] = objects.map((itemObject): DataPoint => ({
-            x: itemObject.get(seriesConfig.seriesXAttribute) as number,
-            y: parseFloat(itemObject.get(seriesConfig.seriesYAttribute) as string)
+        this.dataStore.series[seriesConfig.name] = objects.map((itemObject): DataPoint => ({
+            x: itemObject.get(seriesConfig.xAttribute) as number,
+            y: parseFloat(itemObject.get(seriesConfig.yAttribute) as string)
         }));
     }
 

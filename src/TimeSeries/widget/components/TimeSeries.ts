@@ -1,4 +1,4 @@
-import { Component, DOM, createElement } from "react";
+import { Component, createElement } from "react";
 
 import { NVD3LineChart } from "./NVD3LineChart";
 import { format, time } from "d3";
@@ -28,16 +28,9 @@ export interface WidgetProps extends ModelProps {
 }
 
 export class TimeSeries extends Component<WidgetProps, {}> {
-
-    constructor(props: WidgetProps) {
-        super(props);
-
-        this.getDatum = this.getDatum.bind(this);
-    }
-
     render() {
         const props = this.props;
-        const datum = this.getDatum(props.seriesConfig, props.dataStore);
+        const datum = TimeSeries.processDatum(props.seriesConfig, props.dataStore);
         const xFormat = props.xAxisFormat ? props.xAxisFormat : "%d-%b-%y";
         const yFormat = props.yAxisFormat ? props.yAxisFormat : "";
         let chart: any = {
@@ -62,18 +55,18 @@ export class TimeSeries extends Component<WidgetProps, {}> {
                     }
                 },
                 datum,
-                height: props.height,
-                width: props.width
+                height: props.heightUnit === "pixels" ? props.height : undefined,
+                width: props.widthUnit === "pixels" ? props.width : undefined
             };
         return createElement (NVD3LineChart, chart);
     }
 
-    public getDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
-        return seriesConfig.map(serieConfig => ({
-            area: serieConfig.seriesFill,
-            color: serieConfig.seriesColor ? serieConfig.seriesColor : undefined,
-            key: serieConfig.seriesKey,
-            values: Object.keys(dataStore.series).length ? dataStore.series[serieConfig.seriesKey] : []
+    public static processDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
+        return seriesConfig.map(config => ({
+            area: config.fill,
+            color: config.color ? config.color : undefined,
+            key: config.name,
+            values: Object.keys(dataStore.series).length ? dataStore.series[config.name] : []
         }));
     }
 }

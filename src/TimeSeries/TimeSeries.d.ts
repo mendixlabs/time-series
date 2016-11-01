@@ -18,19 +18,19 @@ export interface ModelProps {
 }
 
 export interface SeriesConfig {
-    seriesEntity?: string;
-    seriesSource?: SeriesConfigSeriesSource;
-    seriesXAttribute?: string;
-    seriesYAttribute?: string;
-    seriesKey?: string;
+    entity?: string;
+    sourceType?: SeriesConfigSourceType;
+    xAttribute?: string;
+    yAttribute?: string;
+    name?: string;
     entityConstraint?: string;
     dataSourceMicroflow?: string;
-    seriesColor?: string;
-    seriesFill?: boolean;
+    color?: string;
+    fill?: boolean;
 }
 
 export type WidthUnit = "auto" | "pixels";
 
 export type HeightUnit = "auto" | "pixels";
 
-export type SeriesConfigSeriesSource = "xpath" | "microflow";
+export type SeriesConfigSourceType = "xpath" | "microflow";

@@ -41,7 +41,6 @@ export function configureComponents(chart: any, options: any) {
         }
     }
 }
-
 export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private resizeHandler: { clear: Function };
     private chart: nv.LineChart;
@@ -56,7 +55,7 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             width: this.props.width
         };
         return (DOM.div({ className: "nv-chart", style },
-            DOM.svg({ ref: n => this.svg = n })
+            DOM.svg({ ref: n => this.svg = n } )
         ));
     }
 
@@ -73,7 +72,6 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             this.resizeHandler.clear();
         }
     }
-
 
     private renderChart() {
         this.chart = (this.chart && !this.rendering) ? this.chart : nv.models.lineChart();
@@ -96,4 +94,11 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         this.rendering = true;
         return this.chart;
     }
+
+    /* TODO: Validate props and handle exceptional behavior in case props are not set!
+    eg: if datum is undefined, should show an error to the user.
+    */
+
+    // TODO: setup initial default props to deal with undefined datum values.
+    // TODO
 }

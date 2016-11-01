@@ -31,12 +31,12 @@
             <category>Series Configuration</category>
             <description>Add a series and configure its properties</description>
             <properties>
-                <property key="seriesEntity" type="entity" pathType="reference" isPath="optional">
+                <property key="entity" type="entity" pathType="reference" isPath="optional">
                     <caption>Data entity</caption>
                     <category>Data source</category>
                     <description>The entity containing series points</description>
                 </property>
-                <property key="seriesSource" type="enumeration" defaultValue="xpath">
+                <property key="sourceType" type="enumeration" defaultValue="xpath">
                     <caption>Source</caption>
                     <category>Data source</category>
                     <description>Type of source</description>
@@ -45,7 +45,7 @@
                         <enumerationValue key="microflow">Microflow</enumerationValue>
                     </enumerationValues> 
                 </property>
-                <property key="seriesXAttribute" type="attribute" entityProperty="seriesEntity">
+                <property key="xAttribute" type="attribute" entityProperty="entity">
                     <caption>X-axis data</caption>
                     <category>Data source</category>
                     <description>Attribute containing dates for x-axis</description>
@@ -53,7 +53,7 @@
                         <attributeType name="DateTime"/>
                     </attributeTypes>
                 </property>
-               <property key="seriesYAttribute" type="attribute" entityProperty="seriesEntity">
+               <property key="yAttribute" type="attribute" entityProperty="entity">
                     <caption>Y-axis data</caption>
                     <category>Data source</category>
                     <description>Attribute containing data for y-axis</description>
@@ -61,12 +61,12 @@
                         <attributeType name="Decimal"/>
                     </attributeTypes>
                 </property>
-                <property key="seriesKey" type="string">
+                <property key="name" type="string">
                     <caption>Name</caption>
                     <category>Data source</category>
                     <description>Used in the legend to interact with the chart</description>
                 </property>
-                <property key="entityConstraint" type="entityConstraint" entityProperty="seriesEntity" required="false">
+                <property key="entityConstraint" type="entityConstraint" entityProperty="entity" required="false">
                     <caption>Constraint</caption>
                     <category>Source - XPath</category>
                     <description>Constraint on the data from the data entity</description>
@@ -75,17 +75,17 @@
                     <caption>Data source microflow </caption>
                     <category>Source - microflow</category>
                     <description>Returns a series' coordinates</description>
-                    <returnType type="Object" entityProperty="seriesEntity" isList="true"/>
+                    <returnType type="Object" entityProperty="entity" isList="true"/>
                 </property>
-                <property key="seriesColor" type="string" required="false">
-                    <caption>Series color</caption>
+                <property key="color" type="string" required="false">
+                    <caption>Color</caption>
                     <category>Appearance</category>
                     <description>Color of the line in HTML colors; color name, RGB or HEX</description>
                 </property>
-                <property key="seriesFill" type="boolean" defaultValue="false">
+                <property key="fill" type="boolean" defaultValue="false">
                     <caption>Fill area</caption>
                     <category>Appearance</category>
-                    <description>Should series area be filled</description>
+                    <description>Fill area between data-point and x-axis</description>
                 </property>
             </properties>
         </property>

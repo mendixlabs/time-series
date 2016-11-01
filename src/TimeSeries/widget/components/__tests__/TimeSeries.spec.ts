@@ -8,8 +8,8 @@ describe("Test suite for TimeSeries component", () => {
     const dataStore: any = { series: {} };
 
     const getDate = (date: string) => { return new Date(date).getDate(); };
-    const seriesConfig: SeriesConfig[] = [ { seriesColor: "blue", seriesFill: true, seriesKey: "data1" } ];
-    dataStore.series[seriesConfig[0].seriesKey] = [
+    const seriesConfig: SeriesConfig[] = [ { color: "blue", fill: true, name: "data1" } ];
+    dataStore.series[seriesConfig[0].name] = [
         { x: getDate("24-Apr-2007"), y: 93.24 },
         { x: getDate("2-Jan-2008"), y: 194.84 },
         { x: getDate("1-Jan-2009"), y: 85.35 },
@@ -36,7 +36,7 @@ describe("Test suite for TimeSeries component", () => {
     });
 
     it("Should transform props into datum", () => {
-        const datum = TimeSeries.prototype.getDatum(seriesConfig, dataStore)[0];
+        const datum = TimeSeries.processDatum(seriesConfig, dataStore)[0];
         // HINT: use direct value instead referencing eg: seriesConfig[0].seriesFill to avoid undefined
         expect(datum.area).toEqual(true);
         expect(datum.color).toBe("blue");
