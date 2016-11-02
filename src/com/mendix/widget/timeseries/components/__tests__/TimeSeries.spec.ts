@@ -1,7 +1,7 @@
 import { mount } from "enzyme"; // enzyme's api doesn't provide innerHTML for svg. use "React.addons.TestUtils"
 import { createElement } from "react";
 
-import { SeriesConfig } from "../../../TimeSeries.d";
+import { SeriesConfig } from "../../TimeSeries.d";
 import { TimeSeries, WidgetProps } from "../TimeSeries";
 
 describe("Test suite for TimeSeries component", () => {

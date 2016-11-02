@@ -3,13 +3,13 @@ const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-    entry: "./src/TimeSeries/widget/TimeSeries.ts",
+    entry: "./src/com/mendix/widget/timeseries/TimeSeries.ts",
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
-        filename: "src/TimeSeries/widget/TimeSeries.js",
+        filename: "src/com/mendix/widget/timeseries/TimeSeries.js",
         libraryTarget:  "umd",
         umdNamedDefine: true,
-        library: "TimeSeries.widget.TimeSeries"
+        library: "com.mendix.widget.timeseries.TimeSeries"
     },
     resolve: {
         extensions: [ "", ".ts", ".js", ".json" ]

@@ -5,8 +5,8 @@ import * as WidgetBase from "mxui/widget/_WidgetBase";
 import { createElement } from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
-import { HeightUnit, SeriesConfig, WidthUnit } from "../TimeSeries.d";
 import { DataPoint, TimeSeries, WidgetProps } from "./components/TimeSeries";
+import { HeightUnit, SeriesConfig, WidthUnit } from "./TimeSeries.d";
 
 export class TimeSeriesWrapper extends WidgetBase {
     // Parameters configured in the Modeler  
@@ -175,7 +175,7 @@ export class TimeSeriesWrapper extends WidgetBase {
 // Declare widget's prototype the Dojo way
 // Thanks to https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/dojo/README.md
 // tslint:disable : only-arrow-functions
-dojoDeclare("TimeSeries.widget.TimeSeries", [ WidgetBase ], (function (Source: any) {
+dojoDeclare("com.mendix.widget.timeseries.TimeSeries", [ WidgetBase ], (function (Source: any) {
     let result: any = {};
     for (let i in Source.prototype) {
         if (i !== "constructor" && Source.prototype.hasOwnProperty(i) ) {

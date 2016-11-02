@@ -3,7 +3,7 @@ import { Component, createElement } from "react";
 import { NVD3LineChart } from "./NVD3LineChart";
 import { format, time } from "d3";
 
-import { ModelProps, SeriesConfig } from "../../TimeSeries.d";
+import { ModelProps, SeriesConfig } from "../TimeSeries.d";
 
 export interface DataPoint {
     x: number;
@@ -55,8 +55,8 @@ export class TimeSeries extends Component<WidgetProps, {}> {
                     }
                 },
                 datum,
-                height: props.heightUnit === "pixels" ? props.height : undefined,
-                width: props.widthUnit === "pixels" ? props.width : undefined
+                height: props.heightUnit === "auto" ? undefined : props.height,
+                width: props.widthUnit === "auto" ? undefined : props.width
             };
         return createElement (NVD3LineChart, chart);
     }
