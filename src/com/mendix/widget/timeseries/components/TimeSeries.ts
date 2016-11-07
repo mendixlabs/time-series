@@ -17,14 +17,12 @@ export interface DataStore {
 
 export interface Series {
     values?: DataPoint[];
-    key?: any;
+    key?: string;
     color?: string;
     area?: boolean;
 }
 
 export interface WidgetProps extends ModelProps {
-    widgetId: string;
-    dataLoaded?: boolean;
     dataStore?: DataStore;
 }
 
@@ -32,9 +30,9 @@ export class TimeSeries extends Component<WidgetProps, {}> {
     render() {
         const props = this.props;
         const datum = TimeSeries.processDatum(props.seriesConfig, props.dataStore);
-        const xFormat = props.xAxisFormat ? props.xAxisFormat : "%d-%b-%y";
-        const yFormat = props.yAxisFormat ? props.yAxisFormat : "";
-        let chart: any = {
+        const xFormat = props.xAxisFormat || "%d-%b-%y";
+        const yFormat = props.yAxisFormat;
+        const chart: any = {
                 chartProps: {
                     xAxis: {
                         axisLabel: props.xAxisLabel,
@@ -59,15 +57,18 @@ export class TimeSeries extends Component<WidgetProps, {}> {
                 height: props.heightUnit === "auto" ? undefined : props.height,
                 width: props.widthUnit === "auto" ? undefined : props.width
             };
+
         return createElement (NVD3LineChart, chart);
     }
 
     public static processDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
         return seriesConfig.map(config => ({
             area: config.fill,
-            color: config.color ? config.color : undefined,
+            color: config.color,
             key: config.name,
-            values: Object.keys(dataStore.series).length ? dataStore.series[config.name] : []
+            values: Object.keys(dataStore).filter(element => (element === "series")).length &&
+             Object.keys(dataStore.series).filter(element => (element === config.name)).length ?
+             dataStore.series[config.name] : []
         }));
     }
 }

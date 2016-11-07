@@ -1,10 +1,10 @@
-import { mount } from "enzyme"; // enzyme's api doesn't provide innerHTML for svg. use "React.addons.TestUtils"
+import { mount, shallow } from "enzyme"; // enzyme's api doesn't provide innerHTML for svg. use "React.addons.TestUtils"
 import { createElement } from "react";
 
 import { SeriesConfig } from "../../TimeSeries.d";
 import { TimeSeries, WidgetProps } from "../TimeSeries";
 
-describe("Test suite for TimeSeries component", () => {
+describe("TimeSeries", () => {
     const dataStore: any = { series: {} };
 
     const getDate = (date: string) => { return new Date(date).getDate(); };
@@ -21,30 +21,25 @@ describe("Test suite for TimeSeries component", () => {
         height: 500,
         heightUnit: "pixels",
         seriesConfig,
-        widgetId: "Test.TimeSeries.widget.TimeSeries",
         width: 900,
         widthUnit: "pixels"
         };
-    let TimeSeriesWrapper = mount(createElement(TimeSeries, createProps));
 
-    it("Should have the correct height passed as props to NVD3LineChart", () => {
-        expect(TimeSeriesWrapper.find("NVD3LineChart").props().height).toBe(500);
+    const chartShallow = shallow(createElement(TimeSeries, createProps));
+
+    it("should render NVD3LineChart component", () => {
+        expect(chartShallow.find("NVD3LineChart").length).toEqual(1) ;
     });
 
-    it("Should have the correct width passed as props to NVD3LineChart", () => {
-        expect(TimeSeriesWrapper.find("NVD3LineChart").props().width).toBe(900);
+    it("should have the correct height passed as props to NVD3LineChart", () => {
+        expect(chartShallow.find("NVD3LineChart").props().height).toBe(500);
+        expect(chartShallow.find("NVD3LineChart").props().width).toBe(900);
     });
 
-    it("Should transform props into datum", () => {
+    it("should transform props into datum", () => {
         const datum = TimeSeries.processDatum(seriesConfig, dataStore)[0];
-        // HINT: use direct value instead referencing eg: seriesConfig[0].seriesFill to avoid undefined
         expect(datum.area).toEqual(true);
         expect(datum.color).toBe("blue");
         expect(datum.key).toBe("data1");
-    });
-
-    it("Should contain TimeSeries named component tag", () => {
-        expect(TimeSeriesWrapper.find("TimeSeries").length).toEqual(1) ;
-        expect(TimeSeriesWrapper.find("NVD3LineChart").length).toEqual(1) ;
     });
 });

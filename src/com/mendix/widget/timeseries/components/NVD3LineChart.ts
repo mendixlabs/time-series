@@ -1,5 +1,5 @@
 import { Selection, select } from "d3";
-import "nvd3";
+import { LineChart, addGraph, models, utils } from "nvd3";
 import { Component, DOM } from "react";
 
 import { Series } from "./TimeSeries";
@@ -12,7 +12,7 @@ export interface Nvd3LineChartProps {
     datum: Series[];
 }
 
-export function isPlainObject(object: any): boolean {
+function isPlainObject(object: any): boolean {
     if (typeof object === "object" && object !== null) {
         if (typeof Object.getPrototypeOf === "function") {
             const proto = Object.getPrototypeOf(object);
@@ -28,13 +28,13 @@ export function isPlainObject(object: any): boolean {
  * @param chart A nvd3 chart instance
  * @param options A key value object
  */
-export function configureComponents(chart: any, options: any) {
+function configureChart(chart: any, options: any) {
     for (let optionName in options) {
         if (options.hasOwnProperty(optionName)) {
             let optionValue = options[optionName];
             if (chart) {
                 if (isPlainObject(optionValue)) {
-                    configureComponents(chart[optionName], optionValue);
+                    configureChart(chart[optionName], optionValue);
                 } else if (typeof chart[optionName] === "function") {
                     chart[optionName](optionValue);
                 }
@@ -44,24 +44,23 @@ export function configureComponents(chart: any, options: any) {
 }
 export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private resizeHandler: { clear: Function };
-    private chart: nv.LineChart;
+    private chart: LineChart;
     private rendering: boolean;
     private selection: Selection<any>;
     private svg: Node;
 
     render() {
-        // TODO check if handles height and width correctly.
         const style = {
             height: this.props.height,
             width: this.props.width
         };
-        return (DOM.div({ className: "nv-chart", style },
+        return DOM.div({ className: "nv-chart", style },
             DOM.svg({ ref: n => this.svg = n } )
-        ));
+        );
     }
 
     componentDidMount() {
-        nv.addGraph(this.renderChart.bind(this));
+        addGraph(this.renderChart.bind(this));
     }
 
     componentDidUpdate() {
@@ -75,19 +74,20 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private renderChart() {
-        this.chart = (this.chart && !this.rendering) ? this.chart : nv.models.lineChart();
-        configureComponents(this.chart, this.props.chartProps);
+        this.chart = (this.chart && !this.rendering) ? this.chart : models.lineChart();
+        configureChart(this.chart, this.props.chartProps);
         this.chart.showLegend(true)
             .showXAxis(true)
             .showYAxis(true)
             .useInteractiveGuideline(true)
             .duration(350);
+
         this.selection = select(this.svg)
-            .datum(this.props.datum)
+            .datum(this.props.datum ? this.props.datum : [])
             .call(this.chart);
 
         if (!this.resizeHandler) {
-            this.resizeHandler = nv.utils.windowResize(() => {
+            this.resizeHandler = utils.windowResize(() => {
                 this.chart.update();
             });
         }
@@ -96,10 +96,4 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         return this.chart;
     }
 
-    /* TODO: Validate props and handle exceptional behavior in case props are not set!
-    eg: if datum is undefined, should show an error to the user.
-    */
-
-    // TODO: setup initial default props to deal with undefined datum values.
-    // TODO
 }
