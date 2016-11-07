@@ -23,11 +23,7 @@ function isPlainObject(object: any): boolean {
     return false;
 }
 
-/**
- * Configure components recursively
- * @param chart A nvd3 chart instance
- * @param options A key value object
- */
+// Configure components recursively
 function configureChart(chart: any, options: any) {
     for (let optionName in options) {
         if (options.hasOwnProperty(optionName)) {
@@ -42,6 +38,7 @@ function configureChart(chart: any, options: any) {
         }
     }
 }
+
 export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private resizeHandler: { clear: Function };
     private chart: LineChart;
@@ -95,5 +92,4 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         this.rendering = true;
         return this.chart;
     }
-
 }

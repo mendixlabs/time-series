@@ -45,14 +45,16 @@ class TimeSeries extends WidgetBase {
         this.updateRendering();
     }
 
-    update(object: mendix.lib.MxObject, callback?: Function) {
+    update(object: mendix.lib.MxObject, callback: Function) {
         this.contextObject = object;
-        if (this.contextObject && this.isValidConfig()) {
+        if (this.contextObject && this.hasValidConfig()) {
             this.updateData(() => {
-                this.updateRendering(callback);
+                this.updateRendering();
+                callback();
         });
         } else {
-            this.updateRendering(callback);
+            this.updateRendering();
+            callback();
         }
         this.resetSubscriptions();
     }
@@ -63,42 +65,38 @@ class TimeSeries extends WidgetBase {
     }
 
     private updateData(callback: Function) {
-        const series = this.seriesConfig[0];
         // TODO: do this in a async parallel way for all series, in the future.
-        if (series.sourceType === "xpath" && series.entity) {
+        const series = this.seriesConfig[0];
+        const processResults = (data: mendix.lib.MxObject[]) => {
+            this.setDataFromObjects(data, series);
+            callback();
+        };
+
+        if (series.sourceType === "xpath") {
             const constraint = series.entityConstraint.replace("[%CurrentObject%]", this.contextObject.getGuid());
             const xpath = "//" + series.entity + constraint;
-            this.fetchByXPath(series, xpath, (data: mendix.lib.MxObject[]) => {
-                this.setDataFromObjects(data, series);
-                callback();
-            });
-        } else if (series.sourceType === "microflow" && series.dataSourceMicroflow) {
-             this.fetchByMicroflow(series.dataSourceMicroflow, (data: mendix.lib.MxObject[]) => {
-                 this.setDataFromObjects(data, series);
-                 callback();
-             });
+            this.fetchByXPath(series, xpath, processResults);
+
+        } else if (series.sourceType === "microflow") {
+             this.fetchByMicroflow(series.dataSourceMicroflow, processResults);
         }
     }
 
-    /**
-     * Validate the widget configurations from the modeler
-     */
-    private isValidConfig(): boolean {
-        const incorrectSeries = this.seriesConfig.filter(series =>
-            (series.sourceType === "microflow" && !series.dataSourceMicroflow));
-        const incorrectSeriesNames = incorrectSeries.map((incorrect) => (incorrect.name)).join(", ");
+    private hasValidConfig(): boolean {
+        const incorrectSeriesNames = this.seriesConfig.filter(series => (series.sourceType === "microflow" && !series.dataSourceMicroflow))
+            .map((incorrect) => (incorrect.name))
+            .join(", ");
 
-        if (incorrectSeries.length) {
-            window.mx.ui.error(`Configuration error for series : ${ incorrectSeriesNames }. 
-            data source type is set to 'Microflow' but 'Source - microflow' is missing`, true);
+        if (incorrectSeriesNames) {
+            window.mx.ui.error(`Configuration error for series : ${ incorrectSeriesNames }.
+                data source type is set to 'Microflow' but 'Source - microflow' is missing`, true);
         }
 
-        return incorrectSeries.length === 0;
+        return !!incorrectSeriesNames;
     }
 
-    private updateRendering (callback?: Function) {
+    private updateRendering () {
         render(createElement(TimeSeriesComponent, this.createProps()), this.domNode);
-        if (callback) { callback(); }
     }
 
     private resetSubscriptions () {
@@ -107,7 +105,7 @@ class TimeSeries extends WidgetBase {
 
         if (this.contextObject) {
             this.handle = this.subscribe({
-                callback: (guid: string) => {
+                callback: () => {
                     this.updateRendering();
                 },
                 guid: this.contextObject.getGuid()
@@ -116,7 +114,6 @@ class TimeSeries extends WidgetBase {
     }
 
     private fetchByXPath(seriesConfig: SeriesConfig, xpath: string, callback: (object: mendix.lib.MxObject[]) => void) {
-
         window.mx.data.get({
             callback,
             error: (error) => {
@@ -137,19 +134,18 @@ class TimeSeries extends WidgetBase {
             x: itemObject.get(seriesConfig.xAttribute) as number,
             y: parseFloat(itemObject.get(seriesConfig.yAttribute) as string)
         }));
-
     }
 
-    private fetchByMicroflow(dataSourceMicroflow: string, callback: (object: mendix.lib.MxObject[]) => void) {
+    private fetchByMicroflow(microflowName: string, callback: (object: mendix.lib.MxObject[]) => void) {
         window.mx.data.action({
             callback,
             error: (error) => {
                 window.mx.ui.error("An error occurred while retrieving microflow data");
-                window.logger.error(`${this.id}.fetchByMicroflow ${dataSourceMicroflow}:
-                An error occurred while fetching data by microflow : ${error}`);
+                window.logger.error(`${this.id}.fetchByMicroflow ${microflowName}:
+                    An error occurred while fetching data by microflow : ${error}`);
             },
             params: {
-                actionname: dataSourceMicroflow,
+                actionname: microflowName,
                 applyto: "selection",
                 guids: [ this.contextObject.getGuid() ]
             }

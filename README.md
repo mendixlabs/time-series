@@ -6,8 +6,8 @@ Plot and track your data across different time periods on a chart.
 
 * Date formatting on x-axis
 * Formatting of numbers on y-axis
-* Use of a guideline and floating tooltip while hovering over the chart
-* Support for customized line colors
+* Guidelines and floating tooltips
+* Automatic line colouring or custom
 * Filling of series area
 
 ## Dependencies

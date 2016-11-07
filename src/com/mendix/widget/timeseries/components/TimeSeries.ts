@@ -12,7 +12,7 @@ export interface DataPoint {
 }
 
 export interface DataStore {
-    series: any;
+    series: any; //TODO: remove any
 }
 
 export interface Series {
@@ -30,23 +30,24 @@ export class TimeSeries extends Component<WidgetProps, {}> {
     render() {
         const props = this.props;
         const datum = TimeSeries.processDatum(props.seriesConfig, props.dataStore);
-        const xFormat = props.xAxisFormat || "%d-%b-%y";
-        const yFormat = props.yAxisFormat;
+        const xFormat = props.xAxisFormat || "dd-MM-yyyy";
         const chart: any = {
                 chartProps: {
                     xAxis: {
                         axisLabel: props.xAxisLabel,
                         showMaxMin: true,
                         tickFormat: (dataPoint: any) => {
-                            return time.format(xFormat)(new Date(dataPoint));
+                            console.log(dataPoint);
+                            return window.mx.parser.formatValue(dataPoint, "datetime", { datePattern: xFormat } );
+                            // return time.format(xFormat)(new Date(dataPoint));
                         }
                     },
                     xScale: time.scale(),
                     yAxis: {
                         axisLabel: props.yAxisLabel,
                         tickFormat: (dataPoint: any) => {
-                            if (yFormat) {
-                                return format(yFormat)(dataPoint);
+                            if (props.yAxisFormat) {
+                                return format(props.yAxisFormat)(dataPoint);
                             } else {
                                 return dataPoint;
                             }
@@ -62,13 +63,14 @@ export class TimeSeries extends Component<WidgetProps, {}> {
     }
 
     public static processDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
+        // const hasData = Object.keys(dataStore).filter(element => (element === "series")).length &&
+        //         Object.keys(dataStore.series).filter(element => (element === config.name)).length;
+
         return seriesConfig.map(config => ({
             area: config.fill,
             color: config.color,
             key: config.name,
-            values: Object.keys(dataStore).filter(element => (element === "series")).length &&
-             Object.keys(dataStore.series).filter(element => (element === config.name)).length ?
-             dataStore.series[config.name] : []
+            values: dataStore.hasOwnProperty("series") ? dataStore.series[config.name] : []
         }));
     }
 }

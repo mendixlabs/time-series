@@ -31,6 +31,11 @@
             <category>Series Configuration</category>
             <description>Add a series and configure its properties</description>
             <properties>
+                <property key="name" type="string">
+                    <caption>Name</caption>
+                    <category>Data source</category>
+                    <description>Used in legend and tooltip</description>
+                </property>
                 <property key="entity" type="entity" pathType="reference" isPath="optional">
                     <caption>Data entity</caption>
                     <category>Data source</category>
@@ -63,11 +68,6 @@
                         <attributeType name="Integer"/>
                     </attributeTypes>
                 </property>
-                <property key="name" type="string">
-                    <caption>Name</caption>
-                    <category>Data source</category>
-                    <description>Name of this series configuration</description>
-                </property>
                 <property key="entityConstraint" type="entityConstraint" entityProperty="entity" required="false">
                     <caption>Constraint</caption>
                     <category>Source - XPath</category>
@@ -82,7 +82,7 @@
                 <property key="color" type="string" required="false">
                     <caption>Color</caption>
                     <category>Appearance</category>
-                    <description>Color of the line in HTML colors; color name, RGB or HEX</description>
+                    <description>Color of the line in HTML colors</description>
                 </property>
                 <property key="fill" type="boolean" defaultValue="false">
                     <caption>Fill area</caption>

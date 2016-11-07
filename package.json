@@ -1,8 +1,7 @@
 {
   "name": "TimeSeries",
   "version": "0.1.0",
-  "description": "Displays discrete-time data in a time-series chart using nv.d3",
-  "author": "Derrick Kwagala <derrick.kwagala@flockofbirds.org",
+  "description": "Time series chart",
   "copyright": "Mendix",
   "scripts": {
     "test": "karma start && node tests/remap.js"
