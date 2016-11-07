@@ -4,6 +4,7 @@ import { NVD3LineChart } from "./NVD3LineChart";
 import { format, time } from "d3";
 
 import { ModelProps, SeriesConfig } from "../TimeSeries.d";
+import "../ui/TimeSeries.css";
 
 export interface DataPoint {
     x: number;
