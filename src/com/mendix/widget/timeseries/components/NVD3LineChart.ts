@@ -42,7 +42,6 @@ function configureChart(chart: any, options: any) {
 export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private resizeHandler: { clear: Function };
     private chart: LineChart;
-    private rendering: boolean;
     private selection: Selection<any>;
     private svg: Node;
 
@@ -57,7 +56,7 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     componentDidMount() {
-        addGraph(this.renderChart.bind(this));
+        addGraph(() => this.renderChart() );
     }
 
     componentDidUpdate() {
@@ -71,7 +70,7 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private renderChart() {
-        this.chart = (this.chart && !this.rendering) ? this.chart : models.lineChart();
+        this.chart = (this.chart) ? this.chart : models.lineChart();
         configureChart(this.chart, this.props.chartProps);
         this.chart.showLegend(true)
             .showXAxis(true)
@@ -89,7 +88,7 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             });
         }
 
-        this.rendering = true;
         return this.chart;
     }
+
 }
