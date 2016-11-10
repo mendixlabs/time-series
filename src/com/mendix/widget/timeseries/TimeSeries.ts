@@ -50,12 +50,15 @@ class TimeSeries extends WidgetBase {
     update(object: mendix.lib.MxObject, callback: Function) {
         this.contextObject = object;
         if (this.contextObject && this.hasValidConfig()) {
-            this.updateData(() => this.updateRendering());
+            this.updateData(() => {
+                this.updateRendering();
+                callback();
+            });
         } else {
             this.updateRendering();
+            callback();
         }
         this.resetSubscriptions();
-        if (callback) { callback(); }
     }
 
     uninitialize() {
