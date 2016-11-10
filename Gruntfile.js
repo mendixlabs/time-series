@@ -21,7 +21,7 @@ module.exports = function (grunt) {
                 "tasks": [ "copy:source" ]
             }
         },
-        
+
         compress: {
             dist: {
                 options: {
@@ -37,7 +37,7 @@ module.exports = function (grunt) {
                 }]
             }
         },
-        
+
         copy: {
             distDeployment: {
                 files: [
@@ -51,11 +51,11 @@ module.exports = function (grunt) {
             },
             source: {
                 files: [
-                    { dest: "./dist/tmp/src", cwd: "./src/", src: ["**/*", "!**/*.ts", "!**/*.tsx"], expand: true }
+                    { dest: "./dist/tmp/src", cwd: "./src/", src: ["**/*", "!**/*.ts", "!**/*.css"], expand: true }
                 ]
-            }         
+            }
         },
-        
+
         webpack: {
             renderer: webpackConfig
         },
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
             ], 
             dist : ["./dist/**/*","!./dist/MxTestProject/*"]               
         },
-        
+
         xsltproc: {
             options: {
                 stylesheet: "widget.xsl"
@@ -80,7 +80,7 @@ module.exports = function (grunt) {
             }
         }
     });
-    
+
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-watch");
