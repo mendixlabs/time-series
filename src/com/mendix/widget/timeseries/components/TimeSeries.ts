@@ -12,7 +12,7 @@ export interface DataPoint {
 }
 
 export interface DataStore {
-    series: any; //TODO: remove any
+    series: any; // due to dynamic attributes.
 }
 
 export interface Series {
@@ -29,7 +29,7 @@ export interface WidgetProps extends ModelProps {
 export class TimeSeries extends Component<WidgetProps, {}> {
     render() {
         const props = this.props;
-        const datum = TimeSeries.processDatum(props.seriesConfig, props.dataStore);
+        const datum = this.processDatum(props.seriesConfig, props.dataStore);
         const xFormat = props.xAxisFormat || "dd-MM-yyyy";
         const chart: any = {
                 chartProps: {
@@ -39,7 +39,6 @@ export class TimeSeries extends Component<WidgetProps, {}> {
                         tickFormat: (dataPoint: any) => {
                             console.log(dataPoint);
                             return window.mx.parser.formatValue(dataPoint, "datetime", { datePattern: xFormat } );
-                            // return time.format(xFormat)(new Date(dataPoint));
                         }
                     },
                     xScale: time.scale(),
@@ -62,15 +61,15 @@ export class TimeSeries extends Component<WidgetProps, {}> {
         return createElement (NVD3LineChart, chart);
     }
 
-    public static processDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
-        // const hasData = Object.keys(dataStore).filter(element => (element === "series")).length &&
-        //         Object.keys(dataStore.series).filter(element => (element === config.name)).length;
+    private processDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
 
         return seriesConfig.map(config => ({
             area: config.fill,
             color: config.color,
             key: config.name,
-            values: dataStore.hasOwnProperty("series") ? dataStore.series[config.name] : []
+            values: dataStore.hasOwnProperty("series") && dataStore.series.hasOwnProperty(config.name)
+                ? dataStore.series[config.name]
+                : []
         }));
     }
 }
