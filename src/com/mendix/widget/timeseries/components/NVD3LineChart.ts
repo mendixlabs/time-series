@@ -1,4 +1,4 @@
-import { select } from "d3";
+import { select, time } from "d3";
 import { addGraph, models, utils } from "nvd3";
 import { Component, DOM } from "react";
 
@@ -13,15 +13,15 @@ export interface Nvd3LineChartProps {
 }
 
 interface ChartProps {
-    xAxis?: Axis;
-    xScale?: d3.time.Scale<number, number>;
-    yAxis?: Axis;
+    xAxis: Axis;
+    xScale: time.Scale<number, number>;
+    yAxis: Axis;
 }
 
 interface Axis {
     axisLabel: string;
     showMaxMin?: boolean;
-    tickFormat?: any;
+    tickFormat: (d: any) => string;
 }
 
 export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {

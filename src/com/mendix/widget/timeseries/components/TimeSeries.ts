@@ -12,7 +12,7 @@ export interface DataPoint {
 }
 
 export interface DataStore {
-    series: any; // due to dynamic attributes.
+    series: {[key: string]: DataPoint[]};
 }
 
 export interface Series {
@@ -36,18 +36,18 @@ export class TimeSeries extends Component<WidgetProps, {}> {
                     xAxis: {
                         axisLabel: props.xAxisLabel,
                         showMaxMin: true,
-                        tickFormat: (dataPoint: any) => {
-                            return window.mx.parser.formatValue(dataPoint, "datetime", { datePattern: xFormat } );
+                        tickFormat: (value: number) => {
+                            return window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat } );
                         }
                     },
                     xScale: time.scale(),
                     yAxis: {
                         axisLabel: props.yAxisLabel,
-                        tickFormat: (dataPoint: any) => {
+                        tickFormat: (value) => {
                             if (props.yAxisFormat) {
-                                return format(props.yAxisFormat)(dataPoint);
+                                return format(props.yAxisFormat)(value);
                             } else {
-                                return dataPoint;
+                                return value;
                             }
                         }
                     }
@@ -61,7 +61,6 @@ export class TimeSeries extends Component<WidgetProps, {}> {
     }
 
     private processDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {
-
         return seriesConfig.map(config => ({
             area: config.fill,
             color: config.color,

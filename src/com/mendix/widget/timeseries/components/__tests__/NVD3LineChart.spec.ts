@@ -10,10 +10,14 @@ describe("NVD3LineChart", () => {
             chartProps: {
                 xAxis: {
                     axisLabel: "Time",
-                    showMaxMin: true
+                    showMaxMin: true,
+                    tickFormat: (v) => v
                 },
                 xScale: time.scale(),
-                yAxis: { axisLabel: "Label", tickFormat: Object.create(null) }
+                yAxis: {
+                    axisLabel: "Label",
+                    tickFormat: (v) => v
+                }
             },
             datum: [ {
                 area: true,
@@ -90,16 +94,16 @@ describe("NVD3LineChart", () => {
     });
 
     describe("with no datum", () => {
-
         beforeEach(() => {
             chartProps = {
                 chartProps: {
                     xAxis: {
                         axisLabel: "Time",
-                        showMaxMin: true
+                        showMaxMin: true,
+                        tickFormat: (v) => v
                     },
                     xScale: time.scale(),
-                    yAxis: { axisLabel: "Label" }
+                    yAxis: { axisLabel: "Label", tickFormat: (v) => v }
                 },
                 datum: undefined,
                 height: 20,

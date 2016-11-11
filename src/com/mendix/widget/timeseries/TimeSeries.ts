@@ -8,6 +8,7 @@ import { DataPoint, DataStore, TimeSeries as TimeSeriesComponent, WidgetProps } 
 import { HeightUnit, SeriesConfig, WidthUnit } from "./TimeSeries.d";
 
 class TimeSeries extends WidgetBase {
+    // Model props
     private xAxisLabel: string;
     private xAxisFormat: string;
     private yAxisLabel: string;
@@ -17,33 +18,13 @@ class TimeSeries extends WidgetBase {
     private height: number;
     private widthUnit: WidthUnit;
     private heightUnit: HeightUnit;
-
+    // Internal props
     private contextObject: mendix.lib.MxObject;
     private dataStore: DataStore;
     private handle: number;
 
-    private createProps(): WidgetProps {
-        return {
-            dataStore: this.dataStore,
-            height: this.height,
-            heightUnit: this.heightUnit,
-            seriesConfig: this.seriesConfig,
-            width: this.width,
-            widthUnit: this.widthUnit,
-            xAxisFormat: this.xAxisFormat,
-            xAxisLabel: this.xAxisLabel,
-            yAxisFormat: this.yAxisFormat,
-            yAxisLabel: this.yAxisLabel
-        };
-    }
-
     postCreate() {
-        this.dataStore = {
-            series: this.seriesConfig.reduce((previousValue: any, currentValue: SeriesConfig) => {
-                return previousValue[currentValue.name] = [];
-            }, {})
-        };
-
+        this.dataStore = { series: {} };
         this.updateRendering();
     }
 
@@ -61,9 +42,24 @@ class TimeSeries extends WidgetBase {
         this.resetSubscriptions();
     }
 
-    uninitialize() {
+    uninitialize(): boolean {
         unmountComponentAtNode(this.domNode);
         return true;
+    }
+
+    private createProps(): WidgetProps {
+        return {
+            dataStore: this.dataStore,
+            height: this.height,
+            heightUnit: this.heightUnit,
+            seriesConfig: this.seriesConfig,
+            width: this.width,
+            widthUnit: this.widthUnit,
+            xAxisFormat: this.xAxisFormat,
+            xAxisLabel: this.xAxisLabel,
+            yAxisFormat: this.yAxisFormat,
+            yAxisLabel: this.yAxisLabel
+        };
     }
 
     private updateData(callback: Function) {
@@ -91,16 +87,16 @@ class TimeSeries extends WidgetBase {
             .map(incorrect => incorrect.name)
             .join(", ");
 
+        if (incorrectSeriesNames) {
+            errorMessage += `series : ${incorrectSeriesNames}` +
+                ` - data source type is set to 'Microflow' but 'Source - microflow' is missing \n`;
+        }
+
         try {
             let xformat = this.xAxisFormat || "";
             window.mx.parser.formatValue(new Date(), "datetime", { datePattern: xformat });
         } catch (error) {
-            errorMessage += "Wrong formatting for the x-axis \n\n";
-        }
-
-        if (incorrectSeriesNames) {
-        errorMessage += `series : ${incorrectSeriesNames}` +
-            ` - data source type is set to 'Microflow' but 'Source - microflow' is missing \n`;
+            errorMessage += `Formatting for the x-axis : ${this.xAxisFormat} is invalid \n\n`;
         }
 
         if (errorMessage) {
@@ -155,8 +151,8 @@ class TimeSeries extends WidgetBase {
             callback,
             error: (error) => {
                 window.mx.ui.error("An error occurred while retrieving microflow data");
-                window.logger.error(this.id + ".fetchByMicroflow " + microflowName
-                    + "An error occurred while fetching data by microflow :", error);
+                window.logger.error(`${this.id} .fetchByMicroflow  ${microflowName}` +
+                    `An error occurred while fetching data by microflow :`, error);
             },
             params: {
                 actionname: microflowName,
