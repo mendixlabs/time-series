@@ -25,7 +25,11 @@ describe("TimeSeries", () => {
         heightUnit: "pixels",
         seriesConfig,
         width: 900,
-        widthUnit: "pixels"
+        widthUnit: "pixels",
+        xAxisFormat: "yyyy",
+        xAxisLabel: "",
+        yAxisFormat: "",
+        yAxisLabel: "y-axis"
     };
 
     const chart = shallow(createElement(TimeSeries, createProps));
