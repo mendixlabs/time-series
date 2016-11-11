@@ -1,109 +1,124 @@
-import { mount, shallow } from "enzyme";
+import { ShallowWrapper, shallow } from "enzyme";
 import { DOM, createElement } from "react";
 
 import { NVD3LineChart, Nvd3LineChartProps } from "../NVD3LineChart";
+import { time } from "d3";
 
 describe("NVD3LineChart", () => {
 
-    const renderChart = (props?: Nvd3LineChartProps) => shallow(createElement(NVD3LineChart, props));
-    const renderFull = (props?: Nvd3LineChartProps) => mount(createElement(NVD3LineChart, props));
-
-    const chartProps = {
-        chartProps: {},
-        datum: [ {
-            area: true,
-            color: "F00",
-            key: "Series 1",
-            values: [ { x: 1, y: 5 } ]
-        } ],
-        height: 20,
-        width: 50
+    let chartProps: Nvd3LineChartProps = {
+            chartProps: {
+                xAxis: {
+                    axisLabel: "Time",
+                    showMaxMin: true
+                },
+                xScale: time.scale(),
+                yAxis: { axisLabel: "Label", tickFormat: Object.create(null) }
+            },
+            datum: [ {
+                area: true,
+                color: "F00",
+                key: "Series 1",
+                values: [ { x: 1, y: 5 } ]
+            } ],
+            height: 20,
+            width: 50
     };
 
-    it("should add a graph", () => {
-        spyOn(nv, "addGraph");
+    let renderChart: ShallowWrapper<any, any>;
 
-        const chart = renderChart(chartProps).instance() as NVD3LineChart;
-        chart.componentDidMount();
-
-        expect(nv.addGraph).toHaveBeenCalled();
-    });
-
-    describe("default chart properties", () => {
-        let chart2: nv.LineChart;
-        beforeAll((done) => {
-            spyOn(nv.models, "lineChart").and.callFake(() => chart2 = nv.models.lineChart());
-            renderFull(chartProps);
-            done();
-        });
-
-        it("should have an interactive guideline", () => {
-            setTimeout(() => {
-                expect(chart2.useInteractiveGuideline()).toBe(true);
-            }, 100);
-        });
-
-        it("should have a legend", () => {
-            setTimeout(() => {
-                expect(chart2.showLegend()).toBe(true);
-            }, 100);
-        });
-
-        it("should show the x-axis", () => {
-            setTimeout(() => {
-                expect(chart2.showXAxis()).toBe(true);
-            }, 100);
-        });
-
-        it("should show the y-axis", () => {
-            setTimeout(() => {
-                expect(chart2.showYAxis()).toBe(true);
-            }, 100);
-        });
-
-        it("should have an animation duration", () => {
-            setTimeout(() => {
-                expect(chart2.showLegend()).toBe(350);
-            }, 100);
-        });
-
+    beforeEach(() => {
+        renderChart = shallow(createElement(NVD3LineChart, chartProps));
     });
 
     it("should render a structure correctly", () => {
-        const chart = renderChart(chartProps);
-
-        expect(chart).toBeElement(
+        expect(renderChart).toBeElement(
             DOM.div({ className: "nv-chart", style: { height: 20, width: 50 } },
                 DOM.svg()
             )
         );
     });
 
-    it("should render a div with a style height", () => {
-        const output = renderChart(chartProps);
-
-        expect(output.first().prop("style").height).toBe(20);
+    it("should render with the nv-chart class", () => {
+        expect(renderChart.hasClass("nv-chart")).toBe(true);
     });
 
-    it("should render a div with a style width", () => {
-        const output = renderChart(chartProps);
+    it("should add a graph", (done) => {
+        spyOn(nv, "addGraph").and.callThrough();
+        spyOn(nv.models, "lineChart").and.callThrough();
 
-        expect(output.first().prop("style").width).toBe(50);
+        const chart = renderChart.instance() as NVD3LineChart;
+        chart.componentDidMount();
+
+        expect(nv.addGraph).toHaveBeenCalled();
+
+        setTimeout(() => {
+            expect(nv.models.lineChart).toHaveBeenCalled();
+
+            done();
+        }, 100);
     });
 
-    xdescribe("", () => {
-        it("should add resize listener", () => {
-            //
-        });
+    it("should update the chart on window resize", (done) => {
+        spyOn(nv.utils, "windowResize").and.callThrough();
 
-        it("should update chart on resize", () => {
-            // spy on the update function if its been called.
-        });
+        const chart = renderChart.instance() as NVD3LineChart;
+        chart.componentDidMount();
 
-        it("should remove resize listener", () => {
-            // mock the nv.util.windowsresize function with {clear: function}
-            // execute unmount and confirm if clear has been fired.
-        });
+        setTimeout(() => {
+            expect(nv.utils.windowResize).toHaveBeenCalled();
+
+            renderChart.unmount();
+            done();
+        }, 100);
     });
 
+    it("should update the chart when the component is updated", (done) => {
+        spyOn(nv.models, "lineChart").and.callThrough();
+
+        expect(nv.models.lineChart).not.toHaveBeenCalled();
+        const chart = renderChart.instance() as NVD3LineChart;
+        chart.componentDidMount();
+
+        setTimeout(() => {
+            expect(nv.models.lineChart).toHaveBeenCalled();
+            chart.componentDidUpdate();
+            expect(nv.models.lineChart).toHaveBeenCalledTimes(1);
+
+            done();
+        }, 100);
+    });
+
+    describe("with no datum", () => {
+
+        beforeEach(() => {
+            chartProps = {
+                chartProps: {
+                    xAxis: {
+                        axisLabel: "Time",
+                        showMaxMin: true
+                    },
+                    xScale: time.scale(),
+                    yAxis: { axisLabel: "Label" }
+                },
+                datum: undefined,
+                height: 20,
+                width: 50
+            };
+            renderChart = shallow(createElement(NVD3LineChart, chartProps));
+        });
+
+        it("renders a chart with no datum", (done) => {
+            spyOn(nv.models, "lineChart").and.callThrough();
+
+            const chart = renderChart.instance() as NVD3LineChart;
+            chart.componentDidMount();
+
+            setTimeout(() => {
+                expect(nv.models.lineChart).toHaveBeenCalled();
+
+                done();
+            }, 100);
+        });
+    });
 });
