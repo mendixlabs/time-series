@@ -1,6 +1,6 @@
 import { Component, createElement } from "react";
 
-import { NVD3LineChart } from "./NVD3LineChart";
+import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
 import { format, time } from "d3";
 
 import { ModelProps, SeriesConfig } from "../TimeSeries.d";
@@ -31,7 +31,7 @@ export class TimeSeries extends Component<WidgetProps, {}> {
         const props = this.props;
         const datum = this.processDatum(props.seriesConfig, props.dataStore);
         const xFormat = props.xAxisFormat || "dd-MM-yyyy";
-        const chart: any = {
+        const chart: Nvd3LineChartProps = {
                 chartProps: {
                     xAxis: {
                         axisLabel: props.xAxisLabel,

@@ -1,5 +1,5 @@
-import { Selection, select } from "d3";
-import { LineChart, addGraph, models, utils } from "nvd3";
+import { select } from "d3";
+import { addGraph, models, utils } from "nvd3";
 import { Component, DOM } from "react";
 
 import { Series } from "./TimeSeries";
@@ -8,41 +8,26 @@ import "nvd3/build/nv.d3.css";
 export interface Nvd3LineChartProps {
     height?: number;
     width?: number;
-    chartProps?: any;
+    chartProps?: ChartProps;
     datum: Series[];
 }
 
-function isPlainObject(object: any): boolean {
-    if (typeof object === "object" && object !== null) {
-        if (typeof Object.getPrototypeOf === "function") {
-            const proto = Object.getPrototypeOf(object);
-            return proto === Object.prototype || proto === null;
-        }
-        return Object.prototype.toString.call(object) === "[object Object]";
-    }
-    return false;
+interface ChartProps {
+    xAxis?: Axis;
+    xScale?: d3.time.Scale<number, number>;
+    yAxis?: Axis;
 }
 
-// Configure components recursively
-function configureChart(chart: any, options: any) {
-    for (let optionName in options) {
-        if (options.hasOwnProperty(optionName)) {
-            let optionValue = options[optionName];
-            if (chart) {
-                if (isPlainObject(optionValue)) {
-                    configureChart(chart[optionName], optionValue);
-                } else if (typeof chart[optionName] === "function") {
-                    chart[optionName](optionValue);
-                }
-            }
-        }
-    }
+interface Axis {
+    axisLabel: string;
+    showMaxMin?: boolean;
+    tickFormat?: any;
 }
 
 export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
+    static defaultProps: Nvd3LineChartProps = { datum: [] };
+    private chart: nv.LineChart;
     private resizeHandler: { clear: Function };
-    private chart: LineChart;
-    private selection: Selection<any>;
     private svg: Node;
 
     render() {
@@ -51,7 +36,7 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             width: this.props.width
         };
         return DOM.div({ className: "nv-chart", style },
-            DOM.svg({ ref: n => this.svg = n } )
+            DOM.svg({ ref: node => this.svg = node })
         );
     }
 
@@ -64,31 +49,49 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     componentWillUnmount() {
-        if (this.resizeHandler) {
-            this.resizeHandler.clear();
-        }
+        this.resizeHandler.clear();
     }
 
     private renderChart() {
-        this.chart = (this.chart) ? this.chart : models.lineChart();
-        configureChart(this.chart, this.props.chartProps);
+        this.chart = this.chart || models.lineChart();
+        this.configureChart(this.chart, this.props.chartProps);
         this.chart.showLegend(true)
             .showXAxis(true)
             .showYAxis(true)
             .useInteractiveGuideline(true)
             .duration(350);
 
-        this.selection = select(this.svg)
-            .datum(this.props.datum ? this.props.datum : [])
-            .call(this.chart);
+        select(this.svg).datum(this.props.datum).call(this.chart);
 
         if (!this.resizeHandler) {
             this.resizeHandler = utils.windowResize(() => {
-                this.chart.update();
+                if (this.chart.update) {
+                    this.chart.update();
+                }
             });
         }
 
         return this.chart;
     }
 
+    private isPlainObject(object: any): boolean {
+        if (typeof object === "object" && object !== null) {
+            const proto = Object.getPrototypeOf(object);
+            return proto === Object.prototype || proto === null;
+        }
+        return false;
+    }
+
+    private configureChart(chart: any, options: any) {
+        for (let optionName in options) {
+            if (options.hasOwnProperty(optionName)) {
+                let optionValue = options[optionName];
+                if (this.isPlainObject(optionValue)) {
+                    this.configureChart(chart[optionName], optionValue);
+                } else if (typeof chart[optionName] === "function") {
+                    chart[optionName](optionValue);
+                }
+            }
+        }
+    }
 }

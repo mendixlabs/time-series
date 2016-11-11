@@ -51,7 +51,11 @@ module.exports = function (grunt) {
             },
             source: {
                 files: [
+<<<<<<< Updated upstream
                     { dest: "./dist/tmp/src", cwd: "./src/", src: ["**/*", "!**/*.ts", "!**/*.css"], expand: true }
+=======
+                    { dest: "./dist/tmp/src", cwd: "./src/", src: ["**/*", "!**/*.ts", "!**/*.tsx", "!**/*.css"], expand: true }
+>>>>>>> Stashed changes
                 ]
             }
         },
