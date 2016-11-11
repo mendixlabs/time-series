@@ -85,17 +85,28 @@ class TimeSeries extends WidgetBase {
     }
 
     private hasValidConfig(): boolean {
+        let errorMessage = "";
         const incorrectSeriesNames = this.seriesConfig
             .filter(series => (series.sourceType === "microflow" && !series.dataSourceMicroflow))
             .map(incorrect => incorrect.name)
             .join(", ");
 
-        if (incorrectSeriesNames) {
-            window.mx.ui.error("Configuration error for series :" + incorrectSeriesNames +
-                "data source type is set to 'Microflow' but 'Source - microflow' is missing", true);
+        try {
+            let xformat = this.xAxisFormat || "";
+            window.mx.parser.formatValue(new Date(), "datetime", { datePattern: xformat });
+        } catch (error) {
+            errorMessage += "Wrong formatting for the x-axis \n\n";
         }
 
-        return !incorrectSeriesNames;
+        if (incorrectSeriesNames) {
+        errorMessage += `series : ${incorrectSeriesNames}` +
+            ` - data source type is set to 'Microflow' but 'Source - microflow' is missing \n`;
+        }
+
+        if (errorMessage) {
+            window.mx.ui.error(`Configuration error :\n\n ${errorMessage}`, true);
+        }
+        return !errorMessage;
     }
 
     private updateRendering() {
@@ -120,9 +131,9 @@ class TimeSeries extends WidgetBase {
         window.mx.data.get({
             callback,
             error: (error) => {
-                window.logger.error(this.id + ".fetchByXPath " + xpath
-                    + ": An error occurred while retrieving data:", error);
-                window.mx.ui.error("An error occurred while retrieving data");
+                window.logger.error(`${this.id} .fetchByXPath ${xpath}`
+                    + `: An error occurred while retrieving data:`, error);
+                window.mx.ui.error(`An error occurred while retrieving data`);
                 callback([]);
             },
             filter: {
