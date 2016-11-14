@@ -41,7 +41,7 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     componentDidMount() {
-        addGraph(() => this.renderChart() );
+        addGraph(() => this.renderChart());
     }
 
     componentDidUpdate() {
@@ -49,7 +49,7 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     componentWillUnmount() {
-        this.resizeHandler.clear();
+        if (this.resizeHandler) this.resizeHandler.clear();
     }
 
     private renderChart() {
@@ -83,9 +83,9 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private configureChart(chart: any, options: any) {
-        for (let optionName in options) {
+        for (const optionName in options) {
             if (options.hasOwnProperty(optionName)) {
-                let optionValue = options[optionName];
+                const optionValue = options[optionName];
                 if (this.isPlainObject(optionValue)) {
                     this.configureChart(chart[optionName], optionValue);
                 } else if (typeof chart[optionName] === "function") {
