@@ -169,7 +169,7 @@ class TimeSeries extends WidgetBase {
 dojoDeclare("com.mendix.widget.timeseries.TimeSeries", [ WidgetBase ], function (Source: any) {
     let result: any = {};
     for (let i in Source.prototype) {
-        if (i !== "constructor" && Source.prototype.hasOwnProperty(i) ) {
+        if (i !== "constructor" && Source.prototype.hasOwnProperty(i)) {
             result[i] = Source.prototype[i];
         }
     }

@@ -13,7 +13,6 @@ module.exports = function(config) {
     config.set({
         basePath: "",
         frameworks: [ "jasmine" ],
-
         files: [
             { pattern: "src/**/*.ts", watched: false, included: false, served: false },
             { pattern: "tests/**/*.ts", watched: false, included: false, served: false },

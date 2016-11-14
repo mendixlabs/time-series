@@ -41,7 +41,7 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     componentDidMount() {
-        addGraph(() => this.renderChart() );
+        addGraph(() => this.renderChart());
     }
 
     componentDidUpdate() {
