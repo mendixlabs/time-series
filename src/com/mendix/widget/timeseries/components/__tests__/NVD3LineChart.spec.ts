@@ -1,8 +1,8 @@
 import { ShallowWrapper, shallow } from "enzyme";
 import { DOM, createElement } from "react";
+import { time } from "d3";
 
 import { NVD3LineChart, Nvd3LineChartProps } from "../NVD3LineChart";
-import { time } from "d3";
 
 describe("NVD3LineChart", () => {
 

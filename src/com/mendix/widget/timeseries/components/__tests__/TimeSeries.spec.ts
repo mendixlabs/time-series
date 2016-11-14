@@ -12,10 +12,12 @@ describe("TimeSeries", () => {
     const seriesConfig: SeriesConfig[] = [ { color: "blue", fill: true, name: "data1" } ];
     const dataStore = {
         series: {
-            data1: [ { x: getDate("24-Apr-2007"), y: 93.24 },
+            data1: [
+                { x: getDate("24-Apr-2007"), y: 93.24 },
                 { x: getDate("2-Jan-2008"), y: 194.84 },
                 { x: getDate("1-Jan-2009"), y: 85.35 },
-                { x: getDate("1-Jan-2010"), y: 210.73 } ]
+                { x: getDate("1-Jan-2010"), y: 210.73 }
+            ]
         }
     };
 
@@ -45,6 +47,25 @@ describe("TimeSeries", () => {
         expect(componentProps.datum[0].area).toEqual(true);
         expect(componentProps.datum[0].color).toBe("blue");
         expect(componentProps.datum[0].key).toBe("data1");
+    });
+
+    it("should render chart component with without data", () => {
+        const nonDataProps: WidgetProps = {
+            dataStore : { series: {} },
+            height: 500,
+            heightUnit: "pixels",
+            seriesConfig,
+            width: 900,
+            widthUnit: "pixels",
+            xAxisFormat: "yyyy",
+            xAxisLabel: "",
+            yAxisFormat: "",
+            yAxisLabel: "y-axis"
+        };
+        const emptyChart = shallow(createElement(TimeSeries, nonDataProps));
+
+        const props = emptyChart.find(NVD3LineChart).props();
+        expect(props.datum[0].values).toEqual([]);
     });
 
     describe ("with auto dimensions", () => {
