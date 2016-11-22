@@ -105,10 +105,13 @@ export function findDifference(expected: ElementStructure | ElementStructure[], 
         let actualIndex = 0;
         for (let expectedIndex = 0; expectedIndex < expectedJson.children.length; ++expectedIndex) {
             const expectedChild = expectedJson.children[expectedIndex];
-            for (; actualIndex < actualJson.children.length; actualIndex++) {
-                if (findDifference(expectedChild, actualJson.children[actualIndex], false) == null) break;
-            }
-            if (actualIndex === actualJson.children.length) {
+            let found = false;
+            for (; !found && actualIndex < actualJson.children.length; actualIndex++) {
+                 if (findDifference(expectedChild, actualJson.children[actualIndex], false) == null) {
+                     found = true;
+                 }
+             }
+             if (!found && actualIndex === actualJson.children.length) {
                 return `${msgPrefix} a child like ${toString(expectedChild)} `
                     + `but it is missing in ${actualJson.children.map(toString).join(", ")}`;
             }
