@@ -37,7 +37,7 @@ export class TimeSeries extends Component<WidgetProps, {}> {
                         axisLabel: props.xAxisLabel,
                         showMaxMin: true,
                         tickFormat: (value: number) => {
-                            return window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat } );
+                            return window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat });
                         }
                     },
                     xScale: time.scale(),

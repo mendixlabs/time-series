@@ -1,5 +1,5 @@
 {
-    "rulesDirectory": ["node_modules/tslint-eslint-rules/dist/rules"],
+    "rulesDirectory": [ "node_modules/tslint-eslint-rules/dist/rules" ],
     "extends": "tslint:latest", 
     "rules": {
         "class-name": true,
@@ -35,15 +35,13 @@
         "semicolon": [ true, "always" ],
         "trailing-comma": [ true, { "multiline": "never", "singleline": "never" } ],
         "triple-equals": [ true, "allow-null-check" ],
-        "typedef-whitespace": [ true,
-            {
+        "typedef-whitespace": [ true, {
                 "call-signature": "nospace",
                 "index-signature": "nospace",
                 "parameter": "nospace",
                 "property-declaration": "nospace",
                 "variable-declaration": "nospace"
-            }
-        ],
+        } ],
         "variable-name": [ true, "ban-keywords" ],
         "whitespace": [
             true,
@@ -55,7 +53,7 @@
             "check-type"
         ],
         "interface-name": [ false, "always-prefix" ],
-        "no-multi-spaces": [true],
+        "no-multi-spaces": [ true ],
         "no-extra-semi": true,
         "no-irregular-whitespace": true,
         "no-duplicate-case": true,
