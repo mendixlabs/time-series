@@ -30,7 +30,7 @@ describe("TimeSeries", () => {
         widthUnit: "pixels",
         xAxisFormat: "yyyy",
         xAxisLabel: "",
-        yAxisFormat: "",
+        yAxisFormatDecimalPrecision: 2,
         yAxisLabel: "y-axis"
     };
 
@@ -59,7 +59,7 @@ describe("TimeSeries", () => {
             widthUnit: "pixels",
             xAxisFormat: "yyyy",
             xAxisLabel: "",
-            yAxisFormat: "",
+            yAxisFormatDecimalPrecision: 2,
             yAxisLabel: "y-axis"
         };
         const emptyChart = shallow(createElement(TimeSeries, nonDataProps));

@@ -21,11 +21,11 @@
             <category>Y-axis</category>
             <description>Label for the y-axis (vertical)</description>
         </property>
-        <property key="yAxisFormat" type="string" required="false">
-            <caption>Y-axis data format</caption>
+        <property key="yAxisFormatDecimalPrecision" type="integer" defaultValue="2">
+            <caption>Decimal precision</caption>
             <category>Y-axis</category>
-            <description>Format of data on the y-axis</description>
-        </property>        
+            <description></description>
+        </property>
         <property key="seriesConfig" type="object" isList="true">
             <caption>Series</caption>
             <category>Series Configuration</category>

@@ -4,7 +4,7 @@ export interface ModelProps {
     xAxisLabel?: string;
     xAxisFormat?: string;
     yAxisLabel?: string;
-    yAxisFormat?: string;
+    yAxisFormatDecimalPrecision?: number;
     seriesConfig?: SeriesConfig[];
     width?: number;
     widthUnit?: WidthUnit;

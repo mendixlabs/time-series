@@ -12,7 +12,7 @@ class TimeSeries extends WidgetBase {
     private xAxisLabel: string;
     private xAxisFormat: string;
     private yAxisLabel: string;
-    private yAxisFormat: string;
+    private yAxisFormatDecimalPrecision: number;
     private seriesConfig: SeriesConfig[];
     private width: number;
     private height: number;
@@ -57,7 +57,7 @@ class TimeSeries extends WidgetBase {
             widthUnit: this.widthUnit,
             xAxisFormat: this.xAxisFormat,
             xAxisLabel: this.xAxisLabel,
-            yAxisFormat: this.yAxisFormat,
+            yAxisFormatDecimalPrecision: this.yAxisFormatDecimalPrecision,
             yAxisLabel: this.yAxisLabel
         };
     }

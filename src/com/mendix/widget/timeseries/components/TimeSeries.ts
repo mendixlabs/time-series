@@ -1,7 +1,7 @@
 import { Component, createElement } from "react";
 
 import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
-import { format, time } from "d3";
+import { time } from "d3";
 
 import { ModelProps, SeriesConfig } from "../TimeSeries.d";
 import "../ui/TimeSeries.css";
@@ -44,11 +44,10 @@ export class TimeSeries extends Component<WidgetProps, {}> {
                     yAxis: {
                         axisLabel: props.yAxisLabel,
                         tickFormat: (value) => {
-                            if (props.yAxisFormat) {
-                                return format(props.yAxisFormat)(value);
-                            } else {
-                                return value;
-                            }
+                                return new Intl.NumberFormat("en-US", {
+                                    maximumFractionDigits: props.yAxisFormatDecimalPrecision,
+                                    minimumFractionDigits: 0})
+                                .format(value);
                         }
                     }
                 },
