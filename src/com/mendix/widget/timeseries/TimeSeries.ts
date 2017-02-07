@@ -1,4 +1,5 @@
 import * as dojoDeclare from "dojo/_base/declare";
+import * as lang from "mendix/lang";
 import * as WidgetBase from "mxui/widget/_WidgetBase";
 
 import { createElement } from "react";
@@ -63,21 +64,22 @@ class TimeSeries extends WidgetBase {
     }
 
     private updateData(callback: Function) {
-        // TODO: do this in a async parallel way for all series, in the future.
-        const series = this.seriesConfig[0];
-        const processResults = (data: mendix.lib.MxObject[]) => {
-            this.setDataFromObjects(data, series);
-            callback();
-        };
+        const chain = this.seriesConfig.map(series => (chainCallback: Function) => {
+            const processResults = (data: mendix.lib.MxObject[]) => {
+                this.setDataFromObjects(data, series);
+                chainCallback();
+            };
 
-        if (series.sourceType === "xpath") {
-            const constraint = series.entityConstraint.replace("[%CurrentObject%]", this.contextObject.getGuid());
-            const xpath = "//" + series.entity + constraint;
-            this.fetchByXPath(series, xpath, processResults);
+            if (series.sourceType === "xpath") {
+                const constraint = series.entityConstraint.replace("[%CurrentObject%]", this.contextObject.getGuid());
+                const xpath = "//" + series.entity + constraint;
+                this.fetchByXPath(series, xpath, processResults);
+            } else if (series.sourceType === "microflow") {
+                this.fetchByMicroflow(series.dataSourceMicroflow, processResults);
+            }
+        });
 
-        } else if (series.sourceType === "microflow") {
-             this.fetchByMicroflow(series.dataSourceMicroflow, processResults);
-        }
+        lang.collect(chain, callback);
     }
 
     private hasValidConfig(): boolean {
@@ -93,8 +95,7 @@ class TimeSeries extends WidgetBase {
         }
 
         try {
-            let xformat = this.xAxisFormat || "";
-            window.mx.parser.formatValue(new Date(), "datetime", { datePattern: xformat });
+            window.mx.parser.formatValue(new Date(), "datetime", { datePattern: this.xAxisFormat || "" });
         } catch (error) {
             errorMessage += `Formatting for the x-axis : ${this.xAxisFormat} is invalid \n\n`;
         }
