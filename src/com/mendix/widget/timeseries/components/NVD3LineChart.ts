@@ -1,4 +1,4 @@
-import { select, time } from "d3";
+import { max, min, select, time } from "d3";
 import { addGraph, models, utils } from "nvd3";
 import { Component, DOM } from "react";
 
@@ -49,17 +49,30 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     componentWillUnmount() {
-        if (this.resizeHandler) this.resizeHandler.clear();
+        if (this.resizeHandler) {
+            this.resizeHandler.clear();
+        }
     }
 
     private renderChart() {
+        const { datum } = this.props;
         this.chart = this.chart || models.lineChart();
         this.configureChart(this.chart, this.props.chartProps);
+        const minimumX = min(datum, (serieData) => min(serieData.values, (dataPoint) => dataPoint.x));
+        const maximumX = max(datum, (serieData) => max(serieData.values, (dataPoint) => dataPoint.x));
+        const paddingX = (maximumX - minimumX) * 0.05;
+
+        const minimumY = min(datum, (serieData) => min(serieData.values, (dataPoint) => dataPoint.y));
+        const maximumY = max(datum, (serieData) => max(serieData.values, (dataPoint) => dataPoint.y));
+        const paddingY = (maximumY - minimumY) * 0.05;
+
         this.chart.showLegend(true)
             .showXAxis(true)
             .showYAxis(true)
             .useInteractiveGuideline(true)
-            .duration(350);
+            .duration(350)
+            .forceX([ minimumX - paddingX, maximumX + paddingX ])
+            .forceY([ minimumY - paddingY, maximumY + paddingY ]);
 
         select(this.svg).datum(this.props.datum).call(this.chart);
 
