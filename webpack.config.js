@@ -13,28 +13,24 @@ module.exports = {
         library: "com.mendix.widget.timeseries.TimeSeries"
     },
     resolve: {
-        extensions: [ "", ".ts", ".js", ".json" ]
+        extensions: [ "", ".ts", ".js", ".jsx", ".json" ]
     },
     errorDetails: true,
     module: {
         loaders: [
             { test: /\.ts?$/, loader: "ts-loader" },
             { test: /\.json$/, loader: "json" },
-            { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") }
-        ],
-        postLoaders: [ {
-            test: /\.ts$/,
-            loader: "istanbul-instrumenter",
-            include: path.resolve(__dirname, "src"),
-            exclude: /\.(spec)\.ts$/
-        } ]
+            { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") },
+            { test: /\.jsx?$/, loader: "babel-loader" }
+        ]
     },
     devtool: "source-map",
     externals: [ "mxui/widget/_WidgetBase", "mendix/lang", "dojo/_base/declare" ],
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
-            { from: "src/**/*.xml" }
+            { from: "src/**/*.xml" },
+            { from: "src/**/*.css" }
         ], {
             copyUnmodified: true
         }),
