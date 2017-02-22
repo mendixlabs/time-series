@@ -1,7 +1,7 @@
 import { Component, createElement } from "react";
 
 import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
-import { time } from "d3";
+import { max, min, time } from "d3";
 
 import { ModelProps, SeriesConfig } from "../TimeSeries.d";
 import "../ui/TimeSeries.css";
@@ -30,6 +30,7 @@ export class TimeSeries extends Component<WidgetProps, {}> {
     render() {
         const props = this.props;
         const datum = this.processDatum(props.seriesConfig, props.dataStore);
+        const customForceY = [ Number(props.yAxisDomainMinimum), Number(props.yAxisDomainMaximum) ];
         const xFormat = props.xAxisFormat || "dd-MM-yyyy";
         const chart: Nvd3LineChartProps = {
                 chartProps: {
@@ -51,6 +52,7 @@ export class TimeSeries extends Component<WidgetProps, {}> {
                         }
                     }
                 },
+                forceY: this.forceY(datum, customForceY),
                 datum,
                 height: props.heightUnit === "auto" ? undefined : props.height,
                 width: props.widthUnit === "auto" ? undefined : props.width
@@ -68,5 +70,20 @@ export class TimeSeries extends Component<WidgetProps, {}> {
                 ? dataStore.series[config.name]
                 : []
         }));
+    }
+
+    private forceY(datum: Series[], customForceY: number[] ) {
+        const returnForceY = [ 0, 0 ];
+        const customMinimumY = customForceY[0];
+        const customMaximumY = customForceY[1];
+        const dataMinimumY = min(datum, (serieData) => min(serieData.values, (dataPoint) => dataPoint.y));
+        const dataMaximumY = max(datum, (serieData) => max(serieData.values, (dataPoint) => dataPoint.y));
+        returnForceY[0] = customMinimumY < dataMinimumY ? customMinimumY : dataMinimumY;
+        returnForceY[1] = customMaximumY > dataMaximumY ? customMaximumY : dataMaximumY;
+        const paddingY = (returnForceY[1] - returnForceY[0]) * 0.05;
+        returnForceY[0] = returnForceY[0] === customMinimumY ? customMinimumY : returnForceY[0] - paddingY;
+        returnForceY[1] = returnForceY[1] === customMaximumY ? customMaximumY : returnForceY[1] + paddingY;
+        return returnForceY;
+
     }
 }

@@ -26,6 +26,16 @@
             <category>Y-axis</category>
             <description></description>
         </property>
+        <property key="yAxisDomainMinimum" type="string" required="false">
+            <caption>Axis minimum value</caption>
+            <category>Y-axis</category>
+            <description>Can be positive or negative number eg: -50, 50, 0.5 </description>
+        </property>
+        <property key="yAxisDomainMaximum" type="string" required="false">
+            <caption>Axis maximum value</caption>
+            <category>Y-axis</category>
+            <description>Can be a positive of negative number eg: -10, 100, 2.5</description>
+        </property>
         <property key="seriesConfig" type="object" isList="true">
             <caption>Series</caption>
             <category>Series Configuration</category>

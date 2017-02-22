@@ -10,6 +10,8 @@ export interface ModelProps {
     widthUnit?: WidthUnit;
     height?: number;
     heightUnit?: HeightUnit;
+    yAxisDomainMinimum?: string;
+    yAxisDomainMaximum?: string;
 }
 
 export interface SeriesConfig {

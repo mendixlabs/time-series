@@ -19,10 +19,11 @@ class TimeSeries extends WidgetBase {
     private height: number;
     private widthUnit: WidthUnit;
     private heightUnit: HeightUnit;
+    private yAxisDomainMinimum: string;
+    private yAxisDomainMaximum: string;
     // Internal props
     private contextObject: mendix.lib.MxObject;
     private dataStore: DataStore;
-    private handle: number;
 
     postCreate() {
         this.dataStore = { series: {} };
@@ -59,7 +60,9 @@ class TimeSeries extends WidgetBase {
             xAxisFormat: this.xAxisFormat,
             xAxisLabel: this.xAxisLabel,
             yAxisFormatDecimalPrecision: this.yAxisFormatDecimalPrecision,
-            yAxisLabel: this.yAxisLabel
+            yAxisLabel: this.yAxisLabel,
+            yAxisDomainMaximum: this.yAxisDomainMaximum,
+            yAxisDomainMinimum: this.yAxisDomainMinimum
         };
     }
 
@@ -100,6 +103,13 @@ class TimeSeries extends WidgetBase {
             errorMessage += `Formatting for the x-axis : ${this.xAxisFormat} is invalid \n\n`;
         }
 
+        if(this.yAxisDomainMinimum && isNaN(parseFloat(this.yAxisDomainMinimum))) {
+            errorMessage += `Y-axis Domain minimum value ${this.yAxisDomainMinimum} is not a number`
+        }
+        if(this.yAxisDomainMaximum && isNaN(parseFloat(this.yAxisDomainMaximum))) {
+            errorMessage += `Y-axis Domain maximum value ${this.yAxisDomainMaximum} is not a number`
+        }
+
         if (errorMessage) {
             window.mx.ui.error(`Configuration error :\n\n ${errorMessage}`, true);
         }
@@ -111,14 +121,10 @@ class TimeSeries extends WidgetBase {
     }
 
     private resetSubscriptions() {
-        window.mx.data.unsubscribe(this.handle);
-        this.handle = 0;
-
+        this.unsubscribeAll();
         if (this.contextObject) {
-            this.handle = this.subscribe({
-                callback: () => {
-                    this.updateRendering();
-                },
+            this.subscribe({
+                callback: () => this.updateRendering(),
                 guid: this.contextObject.getGuid()
             });
         }

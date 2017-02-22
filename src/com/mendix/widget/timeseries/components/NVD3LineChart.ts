@@ -6,6 +6,7 @@ import { Series } from "./TimeSeries";
 import "nvd3/build/nv.d3.css";
 
 export interface Nvd3LineChartProps {
+    forceY?: number[];
     height?: number;
     width?: number;
     chartProps?: ChartProps;
@@ -55,24 +56,15 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private renderChart() {
-        const { datum } = this.props;
         this.chart = this.chart || models.lineChart();
         this.configureChart(this.chart, this.props.chartProps);
-        const minimumX = min(datum, (serieData) => min(serieData.values, (dataPoint) => dataPoint.x));
-        const maximumX = max(datum, (serieData) => max(serieData.values, (dataPoint) => dataPoint.x));
-        const paddingX = (maximumX - minimumX) * 0.05;
-
-        const minimumY = min(datum, (serieData) => min(serieData.values, (dataPoint) => dataPoint.y));
-        const maximumY = max(datum, (serieData) => max(serieData.values, (dataPoint) => dataPoint.y));
-        const paddingY = (maximumY - minimumY) * 0.05;
 
         this.chart.showLegend(true)
             .showXAxis(true)
             .showYAxis(true)
             .useInteractiveGuideline(true)
             .duration(350)
-            .forceX([ minimumX - paddingX, maximumX + paddingX ])
-            .forceY([ minimumY - paddingY, maximumY + paddingY ]);
+            .forceY(this.props.forceY);
 
         select(this.svg).datum(this.props.datum).call(this.chart);
 
