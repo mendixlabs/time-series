@@ -5,8 +5,8 @@ import * as WidgetBase from "mxui/widget/_WidgetBase";
 import { createElement } from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
-import { DataPoint, DataStore, TimeSeries as TimeSeriesComponent, WidgetProps } from "./components/TimeSeries";
 import { HeightUnit, SeriesConfig, WidthUnit } from "./TimeSeries.d";
+import { DataPoint, DataStore, TimeSeries as TimeSeriesComponent, WidgetProps } from "./components/TimeSeries";
 
 class TimeSeries extends WidgetBase {
     // Model props
@@ -103,10 +103,10 @@ class TimeSeries extends WidgetBase {
             errorMessage += `Formatting for the x-axis : ${this.xAxisFormat} is invalid \n\n`;
         }
 
-        if(this.yAxisDomainMinimum && isNaN(parseFloat(this.yAxisDomainMinimum))) {
+        if (this.yAxisDomainMinimum && isNaN(parseFloat(this.yAxisDomainMinimum))) {
             errorMessage += `Y-axis Domain minimum value ${this.yAxisDomainMinimum} is not a number`
         }
-        if(this.yAxisDomainMaximum && isNaN(parseFloat(this.yAxisDomainMaximum))) {
+        if (this.yAxisDomainMaximum && isNaN(parseFloat(this.yAxisDomainMaximum))) {
             errorMessage += `Y-axis Domain maximum value ${this.yAxisDomainMaximum} is not a number`
         }
 
