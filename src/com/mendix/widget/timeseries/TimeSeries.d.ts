@@ -16,7 +16,7 @@ export interface ModelProps {
 
 export interface SeriesConfig {
     entity?: string;
-    sourceType?: SeriesConfigSourceType;
+    sourceType?: DataSource;
     xAttribute?: string;
     yAttribute?: string;
     name?: string;
@@ -30,4 +30,13 @@ export type WidthUnit = "auto" | "pixels";
 
 export type HeightUnit = "auto" | "pixels";
 
-export type SeriesConfigSourceType = "xpath" | "microflow";
+export type DataSource = "xpath" | "microflow";
+
+export interface DataPoint {
+    x: number;
+    y: number;
+}
+
+export interface DataStore {
+    series: {[key: string]: DataPoint[]};
+}

@@ -2,13 +2,13 @@ import { shallow } from "enzyme"; // enzyme's api doesn't provide innerHTML for 
 import { createElement } from "react";
 
 import { SeriesConfig } from "../../TimeSeries.d";
-import { TimeSeries, WidgetProps } from "../TimeSeries";
+import { TimeSeries, TimeSeriesProps } from "../TimeSeries";
 
 import { NVD3LineChart } from "../NVD3LineChart";
 
 describe("TimeSeries", () => {
 
-    const getDate = (date: string) => { return new Date(date).getDate(); };
+    const getDate = (date: string) => new Date(date).getDate();
     const seriesConfig: SeriesConfig[] = [ { color: "blue", fill: true, name: "data1" } ];
     const dataStore = {
         series: {
@@ -21,7 +21,7 @@ describe("TimeSeries", () => {
         }
     };
 
-    const createProps: WidgetProps = {
+    const createProps: TimeSeriesProps = {
         dataStore,
         height: 500,
         heightUnit: "pixels",
@@ -50,7 +50,7 @@ describe("TimeSeries", () => {
     });
 
     it("should render chart component with without data", () => {
-        const nonDataProps: WidgetProps = {
+        const nonDataProps: TimeSeriesProps = {
             dataStore : { series: {} },
             height: 500,
             heightUnit: "pixels",
@@ -69,7 +69,7 @@ describe("TimeSeries", () => {
     });
 
     describe ("with auto dimensions", () => {
-        const chartProps: WidgetProps = {
+        const chartProps: TimeSeriesProps = {
             dataStore, height: 500, heightUnit: "auto", seriesConfig, width: 900, widthUnit: "auto"
         };
         const lineChart = shallow(createElement(TimeSeries, chartProps));

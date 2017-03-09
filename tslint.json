@@ -3,7 +3,7 @@
   "extends": "tslint:latest",
   "rules": {
     "class-name": true,
-    "curly": true,
+    "curly": false,
     "comment-format": [ true, "check-space" ],
     "eofline": true,
     "indent": [ true, "spaces" ],

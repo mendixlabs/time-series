@@ -1,19 +1,10 @@
+import { max, min, time } from "d3";
 import { Component, createElement } from "react";
 
+import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries.d";
 import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
-import { max, min, time } from "d3";
 
-import { ModelProps, SeriesConfig } from "../TimeSeries.d";
 import "../ui/TimeSeries.css";
-
-export interface DataPoint {
-    x: number;
-    y: number;
-}
-
-export interface DataStore {
-    series: {[key: string]: DataPoint[]};
-}
 
 export interface Series {
     values?: DataPoint[];
@@ -22,11 +13,11 @@ export interface Series {
     area?: boolean;
 }
 
-export interface WidgetProps extends ModelProps {
+export interface TimeSeriesProps extends ModelProps {
     dataStore?: DataStore;
 }
 
-export class TimeSeries extends Component<WidgetProps, {}> {
+export class TimeSeries extends Component<TimeSeriesProps, {}> {
     render() {
         const props = this.props;
         const datum = this.processDatum(props.seriesConfig, props.dataStore);
