@@ -11,27 +11,32 @@ module.exports = {
         libraryTarget:  "umd"
     },
     resolve: {
-        extensions: [ "", ".ts", ".js", ".jsx", ".json" ]
+        extensions: [ ".ts", ".js", ".json" ],
+        alias: {
+            "tests": path.resolve(__dirname, "./tests")
+        }
     },
-    errorDetails: true,
     module: {
-        loaders: [
-            { test: /\.ts?$/, loader: "ts-loader" },
-            { test: /\.json$/, loader: "json" },
-            { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") },
-            { test: /\.jsx?$/, loader: "babel-loader" }
+        rules: [
+            { test: /\.ts$/, use: "ts-loader" },
+            { test: /\.css$/, loader: ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                use: "css-loader"
+            }) }
         ]
     },
     devtool: "source-map",
-    externals: [ "mxui/widget/_WidgetBase", "mendix/lang", "dojo/_base/declare" ],
+    externals: [ "mxui/widget/_WidgetBase", "dojo/_base/declare", "mendix/lang" ],
     plugins: [
+        new webpack.LoaderOptionsPlugin({
+            debug: true
+        }),
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
             { from: "src/**/*.xml" }
         ], {
             copyUnmodified: true
         }),
-        new ExtractTextPlugin("./src/com/mendix/widget/timeseries/ui/TimeSeries.css")
-    ],
-    watch: true
+        new ExtractTextPlugin({ filename: "./src/com/mendix/widget/timeseries/ui/Timeseries.css" })
+    ]
 };

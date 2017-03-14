@@ -20,12 +20,11 @@ class TimeSeries extends WidgetBase {
     private yAxisDomainMinimum: string;
     private yAxisDomainMaximum: string;
     // Internal props
-    private contextObject: mendix.lib.MxObject;
+    private mxObject: mendix.lib.MxObject;
 
-    update(object: mendix.lib.MxObject, callback: Function) {
-        this.contextObject = object;
+    update(mxObject: mendix.lib.MxObject, callback: () => void) {
+        this.mxObject = mxObject;
         this.updateRendering(callback);
-        this.resetSubscriptions();
     }
 
     uninitialize() {
@@ -33,12 +32,12 @@ class TimeSeries extends WidgetBase {
         return true;
     }
 
-    private updateRendering(callback?: Function) {
+    private updateRendering(callback?: () => void) {
         render(createElement(TimeSeriesContainer, {
             callback,
-            contextObject: this.contextObject,
             height: this.height,
             heightUnit: this.heightUnit,
+            mxObject: this.mxObject,
             seriesConfig: this.seriesConfig,
             width: this.width,
             widthUnit: this.widthUnit,
@@ -49,16 +48,6 @@ class TimeSeries extends WidgetBase {
             yAxisFormatDecimalPrecision: this.yAxisFormatDecimalPrecision,
             yAxisLabel: this.yAxisLabel
         }), this.domNode);
-    }
-
-    private resetSubscriptions() {
-        this.unsubscribeAll();
-        if (this.contextObject) {
-            this.subscribe({
-                callback: () => this.updateRendering(),
-                guid: this.contextObject.getGuid()
-            });
-        }
     }
 
 }

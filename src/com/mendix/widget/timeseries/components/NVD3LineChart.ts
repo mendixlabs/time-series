@@ -3,6 +3,7 @@ import { addGraph, models, utils } from "nvd3";
 import { Component, DOM } from "react";
 
 import { Series } from "./TimeSeries";
+
 import "nvd3/build/nv.d3.css";
 
 export interface Nvd3LineChartProps {

@@ -5,10 +5,9 @@ import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries.d"
 import { Alert } from "./Alert";
 import { TimeSeries as TimeSeriesComponent } from "./TimeSeries";
 
-
 export interface ContainerProps extends ModelProps {
-    callback?: Function;
-    contextObject: mendix.lib.MxObject;
+    callback?: () => void;
+    mxObject: mendix.lib.MxObject;
 }
 
 interface ContainerState {
@@ -18,6 +17,7 @@ interface ContainerState {
 
 export class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
     private subscriptionHandle: number;
+    private dataStore: DataStore;
     constructor(props: ContainerProps) {
         super(props);
         this.fetchData = this.fetchData.bind(this);
@@ -26,7 +26,7 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
             configurationError,
             dataStore: { series: {} }
         };
-        this.resetSubscription(props.contextObject);
+        this.resetSubscription(props.mxObject);
     }
 
     render() {
@@ -52,8 +52,10 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
     }
 
     componentWillReceiveProps(nextProps: ContainerProps) {
-        this.resetSubscription(nextProps.contextObject);
-        this.fetchData(nextProps.contextObject);
+        if (this.props.mxObject !== nextProps.mxObject) {
+            this.resetSubscription(nextProps.mxObject);
+            this.fetchData(nextProps.mxObject);
+        }
     }
 
     componentWillUnmount() {
@@ -62,19 +64,18 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
 
     componentDidMount() {
         if (!this.state.configurationError) {
-            this.fetchData(this.props.contextObject);
+            this.fetchData(this.props.mxObject);
         }
     }
 
-
     private fetchData(contextObject: mendix.lib.MxObject) {
-        const dataStore: DataStore = { series: {} };
         if (contextObject) {
             const chain = this.props.seriesConfig.map(series => (chainCallback: Function) => {
                 const processResults = ( data: mendix.lib.MxObject[]) => {
-                    dataStore.series[series.name] = this.setDataFromObjects(data, series);
+                    this.dataStore.series[series.name] = this.setDataFromObjects(data, series);
                     if (this.props.seriesConfig[this.props.seriesConfig.length - 1].name === series.name) {
-                        this.setState( { dataStore });
+                        console.log(this.dataStore);
+                        this.setState( { dataStore: this.dataStore });
                         if (this.props.callback) this.props.callback();
                     }
                     chainCallback();
@@ -91,7 +92,7 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
 
             lang.collect(chain);
         } else {
-            this.setState({ dataStore });
+            this.setState({ dataStore: this.dataStore });
             this.props.callback();
         }
     }
@@ -107,7 +108,7 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
                 this.props.callback();
             },
             params: {
-                guids: [ this.props.contextObject.getGuid() ]
+                guids: [ this.props.mxObject.getGuid() ]
             }
         });
     }
@@ -148,10 +149,10 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
         }
 
         if (this.props.yAxisDomainMinimum && isNaN(parseFloat(this.props.yAxisDomainMinimum))) {
-            errorMessage += `Y-axis Domain minimum value ${this.props.yAxisDomainMinimum} is not a number`
+            errorMessage += `Y-axis Domain minimum value ${this.props.yAxisDomainMinimum} is not a number`;
         }
         if (this.props.yAxisDomainMaximum && isNaN(parseFloat(this.props.yAxisDomainMaximum))) {
-            errorMessage += `Y-axis Domain maximum value ${this.props.yAxisDomainMaximum} is not a number`
+            errorMessage += `Y-axis Domain maximum value ${this.props.yAxisDomainMaximum} is not a number`;
         }
 
         return errorMessage ? `Configuration error :\n\n ${errorMessage}` : ``;
@@ -167,6 +168,7 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
 
     private resetSubscription(contextObject: mendix.lib.MxObject) {
         this.unSubscribe();
+        this.dataStore = { series: { } };
 
         if (contextObject) {
             this.subscriptionHandle = window.mx.data.subscribe({
