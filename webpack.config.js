@@ -8,9 +8,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
         filename: "src/com/mendix/widget/timeseries/TimeSeries.js",
-        libraryTarget:  "umd",
-        umdNamedDefine: true,
-        library: "com.mendix.widget.timeseries.TimeSeries"
+        libraryTarget:  "umd"
     },
     resolve: {
         extensions: [ "", ".ts", ".js", ".jsx", ".json" ]
@@ -29,8 +27,7 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
-            { from: "src/**/*.xml" },
-            { from: "src/**/*.css" }
+            { from: "src/**/*.xml" }
         ], {
             copyUnmodified: true
         }),

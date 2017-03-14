@@ -44,7 +44,6 @@
       true,
       { "import-sources-order": "lowercase-last" }
     ],
-    "prefer-for-of": true,
     "quotemark": [ true, "double" ],
     "semicolon": [ true, "always" ],
     "triple-equals": [ true, "allow-null-check" ],
