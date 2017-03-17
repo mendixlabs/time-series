@@ -69,15 +69,17 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
     }
 
     private fetchData(contextObject: mendix.lib.MxObject) {
+        let limit = 1;
         if (contextObject) {
             const chain = this.props.seriesConfig.map(series => (chainCallback: Function) => {
                 const processResults = ( data: mendix.lib.MxObject[]) => {
                     this.dataStore.series[series.name] = this.setDataFromObjects(data, series);
-                    if (this.props.seriesConfig[this.props.seriesConfig.length - 1].name === series.name) {
+                    if (limit === this.props.seriesConfig.length) {
                         console.log(this.dataStore);
                         this.setState( { dataStore: this.dataStore });
                         if (this.props.callback) this.props.callback();
                     }
+                    limit++;
                     chainCallback();
                 };
 

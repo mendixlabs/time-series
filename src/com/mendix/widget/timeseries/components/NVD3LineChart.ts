@@ -1,4 +1,4 @@
-import { max, min, select, time } from "d3";
+import { select, time } from "d3";
 import { addGraph, models, utils } from "nvd3";
 import { Component, DOM } from "react";
 
