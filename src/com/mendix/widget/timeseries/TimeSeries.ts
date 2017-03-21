@@ -37,6 +37,7 @@ class TimeSeries extends WidgetBase {
             callback,
             height: this.height,
             heightUnit: this.heightUnit,
+            mxform: this.mxform,
             mxObject: this.mxObject,
             seriesConfig: this.seriesConfig,
             width: this.width,

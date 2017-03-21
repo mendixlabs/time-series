@@ -8,6 +8,7 @@ import { TimeSeries as TimeSeriesComponent } from "./TimeSeries";
 export interface ContainerProps extends ModelProps {
     callback?: () => void;
     mxObject: mendix.lib.MxObject;
+    mxform: mxui.lib.form._FormBase;
 }
 
 interface ContainerState {
@@ -99,20 +100,23 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
         }
     }
 
-    private fetchByMicroflow(microflow: string, callback: (object: mendix.lib.MxObject[]) => void) {
-        window.mx.ui.action(microflow, {
+    private fetchByMicroflow(actionname: string, callback: (object: mendix.lib.MxObject[]) => void) {
+        mx.data.action({
             callback,
             error: error => {
                 this.setState({
-                    configurationError: `Error while retrieving microflow data ${microflow}: ${error.message}`,
+                    configurationError: `Error while retrieving microflow data ${actionname}: ${error.message}`,
                     dataStore: { series: {} }
                 });
                 this.props.callback();
             },
+            origin: this.props.mxform,
             params: {
+                actionname,
+                applyto: "selection",
                 guids: [ this.props.mxObject.getGuid() ]
             }
-        });
+        }, this);
     }
 
     private fetchByXPath(seriesConfig: SeriesConfig, xpath: string, callback: (object: mendix.lib.MxObject[]) => void) {
