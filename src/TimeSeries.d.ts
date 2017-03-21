@@ -17,7 +17,7 @@ export interface ModelProps {
 export interface SeriesConfig {
     entity?: string;
     sourceType?: DataSource;
-    xAttribute?: string;
+    xAttribute?: string ;
     yAttribute?: string;
     name?: string;
     entityConstraint?: string;
