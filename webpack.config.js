@@ -4,10 +4,10 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    entry: "./src/TimeSeries.ts",
+    entry: "./src/components/TimeSeriesContainer.ts",
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
-        filename: "src/com/mendix/widget/timeseries/TimeSeries.js",
+        filename: "src/com/mendix/widget/custom/timeseries/TimeSeries.js",
         libraryTarget:  "umd"
     },
     resolve: {
@@ -26,7 +26,7 @@ module.exports = {
         ]
     },
     devtool: "source-map",
-    externals: [ "mxui/widget/_WidgetBase", "dojo/_base/declare", "mendix/lang" ],
+    externals: [ "mendix/lang", "react", "react-dom" ],
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
@@ -34,7 +34,7 @@ module.exports = {
         ], {
             copyUnmodified: true
         }),
-        new ExtractTextPlugin({ filename: "./src/com/mendix/widget/timeseries/ui/Timeseries.css" }),
+        new ExtractTextPlugin({ filename: "./src/com/mendix/widget/custom/timeseries/ui/Timeseries.css" }),
         new webpack.LoaderOptionsPlugin({
             debug: true
         })

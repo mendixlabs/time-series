@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<widget id="com.mendix.widget.timeseries.TimeSeries" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+<widget id="com.mendix.widget.custom.timeseries.TimeSeries" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
     <name>Time series</name>
     <description>Renders a time series chart</description>
     <icon>

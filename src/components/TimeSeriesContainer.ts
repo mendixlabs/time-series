@@ -8,7 +8,7 @@ import { TimeSeries as TimeSeriesComponent } from "./TimeSeries";
 export interface ContainerProps extends ModelProps {
     callback?: () => void;
     mxObject: mendix.lib.MxObject;
-    mxform: mxui.lib.form._FormBase;
+    mxform?: mxui.lib.form._FormBase;
 }
 
 interface ContainerState {
@@ -72,11 +72,10 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
     private fetchData(contextObject: mendix.lib.MxObject) {
         let limit = 1;
         if (contextObject) {
-            const chain = this.props.seriesConfig.map(series => (chainCallback: Function) => {
+            const chain = this.props.seriesConfig.map(series => (chainCallback: () => void) => {
                 const processResults = ( data: mendix.lib.MxObject[]) => {
                     this.dataStore.series[series.name] = this.setDataFromObjects(data, series);
                     if (limit === this.props.seriesConfig.length) {
-                        console.log(this.dataStore);
                         this.setState( { dataStore: this.dataStore });
                         if (this.props.callback) this.props.callback();
                     }

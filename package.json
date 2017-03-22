@@ -56,6 +56,8 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.2",
     "mendix-client": "git+https://github.com/FlockOfBirds/Mendix-client-typing.git",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
     "react-addons-test-utils": "^15.4.2",
     "remap-istanbul": "^0.9.0",
     "source-map-loader": "^0.2.0",
@@ -68,8 +70,6 @@
     "webpack-dev-server": "^2.2.0"
   },
   "dependencies": {
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
     "d3": "^3.4.4",
     "nvd3": "^1.8.4"
   }
