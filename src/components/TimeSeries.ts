@@ -6,18 +6,18 @@ import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
 
 import "../ui/TimeSeries.css";
 
-export interface Series {
+interface Series {
     values?: DataPoint[];
     key?: string;
     color?: string;
     area?: boolean;
 }
 
-export interface TimeSeriesProps extends ModelProps {
+interface TimeSeriesProps extends ModelProps {
     dataStore?: DataStore;
 }
 
-export class TimeSeries extends Component<TimeSeriesProps, {}> {
+class TimeSeries extends Component<TimeSeriesProps, {}> {
     render() {
         const props = this.props;
         const datum = this.processDatum(props.seriesConfig, props.dataStore);
@@ -78,3 +78,5 @@ export class TimeSeries extends Component<TimeSeriesProps, {}> {
 
     }
 }
+
+export { TimeSeries, TimeSeriesProps, Series };

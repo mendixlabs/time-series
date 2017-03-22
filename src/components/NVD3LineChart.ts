@@ -6,7 +6,7 @@ import { Series } from "./TimeSeries";
 
 import "nvd3/build/nv.d3.css";
 
-export interface Nvd3LineChartProps {
+interface Nvd3LineChartProps {
     forceY?: number[];
     height?: number;
     width?: number;
@@ -26,7 +26,7 @@ interface Axis {
     tickFormat: (d: any) => string;
 }
 
-export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
+class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     static defaultProps: Nvd3LineChartProps = { datum: [] };
     private chart: nv.LineChart;
     private resizeHandler: { clear: Function };
@@ -101,3 +101,5 @@ export class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         }
     }
 }
+
+export { Axis, ChartProps, NVD3LineChart, Nvd3LineChartProps };

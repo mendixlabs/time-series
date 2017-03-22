@@ -5,7 +5,7 @@ import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries.d"
 import { Alert } from "./Alert";
 import { TimeSeries as TimeSeriesComponent } from "./TimeSeries";
 
-export interface ContainerProps extends ModelProps {
+interface ContainerProps extends ModelProps {
     callback?: () => void;
     mxObject: mendix.lib.MxObject;
     mxform?: mxui.lib.form._FormBase;
@@ -16,7 +16,7 @@ interface ContainerState {
     dataStore: DataStore;
 }
 
-export class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
+class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
     private subscriptionHandle: number;
     private dataStore: DataStore;
     constructor(props: ContainerProps) {
@@ -191,3 +191,5 @@ export class TimeSeriesContainer extends Component<ContainerProps, ContainerStat
     }
 
 }
+
+export { TimeSeriesContainer as default, ContainerProps };
