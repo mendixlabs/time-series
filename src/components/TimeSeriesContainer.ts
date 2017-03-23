@@ -32,7 +32,6 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
 
     render() {
         if (this.state.configurationError) {
-            this.props.callback();
             return createElement(Alert, { message: this.state.configurationError });
         } else {
             return createElement(TimeSeriesComponent, {
@@ -88,18 +87,17 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
                     const XPath = "//" + series.entity + constraint;
                     this.fetchByXPath(series, XPath, processResults);
                 } else if (series.sourceType === "microflow") {
-                    this.fetchByMicroflow(series.dataSourceMicroflow, processResults);
+                    this.fetchByMicroflow(contextObject.getGuid(), series.dataSourceMicroflow, processResults);
                 }
             });
 
             lang.collect(chain);
         } else {
             this.setState({ dataStore: this.dataStore });
-            this.props.callback();
         }
     }
 
-    private fetchByMicroflow(actionname: string, callback: (object: mendix.lib.MxObject[]) => void) {
+    private fetchByMicroflow(Guid: string, actionname: string, callback: (object: mendix.lib.MxObject[]) => void) {
         mx.data.action({
             callback,
             error: error => {
@@ -107,13 +105,12 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
                     configurationError: `Error while retrieving microflow data ${actionname}: ${error.message}`,
                     dataStore: { series: {} }
                 });
-                this.props.callback();
             },
             origin: this.props.mxform,
             params: {
                 actionname,
                 applyto: "selection",
-                guids: [ this.props.mxObject.getGuid() ]
+                guids: [ Guid ]
             }
         }, this);
     }
@@ -126,7 +123,6 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
                     configurationError: `An error occurred while retrieving data via XPath (${xpath}): ${error}`,
                     dataStore: { series: {} }
                 });
-                this.props.callback();
             },
             filter: {
                 sort: [ [ seriesConfig.xAttribute, "asc" ] ]
@@ -189,7 +185,6 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
             window.mx.data.unsubscribe(this.subscriptionHandle);
         }
     }
-
 }
 
 export { TimeSeriesContainer as default, ContainerProps };
