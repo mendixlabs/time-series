@@ -3,34 +3,24 @@
   "extends": "tslint:latest",
   "rules": {
     "class-name": true,
-    "curly": false,
     "comment-format": [ true, "check-space" ],
     "eofline": true,
     "indent": [ true, "spaces" ],
-    "interface-name": [ true, "never-prefix" ],
-    "member-ordering": [ true, "variables-before-functions", { "order": "statics-first" } ],
-    "new-parens": true,
+    "member-ordering": [ true, "variables-before-functions" ],
     "no-arg": true,
     "no-bitwise": true,
     "no-conditional-assignment": true,
     "no-console": [ true ],
     "no-debugger": true,
-    "no-default-export": true,
     "no-duplicate-variable": true,
-    "no-empty": true,
     "no-eval": true,
-    "no-inferrable-types": [ true, "ignore-params" ],
-    "no-namespace": [ true, "allow-declarations" ],
-    "no-invalid-this": [ true, "check-function-in-method" ],
-    "no-reference": true,
+    "no-inferrable-types": [ true ],
+    "no-internal-module": true,
     "no-shadowed-variable": true,
-    "no-string-literal": true,
+    "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
-    "no-unsafe-finally": true,
     "no-unused-expression": true,
-    "no-unused-new": true,
     "no-var-keyword": true,
-    "object-literal-shorthand": true,
     "one-line": [
       true,
       "check-catch",
@@ -39,17 +29,11 @@
       "check-open-brace",
       "check-whitespace"
     ],
-    "one-variable-per-declaration": [ true ],
-    "ordered-imports": [
-      true,
-      { "import-sources-order": "lowercase-last" }
-    ],
     "quotemark": [ true, "double" ],
     "semicolon": [ true, "always" ],
     "triple-equals": [ true, "allow-null-check" ],
     "typedef-whitespace": [
-      true,
-      {
+      true, {
         "call-signature": "nospace",
         "index-signature": "nospace",
         "parameter": "nospace",
@@ -67,6 +51,7 @@
       "check-separator",
       "check-type"
     ],
+    "interface-name": [ false, "always-prefix" ],
     "no-multi-spaces": [ true ],
     "no-extra-semi": true,
     "no-irregular-whitespace": true,
@@ -84,19 +69,21 @@
     "block-spacing": [ true, "always" ],
     "brace-style": [
       true,
-      "1tbs",
-      { "allowSingleLine": true }
-    ],
-    "object-curly-spacing": [ true, "always" ],
-    "trailing-comma": [
-      true,
-      {
-        "multiline": "never",
-        "singleline": "never"
+      "1tbs", {
+        "allowSingleLine": true
       }
     ],
+    "object-curly-spacing": [ true, "always" ],
+    "trailing-comma": [ true, { "multiline": "never", "singleline": "never" } ],
     "member-access": false,
-    "no-unused-variable": [true, "react"],
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "any",
+        "named-imports-order": "lowercase-last"
+      }
+    ],
+    "curly": false,
     "arrow-parens": false
   },
   "jsRules": {

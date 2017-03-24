@@ -1,6 +1,7 @@
 import { ShallowWrapper, shallow } from "enzyme";
 import { DOM, createElement } from "react";
 import { time } from "d3";
+import * as nv from "nvd3"; // TODO: Check if this actually works
 
 import { NVD3LineChart, Nvd3LineChartProps } from "../NVD3LineChart";
 

@@ -1,7 +1,7 @@
 import { max, min, time } from "d3";
 import { Component, createElement } from "react";
 
-import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries.d";
+import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
 
 import "../ui/TimeSeries.css";
@@ -18,6 +18,10 @@ interface TimeSeriesProps extends ModelProps {
 }
 
 class TimeSeries extends Component<TimeSeriesProps, {}> {
+    static defaultProps = {
+        dataStore: { series: { } }
+    };
+
     render() {
         const props = this.props;
         const datum = this.processDatum(props.seriesConfig, props.dataStore);
@@ -28,19 +32,17 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                     xAxis: {
                         axisLabel: props.xAxisLabel,
                         showMaxMin: true,
-                        tickFormat: (value: number) => {
-                            return window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat });
-                        }
+                        tickFormat: (value: number) =>
+                            window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat })
                     },
                     xScale: time.scale(),
                     yAxis: {
                         axisLabel: props.yAxisLabel,
-                        tickFormat: (value) => {
-                                return new Intl.NumberFormat("en-US", {
-                                    maximumFractionDigits: props.yAxisFormatDecimalPrecision,
-                                    minimumFractionDigits: 0})
-                                .format(value);
-                        }
+                        tickFormat: (value) =>
+                            new Intl.NumberFormat("en-US", {
+                                maximumFractionDigits: props.yAxisFormatDecimalPrecision,
+                                minimumFractionDigits: 0
+                            }).format(value)
                     }
                 },
                 forceY: this.forceY(datum, customForceY),
@@ -67,8 +69,8 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         const returnForceY = [ 0, 0 ];
         const customMinimumY = customForceY[0];
         const customMaximumY = customForceY[1];
-        const dataMinimumY = min(datum, (serieData) => min(serieData.values, (dataPoint) => dataPoint.y));
-        const dataMaximumY = max(datum, (serieData) => max(serieData.values, (dataPoint) => dataPoint.y));
+        const dataMinimumY = min(datum, (seriesData) => min(seriesData.values, (dataPoint) => dataPoint.y));
+        const dataMaximumY = max(datum, (seriesData) => max(seriesData.values, (dataPoint) => dataPoint.y));
         returnForceY[0] = customMinimumY < dataMinimumY ? customMinimumY : dataMinimumY;
         returnForceY[1] = customMaximumY > dataMaximumY ? customMaximumY : dataMaximumY;
         const paddingY = (returnForceY[1] - returnForceY[0]) * 0.05;

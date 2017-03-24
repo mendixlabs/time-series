@@ -11,10 +11,10 @@
             <category>X-axis</category>
             <description>Label for the x-axis (horizontal)</description>
         </property>
-        <property key="xAxisFormat" type="string" required="false">
-            <caption>X-axis data format</caption>
+        <property key="xAxisFormat" type="string" required="false" defaultValue="dd-MM-yyyy">
+            <caption>X-axis date format</caption>
             <category>X-axis</category>
-            <description>Formats of date on the x-axis</description>
+            <description>X-axis date format e.g. dd-MM-yyyy</description>
         </property>
         <property key="yAxisLabel" type="string" required="false">
             <caption>Y-axis label</caption>
@@ -24,27 +24,27 @@
         <property key="yAxisFormatDecimalPrecision" type="integer" defaultValue="2">
             <caption>Decimal precision</caption>
             <category>Y-axis</category>
-            <description></description>
+            <description/>
         </property>
         <property key="yAxisDomainMinimum" type="string" required="false">
-            <caption>Axis minimum value</caption>
+            <caption>Minimum value</caption>
             <category>Y-axis</category>
             <description>Can be positive or negative number eg: -50, 50, 0.5 </description>
         </property>
         <property key="yAxisDomainMaximum" type="string" required="false">
-            <caption>Axis maximum value</caption>
+            <caption>Maximum value</caption>
             <category>Y-axis</category>
-            <description>Can be a positive of negative number eg: -10, 100, 2.5</description>
+            <description>Can be a positive or negative number eg: -10, 100, 2.5</description>
         </property>
         <property key="seriesConfig" type="object" isList="true">
             <caption>Series</caption>
-            <category>Series Configuration</category>
+            <category>Series configuration</category>
             <description>Add a series and configure its properties</description>
             <properties>
                 <property key="name" type="string">
                     <caption>Name</caption>
                     <category>Data source</category>
-                    <description>Used in legend and tooltip</description>
+                    <description>Used in the legend and tooltip</description>
                 </property>
                 <property key="entity" type="entity" pathType="reference" isPath="optional">
                     <caption>Data entity</caption>
@@ -58,20 +58,20 @@
                     <enumerationValues>
                         <enumerationValue key="xpath">XPath</enumerationValue>
                         <enumerationValue key="microflow">Microflow</enumerationValue>
-                    </enumerationValues> 
+                    </enumerationValues>
                 </property>
                 <property key="xAttribute" type="attribute" entityProperty="entity">
-                    <caption>X-axis data</caption>
+                    <caption>X-axis date attribute</caption>
                     <category>Data source</category>
-                    <description>Attribute containing dates for x-axis</description>
+                    <description>Attribute containing x-axis dates</description>
                     <attributeTypes>
                         <attributeType name="DateTime"/>
                     </attributeTypes>
                 </property>
                <property key="yAttribute" type="attribute" entityProperty="entity">
-                    <caption>Y-axis data</caption>
+                    <caption>Y-axis data attribute</caption>
                     <category>Data source</category>
-                    <description>Attribute containing data for y-axis</description>
+                    <description>Attribute containing y-axis data</description>
                     <attributeTypes>
                         <attributeType name="Decimal"/>
                         <attributeType name="Long"/>
@@ -84,7 +84,7 @@
                     <description>Constraint on the data from the data entity</description>
                 </property>
                 <property key="dataSourceMicroflow" type="microflow" required="false">
-                    <caption>Data source microflow </caption>
+                    <caption>Microflow </caption>
                     <category>Source - microflow</category>
                     <description>Returns a series' coordinates</description>
                     <returnType type="Object" entityProperty="entity" isList="true"/>
@@ -113,7 +113,7 @@
             <enumerationValues>
                 <enumerationValue key="auto">Auto</enumerationValue>
                 <enumerationValue key="pixels">Pixels</enumerationValue>
-            </enumerationValues> 
+            </enumerationValues>
         </property>
         <property key="height" type="integer" defaultValue="500">
             <caption>Chart height</caption>

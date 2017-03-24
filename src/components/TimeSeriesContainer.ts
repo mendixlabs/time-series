@@ -1,40 +1,36 @@
 import * as lang from "mendix/lang";
 import { Component, createElement } from "react";
 
-import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries.d";
+import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { Alert } from "./Alert";
-import { TimeSeries as TimeSeriesComponent } from "./TimeSeries";
+import { TimeSeries } from "./TimeSeries";
 
-interface ContainerProps extends ModelProps {
-    callback?: () => void;
+interface TimeSeriesContainerProps extends ModelProps {
     mxObject: mendix.lib.MxObject;
-    mxform?: mxui.lib.form._FormBase;
 }
 
-interface ContainerState {
-    configurationError?: string;
+interface TimeSeriesContainerState {
+    alertMessage?: string;
     dataStore: DataStore;
 }
 
-class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
+class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeriesContainerState> {
     private subscriptionHandle: number;
     private dataStore: DataStore;
-    constructor(props: ContainerProps) {
+
+    constructor(props: TimeSeriesContainerProps) {
         super(props);
         this.fetchData = this.fetchData.bind(this);
-        const configurationError = this.hasValidConfig();
         this.state = {
-            configurationError,
+            alertMessage: this.validateProps(),
             dataStore: { series: {} }
         };
-        this.resetSubscription(props.mxObject);
     }
 
     render() {
-        if (this.state.configurationError) {
-            return createElement(Alert, { message: this.state.configurationError });
-        } else {
-            return createElement(TimeSeriesComponent, {
+        return this.state.alertMessage
+            ? createElement(Alert, { message: this.state.alertMessage })
+            : createElement(TimeSeries, {
                 dataStore: this.state.dataStore,
                 height: this.props.height,
                 heightUnit: this.props.heightUnit,
@@ -48,24 +44,49 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
                 yAxisFormatDecimalPrecision: this.props.yAxisFormatDecimalPrecision,
                 yAxisLabel: this.props.yAxisLabel
             });
-        }
     }
 
-    componentWillReceiveProps(nextProps: ContainerProps) {
-        if (this.props.mxObject !== nextProps.mxObject) {
-            this.resetSubscription(nextProps.mxObject);
-            this.fetchData(nextProps.mxObject);
-        }
+    componentDidMount() {
+        if (!this.state.alertMessage) this.fetchData(this.props.mxObject);
+    }
+
+    componentWillReceiveProps(nextProps: TimeSeriesContainerProps) {
+        this.resetDataStore();
+        this.resetSubscription(nextProps.mxObject);
+        this.fetchData(nextProps.mxObject);
     }
 
     componentWillUnmount() {
         this.unSubscribe();
     }
 
-    componentDidMount() {
-        if (!this.state.configurationError) {
-            this.fetchData(this.props.mxObject);
+    private validateProps(): string {
+        let errorMessage = "";
+        const incorrectSeriesNames = this.props.seriesConfig
+            .filter(series => series.sourceType === "microflow" && !series.dataSourceMicroflow)
+            .map(incorrect => incorrect.name)
+            .join(", ");
+
+        if (incorrectSeriesNames) {
+            errorMessage += `series : ${incorrectSeriesNames}` +
+                ` - data source type is set to 'Microflow' but 'Source - microflow' is missing \n`;
         }
+
+        try {
+            window.mx.parser.formatValue(new Date(), "datetime", { datePattern: this.props.xAxisFormat || "" });
+        } catch (error) {
+            errorMessage += `Formatting for the x-axis : (${this.props.xAxisFormat}) is invalid \n\n`;
+        }
+
+        if (this.props.yAxisDomainMinimum && isNaN(parseFloat(this.props.yAxisDomainMinimum))) {
+            errorMessage += `Y-axis Domain minimum value (${this.props.yAxisDomainMinimum}) is not a number`;
+        }
+        if (this.props.yAxisDomainMaximum && isNaN(parseFloat(this.props.yAxisDomainMaximum))) {
+            errorMessage += `Y-axis Domain maximum value (${this.props.yAxisDomainMaximum}) is not a number`;
+        }
+
+        return errorMessage && `Configuration error :\n\n ${errorMessage}`;
+
     }
 
     private fetchData(contextObject: mendix.lib.MxObject) {
@@ -76,7 +97,6 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
                     this.dataStore.series[series.name] = this.setDataFromObjects(data, series);
                     if (limit === this.props.seriesConfig.length) {
                         this.setState( { dataStore: this.dataStore });
-                        if (this.props.callback) this.props.callback();
                     }
                     limit++;
                     chainCallback();
@@ -97,67 +117,32 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
         }
     }
 
-    private fetchByMicroflow(Guid: string, actionname: string, callback: (object: mendix.lib.MxObject[]) => void) {
-        mx.data.action({
+    private fetchByMicroflow(guid: string, actionname: string, callback: (object: mendix.lib.MxObject[]) => void) {
+        mx.ui.action(actionname, {
             callback,
-            error: error => {
-                this.setState({
-                    configurationError: `Error while retrieving microflow data ${actionname}: ${error.message}`,
-                    dataStore: { series: {} }
-                });
-            },
-            origin: this.props.mxform,
+            error: error => this.setState({
+                alertMessage: `Error while retrieving microflow data ${actionname}: ${error.message}`,
+                dataStore: { series: {} }
+            }),
             params: {
-                actionname,
                 applyto: "selection",
-                guids: [ Guid ]
+                guids: [ guid ]
             }
-        }, this);
+        });
     }
 
     private fetchByXPath(seriesConfig: SeriesConfig, xpath: string, callback: (object: mendix.lib.MxObject[]) => void) {
         window.mx.data.get({
             callback,
-            error: error => {
-                this.setState({
-                    configurationError: `An error occurred while retrieving data via XPath (${xpath}): ${error}`,
-                    dataStore: { series: {} }
-                });
-            },
+            error: error => this.setState({
+                alertMessage: `An error occurred while retrieving data via XPath (${xpath}): ${error}`,
+                dataStore: { series: {} }
+            }),
             filter: {
                 sort: [ [ seriesConfig.xAttribute, "asc" ] ]
             },
             xpath
         });
-    }
-
-    private hasValidConfig(): string {
-        let errorMessage = "";
-        const incorrectSeriesNames = this.props.seriesConfig
-            .filter(series => (series.sourceType === "microflow" && !series.dataSourceMicroflow))
-            .map(incorrect => incorrect.name)
-            .join(", ");
-
-        if (incorrectSeriesNames) {
-            errorMessage += `series : ${incorrectSeriesNames}` +
-                ` - data source type is set to 'Microflow' but 'Source - microflow' is missing \n`;
-        }
-
-        try {
-            window.mx.parser.formatValue(new Date(), "datetime", { datePattern: this.props.xAxisFormat || "" });
-        } catch (error) {
-            errorMessage += `Formatting for the x-axis : ${this.props.xAxisFormat} is invalid \n\n`;
-        }
-
-        if (this.props.yAxisDomainMinimum && isNaN(parseFloat(this.props.yAxisDomainMinimum))) {
-            errorMessage += `Y-axis Domain minimum value ${this.props.yAxisDomainMinimum} is not a number`;
-        }
-        if (this.props.yAxisDomainMaximum && isNaN(parseFloat(this.props.yAxisDomainMaximum))) {
-            errorMessage += `Y-axis Domain maximum value ${this.props.yAxisDomainMaximum} is not a number`;
-        }
-
-        return errorMessage ? `Configuration error :\n\n ${errorMessage}` : ``;
-
     }
 
     private setDataFromObjects(objects: mendix.lib.MxObject[], seriesConfig: SeriesConfig) {
@@ -167,9 +152,12 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
         }));
     }
 
+    private resetDataStore() {
+        this.dataStore = { series: { } };
+    }
+
     private resetSubscription(contextObject: mendix.lib.MxObject) {
         this.unSubscribe();
-        this.dataStore = { series: { } };
 
         if (contextObject) {
             this.subscriptionHandle = window.mx.data.subscribe({
@@ -187,4 +175,4 @@ class TimeSeriesContainer extends Component<ContainerProps, ContainerState> {
     }
 }
 
-export { TimeSeriesContainer as default, ContainerProps };
+export { TimeSeriesContainer as default };

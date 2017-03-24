@@ -1,5 +1,5 @@
 import { select, time } from "d3";
-import { addGraph, models, utils } from "nvd3";
+import { LineChart, Nvd3ResizeHandler, addGraph, models, utils } from "nvd3";
 import { Component, DOM } from "react";
 
 import { Series } from "./TimeSeries";
@@ -28,8 +28,8 @@ interface Axis {
 
 class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     static defaultProps: Nvd3LineChartProps = { datum: [] };
-    private chart: nv.LineChart;
-    private resizeHandler: { clear: Function };
+    private chart: LineChart;
+    private resizeHandler: Nvd3ResizeHandler;
     private svg: Node;
 
     render() {
@@ -37,6 +37,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             height: this.props.height,
             width: this.props.width
         };
+
         return DOM.div({ className: "nv-chart", style },
             DOM.svg({ ref: node => this.svg = node })
         );
@@ -71,9 +72,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
         if (!this.resizeHandler) {
             this.resizeHandler = utils.windowResize(() => {
-                if (this.chart.update) {
-                    this.chart.update();
-                }
+                if (this.chart.update) this.chart.update();
             });
         }
 
