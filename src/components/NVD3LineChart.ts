@@ -31,6 +31,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private chart: LineChart;
     private resizeHandler: Nvd3ResizeHandler;
     private svg: Node;
+    private intervalID: number;
 
     render() {
         const style = {
@@ -45,6 +46,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
     componentDidMount() {
         addGraph(() => this.renderChart());
+        this.fixChartRendering();
     }
 
     componentDidUpdate() {
@@ -77,6 +79,16 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         }
 
         return this.chart;
+    }
+
+    private fixChartRendering() {
+        this.intervalID = setInterval(() => {
+            if (this.svg && this.svg.parentElement.offsetHeight !== 0 && this.intervalID) {
+                if (this.chart.update) this.chart.update();
+                clearInterval(this.intervalID);
+                this.intervalID = null;
+            }
+        }, 100);
     }
 
     private isPlainObject(object: any): boolean {
