@@ -30,11 +30,12 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
-            { from: "src/**/*.xml" }
+            { from: "src/**/*.xml" },
+            { from: "assets/Preview.png", to: "src/Preview.png"}
         ], {
             copyUnmodified: true
         }),
-        new ExtractTextPlugin({ filename: "./src/com/mendix/widget/custom/timeseries/ui/Timeseries.css" }),
+        new ExtractTextPlugin({ filename: "src/com/mendix/widget/custom/timeseries/ui/Timeseries.css" }),
         new webpack.LoaderOptionsPlugin({
             debug: true
         })
