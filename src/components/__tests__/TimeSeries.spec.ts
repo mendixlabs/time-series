@@ -1,7 +1,7 @@
 import { shallow } from "enzyme"; // enzyme's api doesn't provide innerHTML for svg. use "React.addons.TestUtils"
 import { createElement } from "react";
 
-import { SeriesConfig } from "../../TimeSeries.d";
+import { DataStore, SeriesConfig } from "../../TimeSeries.d";
 import { TimeSeries, TimeSeriesProps } from "../TimeSeries";
 
 import { NVD3LineChart } from "../NVD3LineChart";
@@ -10,7 +10,7 @@ describe("TimeSeries", () => {
 
     const getDate = (date: string) => new Date(date).getDate();
     const seriesConfig: SeriesConfig[] = [ { color: "blue", fill: true, name: "data1" } ];
-    const dataStore = {
+    const dataStore: DataStore = {
         series: {
             data1: [
                 { x: getDate("24-Apr-2007"), y: 93.24 },
@@ -49,7 +49,7 @@ describe("TimeSeries", () => {
         expect(componentProps.datum[0].key).toBe("data1");
     });
 
-    it("should render chart component with without data", () => {
+    it("should render chart component without data", () => {
         const nonDataProps: TimeSeriesProps = {
             dataStore : { series: {} },
             height: 500,
@@ -80,6 +80,37 @@ describe("TimeSeries", () => {
 
         it("should not pass width", () => {
             expect(lineChart.first().props().width).toBeUndefined();
+        });
+    });
+    describe("with multi-series", () => {
+        const data: DataStore = { series: {
+            data1: [
+                    { x: getDate("24-Apr-2007"), y: 93.24 },
+                    { x: getDate("2-Jan-2008"), y: 194.84 },
+                    { x: getDate("1-Jan-2009"), y: 85.35 },
+                    { x: getDate("1-Jan-2010"), y: 210.73 }
+                ],
+            data2: [
+                    { x: getDate("23-Apr-2007"), y: 103.24 },
+                    { x: getDate("2-Jan-2008"), y: 204.84 },
+                    { x: getDate("2-Jan-2009"), y: 95.35 },
+                    { x: getDate("2-Jan-2010"), y: 220.73 }
+                ]
+        }};
+
+        const config: SeriesConfig[] = [
+            { color: "blue", fill: true, name: "data1" },
+            { color: "red", fill: true, name: "data2" } ];
+
+        it("should render correctly", () => {
+            const chartProps: TimeSeriesProps = {
+                dataStore: data, height: 500, heightUnit: "auto", seriesConfig: config, width: 900, widthUnit: "auto"
+            };
+
+            const lineChartProps = shallow(createElement(TimeSeries, chartProps)).find(NVD3LineChart).props();
+
+            expect(lineChartProps.datum.length).toBe(2);
+
         });
     });
 });
