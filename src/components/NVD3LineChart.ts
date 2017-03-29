@@ -39,7 +39,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             width: this.props.width
         };
 
-        return DOM.div({ className: "nv-chart", style },
+        return DOM.div({ className: "widget-time-series nv-chart", style },
             DOM.svg({ ref: node => this.svg = node })
         );
     }
@@ -88,6 +88,20 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
                 clearInterval(this.intervalID);
                 this.intervalID = null;
             }
+
+            select(window).on("mouseout." + this.chart.id(), () => {
+                setTimeout(() => {
+                this.chart.tooltip.hidden(true);
+                this.chart.interactiveLayer.tooltip.hidden(true);
+                }, 1000);
+            });
+            select(window).on("touchstart." + this.chart.id(), () => {
+                setTimeout(() => {
+                this.chart.tooltip.hidden(true);
+                this.chart.interactiveLayer.tooltip.hidden(true);
+                }, 1000);
+            });
+            
         }, 100);
     }
 
@@ -96,6 +110,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             const proto = Object.getPrototypeOf(object);
             return proto === Object.prototype || proto === null;
         }
+
         return false;
     }
 
