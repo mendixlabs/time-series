@@ -1,5 +1,6 @@
 {
-  "name": "TimeSeries",
+  "name": "time-series",
+  "widgetName": "TimeSeries",
   "version": "0.2.0",
   "description": "Time series chart",
   "copyright": "Mendix",
