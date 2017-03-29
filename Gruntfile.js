@@ -2,8 +2,11 @@
 const webpack = require("webpack");
 const webpackConfig = require("./webpack.config");
 const webpackConfigRelease = {};
+let plugins = webpackConfig.plugins.slice(0);
+plugins.push(new webpack.optimize.UglifyJsPlugin());
 Object.assign(webpackConfigRelease, webpackConfig, {
-    devtool: false
+    devtool: false,
+    plugins: plugins
 });
 
 module.exports = function (grunt) {
