@@ -2,6 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "rootDir": "./",
+        "outDir": "dist/tsc/",
         "noEmitOnError": true,
         "sourceMap": true,
         "module": "amd",
@@ -18,6 +19,7 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "skipLibCheck": true,
+        "strictNullChecks": false,
         "noUnusedParameters": true,
         "noUnusedLocals": true
     },

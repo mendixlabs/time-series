@@ -7,9 +7,7 @@ Object.assign(webpackConfig, {
         "react/lib/ReactContext",
         "react/addons",
         "jsdom",
-        "mendix/lang",
-        "dojo/_base/declare",
-        "mxui/widget/_WidgetBase"
+        "mendix/lang"
     ]
 });
 

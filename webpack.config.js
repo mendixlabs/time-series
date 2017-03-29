@@ -8,13 +8,11 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
         filename: "src/com/mendix/widget/custom/timeseries/TimeSeries.js",
-        libraryTarget:  "umd"
+        libraryTarget: "umd"
     },
     resolve: {
         extensions: [ ".ts", ".js", ".json" ],
-        alias: {
-            "tests": path.resolve(__dirname, "./tests")
-        }
+        alias: { "tests": path.resolve(__dirname, "./tests") }
     },
     module: {
         rules: [

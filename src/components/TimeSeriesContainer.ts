@@ -90,15 +90,10 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
     }
 
     private fetchData(contextObject: mendix.lib.MxObject) {
-        let limit = 1;
         if (contextObject) {
             const chain = this.props.seriesConfig.map(series => (chainCallback: () => void) => {
-                const processResults = ( data: mendix.lib.MxObject[]) => {
+                const processResults = (data: mendix.lib.MxObject[]) => {
                     this.dataStore.series[series.name] = this.setDataFromObjects(data, series);
-                    if (limit === this.props.seriesConfig.length) {
-                        this.setState( { dataStore: this.dataStore });
-                    }
-                    limit++;
                     chainCallback();
                 };
 
@@ -110,8 +105,9 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                     this.fetchByMicroflow(contextObject.getGuid(), series.dataSourceMicroflow, processResults);
                 }
             });
-
-            lang.collect(chain);
+            lang.collect(chain, () => {
+                this.setState({ dataStore: this.dataStore });
+            });
         } else {
             this.setState({ dataStore: this.dataStore });
         }
@@ -145,7 +141,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         });
     }
 
-    private setDataFromObjects(objects: mendix.lib.MxObject[], seriesConfig: SeriesConfig) {
+    private setDataFromObjects(objects: mendix.lib.MxObject[], seriesConfig: SeriesConfig): DataPoint[] {
         return objects.map((itemObject): DataPoint => ({
             x: itemObject.get(seriesConfig.xAttribute) as number,
             y: parseFloat(itemObject.get(seriesConfig.yAttribute) as string)

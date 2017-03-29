@@ -38,5 +38,5 @@ export interface DataPoint {
 }
 
 export interface DataStore {
-    series: {[key: string]: DataPoint[]};
+    series: { [key: string]: DataPoint[] };
 }
