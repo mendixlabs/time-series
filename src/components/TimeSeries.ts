@@ -51,7 +51,7 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                 width: props.widthUnit === "auto" ? undefined : props.width
             };
         if (!datum.length) {
-            return DOM.div();
+            return DOM.div({ className: "widget-time-series no-data" });
         }
         return createElement (NVD3LineChart, chart);
     }
@@ -67,7 +67,7 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         }));
     }
 
-    private forceY(datum: Series[], customForceY: number[] ) {
+    private forceY(datum: Series[], customForceY: number[]): number[] {
         const yLimit = { minimum: 0, maximum: 0 };
         const customYLimit = { min: customForceY[0], max: customForceY[1] };
         const dataMinimumY = min(datum, (seriesData) => min(seriesData.values, (dataPoint) => dataPoint.y));
@@ -77,8 +77,8 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         const paddingY = (yLimit.maximum - yLimit.minimum) * 0.05;
         yLimit.minimum = yLimit.minimum === customYLimit.min ? customYLimit.min : yLimit.minimum - paddingY;
         yLimit.maximum = yLimit.maximum === customYLimit.max ? customYLimit.max : yLimit.maximum + paddingY;
-        return [ yLimit.minimum, yLimit.maximum ];
 
+        return [ yLimit.minimum, yLimit.maximum ];
     }
 }
 
