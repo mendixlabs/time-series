@@ -92,7 +92,7 @@
                 <property key="color" type="string" required="false">
                     <caption>Color</caption>
                     <category>Appearance</category>
-                    <description>Color of the line in HTML colors</description>
+                    <description>Color of the line in HTML colors eg: # green, #00FF00, rgb(0,255,0)</description>
                 </property>
                 <property key="fill" type="boolean" defaultValue="false">
                     <caption>Fill area</caption>

@@ -1,5 +1,5 @@
 import { max, min, time } from "d3";
-import { Component, createElement } from "react";
+import { Component, DOM, createElement } from "react";
 
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
@@ -50,7 +50,9 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                 height: props.heightUnit === "auto" ? undefined : props.height,
                 width: props.widthUnit === "auto" ? undefined : props.width
             };
-
+        if (!datum.length) {
+            return DOM.div();
+        }
         return createElement (NVD3LineChart, chart);
     }
 
@@ -66,17 +68,16 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
     }
 
     private forceY(datum: Series[], customForceY: number[] ) {
-        const returnForceY = [ 0, 0 ];
-        const customMinimumY = customForceY[0];
-        const customMaximumY = customForceY[1];
+        const yLimit = { minimum: 0, maximum: 0 };
+        const customYLimit = { min: customForceY[0], max: customForceY[1] };
         const dataMinimumY = min(datum, (seriesData) => min(seriesData.values, (dataPoint) => dataPoint.y));
         const dataMaximumY = max(datum, (seriesData) => max(seriesData.values, (dataPoint) => dataPoint.y));
-        returnForceY[0] = customMinimumY < dataMinimumY ? customMinimumY : dataMinimumY;
-        returnForceY[1] = customMaximumY > dataMaximumY ? customMaximumY : dataMaximumY;
-        const paddingY = (returnForceY[1] - returnForceY[0]) * 0.05;
-        returnForceY[0] = returnForceY[0] === customMinimumY ? customMinimumY : returnForceY[0] - paddingY;
-        returnForceY[1] = returnForceY[1] === customMaximumY ? customMaximumY : returnForceY[1] + paddingY;
-        return returnForceY;
+        yLimit.minimum = customYLimit.min < dataMinimumY ? customYLimit.min : dataMinimumY;
+        yLimit.maximum = customYLimit.max > dataMaximumY ? customYLimit.max : dataMaximumY;
+        const paddingY = (yLimit.maximum - yLimit.minimum) * 0.05;
+        yLimit.minimum = yLimit.minimum === customYLimit.min ? customYLimit.min : yLimit.minimum - paddingY;
+        yLimit.maximum = yLimit.maximum === customYLimit.max ? customYLimit.max : yLimit.maximum + paddingY;
+        return [ yLimit.minimum, yLimit.maximum ];
 
     }
 }
