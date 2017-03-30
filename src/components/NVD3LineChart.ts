@@ -10,7 +10,7 @@ interface Nvd3LineChartProps {
     forceY?: number[];
     height?: number;
     width?: number;
-    chartProps?: ChartProps;
+    chartProps: ChartProps;
     datum: Series[];
 }
 
@@ -21,17 +21,17 @@ interface ChartProps {
 }
 
 interface Axis {
-    axisLabel: string;
+    axisLabel?: string;
     showMaxMin?: boolean;
-    tickFormat: (d: any) => string;
+    tickFormat: (d: number) => string;
 }
 
 class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
-    static defaultProps: Nvd3LineChartProps = { datum: [] };
+    static defaultProps: Partial<Nvd3LineChartProps> = { datum: [] };
     private chart: LineChart;
     private resizeHandler: Nvd3ResizeHandler;
     private svg: Node;
-    private intervalID: number;
+    private intervalID: number | null;
 
     render() {
         const style = {
@@ -68,7 +68,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             .showYAxis(true)
             .useInteractiveGuideline(true)
             .duration(350)
-            .forceY(this.props.forceY);
+            .forceY(this.props.forceY || []);
 
         select(this.svg).datum(this.props.datum).call(this.chart);
 
@@ -83,7 +83,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
     private fixChartRendering() {
         this.intervalID = setInterval(() => {
-            if (this.svg && this.svg.parentElement.offsetHeight !== 0 && this.intervalID) {
+            if (this.svg && this.svg.parentElement && this.svg.parentElement.offsetHeight !== 0 && this.intervalID) {
                 if (this.chart.update) this.chart.update();
                 clearInterval(this.intervalID);
                 this.intervalID = null;

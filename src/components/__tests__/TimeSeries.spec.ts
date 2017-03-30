@@ -1,7 +1,7 @@
 import { shallow } from "enzyme"; // enzyme's api doesn't provide innerHTML for svg. use "React.addons.TestUtils"
 import { createElement } from "react";
 
-import { DataStore, SeriesConfig } from "../../TimeSeries.d";
+import { DataStore, SeriesConfig } from "../../TimeSeries";
 import { TimeSeries, TimeSeriesProps } from "../TimeSeries";
 
 import { NVD3LineChart } from "../NVD3LineChart";
@@ -9,7 +9,7 @@ import { NVD3LineChart } from "../NVD3LineChart";
 describe("TimeSeries", () => {
 
     const getDate = (date: string) => new Date(date).getDate();
-    const seriesConfig: SeriesConfig[] = [ { color: "blue", fill: true, name: "data1" } ];
+    const seriesConfig = [ { color: "blue", fill: true, name: "data1" } ] as SeriesConfig[];
     const dataStore: DataStore = {
         series: {
             data1: [
@@ -98,9 +98,10 @@ describe("TimeSeries", () => {
                 ]
         }};
 
-        const config: SeriesConfig[] = [
+        const config = [
             { color: "blue", fill: true, name: "data1" },
-            { color: "red", fill: true, name: "data2" } ];
+            { color: "red", fill: true, name: "data2" }
+        ] as SeriesConfig[];
 
         it("should render correctly", () => {
             const chartProps: TimeSeriesProps = {

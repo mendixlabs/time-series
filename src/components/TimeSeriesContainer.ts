@@ -98,10 +98,12 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                 };
 
                 if (series.sourceType === "xpath") {
-                    const constraint = series.entityConstraint.replace("[%CurrentObject%]", contextObject.getGuid());
+                    const constraint = series.entityConstraint
+                        ? series.entityConstraint.replace("[%CurrentObject%]", contextObject.getGuid())
+                        : "";
                     const XPath = "//" + series.entity + constraint;
                     this.fetchByXPath(series, XPath, processResults);
-                } else if (series.sourceType === "microflow") {
+                } else if (series.sourceType === "microflow" && series.dataSourceMicroflow) {
                     this.fetchByMicroflow(contextObject.getGuid(), series.dataSourceMicroflow, processResults);
                 }
             });

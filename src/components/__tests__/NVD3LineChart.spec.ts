@@ -12,12 +12,12 @@ describe("NVD3LineChart", () => {
                 xAxis: {
                     axisLabel: "Time",
                     showMaxMin: true,
-                    tickFormat: (v) => v
+                    tickFormat: (v) => v.toString()
                 },
                 xScale: time.scale(),
                 yAxis: {
                     axisLabel: "Label",
-                    tickFormat: (v) => v
+                    tickFormat: (v) => v.toString()
                 }
             },
             datum: [ {
@@ -101,12 +101,12 @@ describe("NVD3LineChart", () => {
                     xAxis: {
                         axisLabel: "Time",
                         showMaxMin: true,
-                        tickFormat: (v) => v
+                        tickFormat: (v) => v.toString()
                     },
                     xScale: time.scale(),
-                    yAxis: { axisLabel: "Label", tickFormat: (v) => v }
+                    yAxis: { axisLabel: "Label", tickFormat: (v) => v.toString() }
                 },
-                datum: undefined,
+                datum: [],
                 height: 20,
                 width: 50
             };

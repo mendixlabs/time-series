@@ -7,14 +7,14 @@ import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
 import "../ui/TimeSeries.css";
 
 interface Series {
-    values?: DataPoint[];
+    values: DataPoint[];
     key?: string;
     color?: string;
     area?: boolean;
 }
 
 interface TimeSeriesProps extends ModelProps {
-    dataStore?: DataStore;
+    dataStore: DataStore;
 }
 
 class TimeSeries extends Component<TimeSeriesProps, {}> {
@@ -32,13 +32,13 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                     xAxis: {
                         axisLabel: props.xAxisLabel,
                         showMaxMin: true,
-                        tickFormat: (value: number) =>
+                        tickFormat: value =>
                             window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat })
                     },
                     xScale: time.scale(),
                     yAxis: {
                         axisLabel: props.yAxisLabel,
-                        tickFormat: (value) =>
+                        tickFormat: value =>
                             new Intl.NumberFormat("en-US", {
                                 maximumFractionDigits: props.yAxisFormatDecimalPrecision,
                                 minimumFractionDigits: 0
@@ -70,8 +70,8 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
     private forceY(datum: Series[], customForceY: number[]): number[] {
         const yLimit = { minimum: 0, maximum: 0 };
         const customYLimit = { min: customForceY[0], max: customForceY[1] };
-        const dataMinimumY = min(datum, (seriesData) => min(seriesData.values, (dataPoint) => dataPoint.y));
-        const dataMaximumY = max(datum, (seriesData) => max(seriesData.values, (dataPoint) => dataPoint.y));
+        const dataMinimumY = min(datum, (seriesData) => min(seriesData.values, (dataPoint: DataPoint) => dataPoint.y));
+        const dataMaximumY = max(datum, (seriesData) => max(seriesData.values, (dataPoint: DataPoint) => dataPoint.y));
         yLimit.minimum = customYLimit.min < dataMinimumY ? customYLimit.min : dataMinimumY;
         yLimit.maximum = customYLimit.max > dataMaximumY ? customYLimit.max : dataMaximumY;
         const paddingY = (yLimit.maximum - yLimit.minimum) * 0.05;
