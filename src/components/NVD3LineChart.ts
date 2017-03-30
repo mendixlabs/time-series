@@ -8,10 +8,12 @@ import "nvd3/build/nv.d3.css";
 
 interface Nvd3LineChartProps {
     forceY?: number[];
-    height?: number;
-    width?: number;
+    height: number;
+    width: number;
     chartProps: ChartProps;
     datum: Series[];
+    heightUnit: "auto" | "pixels";
+    widthUnit: "auto" | "pixels";
 }
 
 interface ChartProps {
@@ -30,7 +32,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     static defaultProps: Partial<Nvd3LineChartProps> = { datum: [] };
     private chart: LineChart;
     private resizeHandler: Nvd3ResizeHandler;
-    private svg: Node;
+    private svg: SVGElement;
     private intervalID: number | null;
 
     render() {
@@ -60,6 +62,8 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private renderChart() {
+        const style = { height: () => 0, width: () => 0 };
+
         this.chart = this.chart || models.lineChart();
         this.configureChart(this.chart, this.props.chartProps);
 
@@ -72,8 +76,21 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
         select(this.svg).datum(this.props.datum).call(this.chart);
 
+
+        if (this.props.heightUnit === "auto" ) {
+            style.height = () => (this.svg.parentNode as HTMLElement).clientWidth * this.props.height;
+        } else {
+            style.height = () => (this.props.height);
+        }
+
+
+        // select(this.svg).datum(this.props.datum).call(this.chart).style({ height: this.svg.clientWidth * 0.75 });
+        select(this.svg).datum(this.props.datum).call(this.chart).style({ height: style.height() });
         if (!this.resizeHandler) {
             this.resizeHandler = utils.windowResize(() => {
+                // const svg = this.svg;
+                // select(this.svg).call(this.chart).style({ height: (svg.parentNode as HTMLElement).clientWidth * 0.75 });
+                select(this.svg).call(this.chart).style({ height: style.height() });
                 if (this.chart.update) this.chart.update();
             });
         }
@@ -101,7 +118,14 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
                 this.chart.interactiveLayer.tooltip.hidden(true);
                 }, 1000);
             });
-            
+
+            select(window).on("touchend." + this.chart.id(), () => {
+                setTimeout(() => {
+                this.chart.tooltip.hidden(true);
+                this.chart.interactiveLayer.tooltip.hidden(true);
+                }, 1000);
+            });
+
         }, 100);
     }
 

@@ -99,7 +99,7 @@
                 </property>
             </properties>
         </property>
-        <property key="width" type="integer" defaultValue="920">
+        <property key="width" type="integer" defaultValue="100">
             <caption>Chart width</caption>
             <category>Appearance</category>
             <description>Width of the chart</description>
@@ -109,11 +109,11 @@
             <category>Appearance</category>
             <description/>
             <enumerationValues>
-                <enumerationValue key="auto">Auto</enumerationValue>
+                <enumerationValue key="auto">Percentage</enumerationValue>
                 <enumerationValue key="pixels">Pixels</enumerationValue>
             </enumerationValues>
         </property>
-        <property key="height" type="integer" defaultValue="500">
+        <property key="height" type="integer" defaultValue="75">
             <caption>Chart height</caption>
             <category>Appearance</category>
             <description>Height of the chart</description>
@@ -123,7 +123,7 @@
             <category>Appearance</category>
             <description/>
             <enumerationValues>
-                <enumerationValue key="auto">Auto</enumerationValue>
+                <enumerationValue key="auto">Percentage</enumerationValue>
                 <enumerationValue key="pixels">Pixels</enumerationValue>
             </enumerationValues>
         </property>

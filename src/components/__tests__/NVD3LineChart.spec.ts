@@ -38,7 +38,7 @@ describe("NVD3LineChart", () => {
 
     it("should render a structure correctly", () => {
         expect(renderChart).toBeElement(
-            DOM.div({ className: "nv-chart", style: { height: 20, width: 50 } },
+            DOM.div({ className: "widget-time-series nv-chart", style: { height: 20, width: 50 } },
                 DOM.svg()
             )
         );

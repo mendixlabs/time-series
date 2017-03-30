@@ -65,7 +65,7 @@ describe("TimeSeries", () => {
         const emptyChart = shallow(createElement(TimeSeries, nonDataProps));
 
         const props = emptyChart.find(NVD3LineChart).props();
-        expect(props.datum[0].values).toEqual([]);
+        expect(props.datum.length).toEqual(0);
     });
 
     describe ("with auto dimensions", () => {

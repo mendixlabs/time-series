@@ -47,11 +47,14 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                 },
                 forceY: this.forceY(datum, customForceY),
                 datum,
-                height: props.heightUnit === "auto" ? undefined : props.height,
-                width: props.widthUnit === "auto" ? undefined : props.width
+                height: props.height,
+                heightUnit: props.heightUnit,
+                width: props.width,
+                widthUnit: props.widthUnit
+
             };
         if (!datum.length) {
-            return DOM.div({ className: "widget-time-series no-data" });
+            return DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "No Data");
         }
         return createElement (NVD3LineChart, chart);
     }
@@ -64,7 +67,7 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
             values: dataStore.hasOwnProperty("series") && dataStore.series.hasOwnProperty(config.name)
                 ? dataStore.series[config.name]
                 : []
-        }));
+        })).filter(config => config.values.length);
     }
 
     private forceY(datum: Series[], customForceY: number[]): number[] {
