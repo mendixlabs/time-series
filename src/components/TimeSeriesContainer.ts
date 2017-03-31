@@ -1,5 +1,5 @@
 import * as lang from "mendix/lang";
-import { Component, createElement } from "react";
+import { Component, DOM, createElement } from "react";
 
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { Alert } from "./Alert";
@@ -12,6 +12,7 @@ interface TimeSeriesContainerProps extends ModelProps {
 interface TimeSeriesContainerState {
     alertMessage?: string;
     dataStore: DataStore;
+    isLoaded?: boolean;
 }
 
 class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeriesContainerState> {
@@ -30,24 +31,22 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
     render() {
         return this.state.alertMessage
             ? createElement(Alert, { message: this.state.alertMessage })
-            : createElement(TimeSeries, {
-                dataStore: this.state.dataStore,
-                height: this.props.height,
-                heightUnit: this.props.heightUnit,
-                seriesConfig: this.props.seriesConfig,
-                width: this.props.width,
-                widthUnit: this.props.widthUnit,
-                xAxisFormat: this.props.xAxisFormat,
-                xAxisLabel: this.props.xAxisLabel,
-                yAxisDomainMaximum: this.props.yAxisDomainMaximum,
-                yAxisDomainMinimum: this.props.yAxisDomainMinimum,
-                yAxisFormatDecimalPrecision: this.props.yAxisFormatDecimalPrecision,
-                yAxisLabel: this.props.yAxisLabel
-            });
-    }
-
-    componentDidMount() {
-        if (!this.state.alertMessage) this.fetchData(this.props.mxObject);
+            : this.state.isLoaded
+                ? createElement(TimeSeries, {
+                    dataStore: this.state.dataStore,
+                    height: this.props.height,
+                    heightUnit: this.props.heightUnit,
+                    seriesConfig: this.props.seriesConfig,
+                    width: this.props.width,
+                    widthUnit: this.props.widthUnit,
+                    xAxisFormat: this.props.xAxisFormat,
+                    xAxisLabel: this.props.xAxisLabel,
+                    yAxisDomainMaximum: this.props.yAxisDomainMaximum,
+                    yAxisDomainMinimum: this.props.yAxisDomainMinimum,
+                    yAxisFormatDecimalPrecision: this.props.yAxisFormatDecimalPrecision,
+                    yAxisLabel: this.props.yAxisLabel
+                })
+                : DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "Loading...");
     }
 
     componentWillReceiveProps(nextProps: TimeSeriesContainerProps) {
@@ -108,10 +107,10 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                 }
             });
             lang.collect(chain, () => {
-                this.setState({ dataStore: this.dataStore });
+                this.setState({ dataStore: this.dataStore, isLoaded: true });
             });
         } else {
-            this.setState({ dataStore: this.dataStore });
+            this.setState({ dataStore: this.dataStore, isLoaded: true });
         }
     }
 
