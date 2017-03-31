@@ -36,13 +36,13 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private intervalID: number | null;
 
     render() {
-        // const style = {
-        //     height: this.props.height,
-        //     width: this.props.width
-        // };
+        const style = {
+            paddingBottom : this.props.heightUnit === "auto" ? `${this.props.height}%` : this.props.height,
+            width: this.props.widthUnit === "auto" ? `${this.props.width}%` : this.props.width
+        };
 
-        return DOM.div({ className: "widget-time-series nv-chart" },
-            DOM.svg({ ref: node => this.svg = node })
+        return DOM.div({ className: "widget-time-series nv-chart", style },
+            DOM.svg({ ref: node => this.svg = node } )
         );
     }
 
@@ -62,7 +62,6 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private renderChart() {
-        // const style = { height: () => 0, width: () => 0 };
 
         this.chart = this.chart || models.lineChart();
         this.configureChart(this.chart, this.props.chartProps);
@@ -76,27 +75,8 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
         select(this.svg).datum(this.props.datum).call(this.chart);
 
-
-        // if (this.props.heightUnit === "auto" ) {
-        //     style.height = () => (this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01;
-        // } else {
-        //     this.chart.height(this.props.height);
-        // }
-        // // if (this.props.widthUnit === "auto") {
-
-        // // } else {
-        // //     this.chart.width(this.props.width);
-        // // }
-
-        // if (this.props.heightUnit === "auto")
-        //    container = select(this.svg).datum(this.props.datum).call(this.chart)
-        //         .style({ height: this.svg.clientWidth * this.props.height * 0.01 });
         if (!this.resizeHandler) {
             this.resizeHandler = utils.windowResize(() => {
-                // select(this.svg).call(this.chart)
-                //     .style({ height: (this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01 });
-                // this.chart.height((this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01 );
-                // container.transition().duration(this.chart.duration).call(this.chart);
                 if (this.chart.update) this.chart.update();
             });
         }

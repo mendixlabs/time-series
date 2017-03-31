@@ -1,11 +1,4 @@
-/*.timeseries,
-.timeseries > .chart,
-.timeseries > .chart > svg {
-    width: 100%;
-    height: 100%;
-}*/
-
-.widget-time-series > .nv-chart > svg, .widget-time-series > svg {
-  width: 100%;
-  padding-bottom: 75%;
+.widget-time-series > svg {
+  position: absolute;
+  top: 0;  bottom: 0;  left: 0;  right: 0;
 }
