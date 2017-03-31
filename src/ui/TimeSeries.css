@@ -5,7 +5,7 @@
     height: 100%;
 }*/
 
-.widget-time-series > .chart > svg {
+.widget-time-series > .nv-chart > svg, .widget-time-series > svg {
   width: 100%;
   padding-bottom: 75%;
 }

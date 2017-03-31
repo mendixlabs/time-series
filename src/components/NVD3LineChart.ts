@@ -62,7 +62,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private renderChart() {
-        const style = { height: () => 0, width: () => 0 };
+        // const style = { height: () => 0, width: () => 0 };
 
         this.chart = this.chart || models.lineChart();
         this.configureChart(this.chart, this.props.chartProps);
@@ -77,30 +77,26 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         select(this.svg).datum(this.props.datum).call(this.chart);
 
 
-        if (this.props.heightUnit === "auto" ) {
-            style.height = () => (this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01;
-        } else {
-            this.chart.height(this.props.height);
-        }
-        // if (this.props.widthUnit === "auto") {
-
+        // if (this.props.heightUnit === "auto" ) {
+        //     style.height = () => (this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01;
         // } else {
-        //     this.chart.width(this.props.width);
+        //     this.chart.height(this.props.height);
         // }
+        // // if (this.props.widthUnit === "auto") {
 
-        // select(this.svg).datum(this.props.datum).call(this.chart);
-        // working // select(this.svg).datum(this.props.datum).call(this.chart).style({ height: this.svg.clientWidth * 0.75 });
-        // select(this.svg).datum(this.props.datum).call(this.chart);
-        if (this.props.heightUnit === "auto")
-            select(this.svg).datum(this.props.datum).call(this.chart)
-                .style({ height: this.svg.clientWidth * this.props.height * 0.01 });
+        // // } else {
+        // //     this.chart.width(this.props.width);
+        // // }
+
+        // if (this.props.heightUnit === "auto")
+        //    container = select(this.svg).datum(this.props.datum).call(this.chart)
+        //         .style({ height: this.svg.clientWidth * this.props.height * 0.01 });
         if (!this.resizeHandler) {
             this.resizeHandler = utils.windowResize(() => {
-                // working // const svg = this.svg;
-                // working // select(this.svg).call(this.chart).style({ height: (svg.parentNode as HTMLElement).clientWidth * 0.75 });
-                // select(this.svg).call(this.chart).style({ height: style.height() });
-                select(this.svg).call(this.chart)
-                    .style({ height: (this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01 });
+                // select(this.svg).call(this.chart)
+                //     .style({ height: (this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01 });
+                // this.chart.height((this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01 );
+                // container.transition().duration(this.chart.duration).call(this.chart);
                 if (this.chart.update) this.chart.update();
             });
         }
