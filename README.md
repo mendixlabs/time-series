@@ -17,6 +17,19 @@ Plot and track your data across different time periods on a chart.
 https://timeseriestest.mxapps.io/
 
 ## Usage
+This widget requires a context.
+
+### Series Configuration
+Atleast one series is required, with its data source
+
+#### Data source
+ - `Name` - The name of the series, it will appear in the chart's legend.
+ - `Data entity` - The entity containing the data points for x-axis and y-axis (it has the x and y attributes). In this example its the <b>Point</b> entity.
+ - `Source`
+    * XPath - For "XPath" source, add an XPath constraint in the `Source - XPath` tab.
+    * Microflow - For "Microflow" source, add a data source microflow in the `Source - Microflow` tab.
+#### Sample domain model and configuration
+<img src="https://raw.githubusercontent.com/flockofbirds/time-series/feature/Mx7Wrapper/assets/Setup.png" width="900px" height="500px" />
 
 ## Issues, suggestions and feature requests
 We are actively maintaining this widget, please report any issues or suggestion for improvement at https://github.com/mendixlabs/time-series/issues.

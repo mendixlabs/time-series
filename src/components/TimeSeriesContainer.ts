@@ -77,10 +77,10 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
             errorMessage += `Formatting for the x-axis : (${this.props.xAxisFormat}) is invalid \n\n`;
         }
 
-        if (this.props.yAxisDomainMinimum && isNaN(parseFloat(this.props.yAxisDomainMinimum))) {
+        if (this.props.yAxisDomainMinimum && isNaN(Number(this.props.yAxisDomainMinimum))) {
             errorMessage += `Y-axis Domain minimum value (${this.props.yAxisDomainMinimum}) is not a number`;
         }
-        if (this.props.yAxisDomainMaximum && isNaN(parseFloat(this.props.yAxisDomainMaximum))) {
+        if (this.props.yAxisDomainMaximum && isNaN(Number(this.props.yAxisDomainMaximum))) {
             errorMessage += `Y-axis Domain maximum value (${this.props.yAxisDomainMaximum}) is not a number`;
         }
 

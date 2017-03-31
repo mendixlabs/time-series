@@ -104,12 +104,12 @@
             <category>Appearance</category>
             <description>Width of the chart</description>
         </property>
-        <property key="widthUnit" type="enumeration" defaultValue="auto">
+        <property key="widthUnit" type="enumeration" defaultValue="percentage">
             <caption>Width unit</caption>
             <category>Appearance</category>
             <description/>
             <enumerationValues>
-                <enumerationValue key="auto">Percentage</enumerationValue>
+                <enumerationValue key="percentage">Percentage</enumerationValue>
                 <enumerationValue key="pixels">Pixels</enumerationValue>
             </enumerationValues>
         </property>
@@ -118,12 +118,12 @@
             <category>Appearance</category>
             <description>Height of the chart</description>
         </property>
-        <property key="heightUnit" type="enumeration" defaultValue="auto">
+        <property key="heightUnit" type="enumeration" defaultValue="percentage">
             <caption>Height unit</caption>
             <category>Appearance</category>
             <description/>
             <enumerationValues>
-                <enumerationValue key="auto">Percentage</enumerationValue>
+                <enumerationValue key="percentage">Percentage</enumerationValue>
                 <enumerationValue key="pixels">Pixels</enumerationValue>
             </enumerationValues>
         </property>

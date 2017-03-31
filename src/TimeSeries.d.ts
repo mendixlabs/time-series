@@ -26,9 +26,9 @@ export interface SeriesConfig {
     fill: boolean;
 }
 
-export type WidthUnit = "auto" | "pixels";
+export type WidthUnit = "percentage" | "pixels";
 
-export type HeightUnit = "auto" | "pixels";
+export type HeightUnit = "percentage" | "pixels";
 
 export type DataSource = "xpath" | "microflow";
 

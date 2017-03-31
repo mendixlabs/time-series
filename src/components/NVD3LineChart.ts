@@ -12,8 +12,8 @@ interface Nvd3LineChartProps {
     width: number;
     chartProps: ChartProps;
     datum: Series[];
-    heightUnit: "auto" | "pixels";
-    widthUnit: "auto" | "pixels";
+    heightUnit: "percentage" | "pixels";
+    widthUnit: "percentage" | "pixels";
 }
 
 interface ChartProps {
@@ -37,8 +37,8 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
     render() {
         const style = {
-            paddingBottom : this.props.heightUnit === "auto" ? `${this.props.height}%` : this.props.height,
-            width: this.props.widthUnit === "auto" ? `${this.props.width}%` : this.props.width
+            paddingBottom : this.props.heightUnit === "percentage" ? `${this.props.height}%` : this.props.height,
+            width: this.props.widthUnit === "percentage" ? `${this.props.width}%` : this.props.width
         };
 
         return DOM.div({ className: "widget-time-series nv-chart", style },
@@ -71,7 +71,11 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             .duration(350)
             .forceY(this.props.forceY || []);
 
-        select(this.svg).datum(this.props.datum).call(this.chart);
+        if (this.props.widthUnit === "percentage") {
+            select(this.svg).datum(this.props.datum).call(this.chart);
+        } else {
+            select(this.svg).datum(this.props.datum).call(this.chart).style({ width: this.props.width });
+        }
 
         this.resizeHandler = utils.windowResize(() => {
             if (this.chart.update) this.chart.update();
@@ -83,7 +87,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private fixChartRendering() {
         this.intervalID = setInterval(() => {
             if (this.svg && this.svg.parentElement && this.svg.parentElement.offsetHeight !== 0 && this.intervalID) {
-                if (this.chart.update) this.chart.update();
+                if (this.chart && this.chart.update) this.chart.update();
                 clearInterval(this.intervalID);
                 this.intervalID = null;
             }

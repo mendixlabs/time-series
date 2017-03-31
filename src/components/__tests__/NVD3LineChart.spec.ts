@@ -47,8 +47,8 @@ describe("NVD3LineChart", () => {
     });
 
     it("should render a structure correctly with percentage", () => {
-        chartProps.heightUnit = "auto";
-        chartProps.widthUnit = "auto";
+        chartProps.heightUnit = "percentage";
+        chartProps.widthUnit = "percentage";
         expect(renderChart).toBeElement(
             DOM.div({ className: "widget-time-series nv-chart", style: { paddingBottom: 20, width: 50 } },
                 DOM.svg()
