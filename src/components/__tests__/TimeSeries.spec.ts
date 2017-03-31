@@ -1,5 +1,5 @@
-import { shallow } from "enzyme"; // enzyme's api doesn't provide innerHTML for svg. use "React.addons.TestUtils"
-import { createElement } from "react";
+import { shallow } from "enzyme";  // enzyme's api doesn't provide innerHTML for svg. use "React.addons.TestUtils"
+import { DOM, createElement } from "react";
 
 import { DataStore, SeriesConfig } from "../../TimeSeries";
 import { TimeSeries, TimeSeriesProps } from "../TimeSeries";
@@ -63,25 +63,9 @@ describe("TimeSeries", () => {
             yAxisLabel: "y-axis"
         };
         const emptyChart = shallow(createElement(TimeSeries, nonDataProps));
-
-        const props = emptyChart.find(NVD3LineChart).props();
-        expect(props.datum.length).toEqual(0);
+        expect(emptyChart).toBeElement(DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "No Data"));
     });
 
-    describe ("with auto dimensions", () => {
-        const chartProps: TimeSeriesProps = {
-            dataStore, height: 500, heightUnit: "auto", seriesConfig, width: 900, widthUnit: "auto"
-        };
-        const lineChart = shallow(createElement(TimeSeries, chartProps));
-
-        it("should not pass height", () => {
-            expect(lineChart.first().props().height).toBeUndefined();
-        });
-
-        it("should not pass width", () => {
-            expect(lineChart.first().props().width).toBeUndefined();
-        });
-    });
     describe("with multi-series", () => {
         const data: DataStore = { series: {
             data1: [
@@ -105,7 +89,14 @@ describe("TimeSeries", () => {
 
         it("should render correctly", () => {
             const chartProps: TimeSeriesProps = {
-                dataStore: data, height: 500, heightUnit: "auto", seriesConfig: config, width: 900, widthUnit: "auto"
+                dataStore: data,
+                height: 500,
+                heightUnit: "auto",
+                seriesConfig: config,
+                width: 900,
+                widthUnit: "auto",
+                yAxisDomainMaximum: "1000",
+                yAxisDomainMinimum: "0"
             };
 
             const lineChartProps = shallow(createElement(TimeSeries, chartProps)).find(NVD3LineChart).props();

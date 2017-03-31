@@ -56,9 +56,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     componentWillUnmount() {
-        if (this.resizeHandler) {
-            this.resizeHandler.clear();
-        }
+        this.resizeHandler.clear();
     }
 
     private renderChart() {
@@ -75,11 +73,9 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
         select(this.svg).datum(this.props.datum).call(this.chart);
 
-        if (!this.resizeHandler) {
-            this.resizeHandler = utils.windowResize(() => {
-                if (this.chart.update) this.chart.update();
-            });
-        }
+        this.resizeHandler = utils.windowResize(() => {
+            if (this.chart.update) this.chart.update();
+        });
 
         return this.chart;
     }
