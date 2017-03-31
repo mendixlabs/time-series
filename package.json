@@ -1,9 +1,9 @@
 {
   "name": "time-series",
   "widgetName": "TimeSeries",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Time series chart",
-  "copyright": "Mendix",
+  "copyright": "Mendix BV",
   "scripts": {
     "pretest": "tsc",
     "test": "karma start --single-run --codeCoverage && node tests/remap.js"
