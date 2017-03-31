@@ -45,7 +45,7 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                             }).format(value)
                     }
                 },
-                forceY: this.forceY(datum, customForceY),
+                forceY: this.getYAxisBoundaries(datum, customForceY),
                 datum,
                 height: props.height,
                 heightUnit: props.heightUnit,
@@ -70,7 +70,8 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         })).filter(config => config.values.length);
     }
 
-    private forceY(datum: Series[], customForceY: number[]): number[] {
+    // This function returns the minimum and maximum y-axis values
+    private getYAxisBoundaries(datum: Series[], customForceY: number[]): number[] {
         const yLimit = { minimum: 0, maximum: 0 };
         const customYLimit = { min: customForceY[0], max: customForceY[1] };
         const dataMinimumY = min(datum, (seriesData) => min(seriesData.values, (dataPoint: DataPoint) => dataPoint.y));

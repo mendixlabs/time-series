@@ -39,7 +39,7 @@
             <category>Series configuration</category>
             <description>Add a series and configure its properties</description>
             <properties>
-                <property key="name" type="string" required="true">
+                <property key="name" type="string">
                     <caption>Name</caption>
                     <category>Data source</category>
                     <description>Used in the legend and tooltip</description>
