@@ -36,12 +36,12 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private intervalID: number | null;
 
     render() {
-        const style = {
-            height: this.props.height,
-            width: this.props.width
-        };
+        // const style = {
+        //     height: this.props.height,
+        //     width: this.props.width
+        // };
 
-        return DOM.div({ className: "widget-time-series nv-chart", style },
+        return DOM.div({ className: "widget-time-series nv-chart" },
             DOM.svg({ ref: node => this.svg = node })
         );
     }
@@ -78,19 +78,29 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
 
         if (this.props.heightUnit === "auto" ) {
-            style.height = () => (this.svg.parentNode as HTMLElement).clientWidth * this.props.height;
+            style.height = () => (this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01;
         } else {
-            style.height = () => (this.props.height);
+            this.chart.height(this.props.height);
         }
+        // if (this.props.widthUnit === "auto") {
 
+        // } else {
+        //     this.chart.width(this.props.width);
+        // }
 
-        // select(this.svg).datum(this.props.datum).call(this.chart).style({ height: this.svg.clientWidth * 0.75 });
-        select(this.svg).datum(this.props.datum).call(this.chart).style({ height: style.height() });
+        // select(this.svg).datum(this.props.datum).call(this.chart);
+        // working // select(this.svg).datum(this.props.datum).call(this.chart).style({ height: this.svg.clientWidth * 0.75 });
+        // select(this.svg).datum(this.props.datum).call(this.chart);
+        if (this.props.heightUnit === "auto")
+            select(this.svg).datum(this.props.datum).call(this.chart)
+                .style({ height: this.svg.clientWidth * this.props.height * 0.01 });
         if (!this.resizeHandler) {
             this.resizeHandler = utils.windowResize(() => {
-                // const svg = this.svg;
-                // select(this.svg).call(this.chart).style({ height: (svg.parentNode as HTMLElement).clientWidth * 0.75 });
-                select(this.svg).call(this.chart).style({ height: style.height() });
+                // working // const svg = this.svg;
+                // working // select(this.svg).call(this.chart).style({ height: (svg.parentNode as HTMLElement).clientWidth * 0.75 });
+                // select(this.svg).call(this.chart).style({ height: style.height() });
+                select(this.svg).call(this.chart)
+                    .style({ height: (this.svg.parentNode as HTMLElement).clientWidth * this.props.height * 0.01 });
                 if (this.chart.update) this.chart.update();
             });
         }

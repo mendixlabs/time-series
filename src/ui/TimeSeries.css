@@ -1,6 +1,11 @@
-.timeseries,
+/*.timeseries,
 .timeseries > .chart,
 .timeseries > .chart > svg {
     width: 100%;
     height: 100%;
+}*/
+
+.widget-time-series > .chart > svg {
+  width: 100%;
+  padding-bottom: 75%;
 }
