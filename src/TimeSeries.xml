@@ -12,7 +12,7 @@
         <property key="xAxisFormat" type="string" required="false" defaultValue="dd-MM-yyyy">
             <caption>X-axis date format</caption>
             <category>X-axis</category>
-            <description>X-axis date format e.g. dd-MM-yyyy</description>
+            <description>X-axis date format e.g. dd-MM-yyyy, dd/MM</description>
         </property>
         <property key="yAxisLabel" type="string" required="false">
             <caption>Y-axis label</caption>

@@ -6,10 +6,10 @@ export interface ModelProps {
     yAxisLabel?: string;
     yAxisFormatDecimalPrecision?: number;
     seriesConfig: SeriesConfig[];
-    width?: number;
-    widthUnit?: WidthUnit;
-    height?: number;
-    heightUnit?: HeightUnit;
+    width: number;
+    widthUnit: WidthUnit;
+    height: number;
+    heightUnit: HeightUnit;
     yAxisDomainMinimum?: string;
     yAxisDomainMaximum?: string;
 }
