@@ -72,13 +72,19 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             .forceY(this.props.forceY || []);
 
         if (this.props.widthUnit === "percentage") {
+            this.chart.width((this.svg.parentNode as HTMLElement).clientWidth);
             select(this.svg).datum(this.props.datum).call(this.chart);
         } else {
             select(this.svg).datum(this.props.datum).call(this.chart).style({ width: this.props.width });
         }
 
         this.resizeHandler = utils.windowResize(() => {
-            if (this.chart.update) this.chart.update();
+            if (this.chart) {
+                if (this.props.widthUnit === "percentage") {
+                    this.chart.width((this.svg.parentNode as HTMLElement).clientWidth);
+                }
+                this.chart.update();
+            }
         });
 
         return this.chart;
