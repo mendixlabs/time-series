@@ -86,32 +86,32 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
     private fixChartRendering() {
         this.intervalID = setInterval(() => {
-            if (this.svg && this.svg.parentElement && this.svg.parentElement.offsetHeight !== 0 && this.intervalID) {
-                if (this.chart && this.chart.update) this.chart.update();
-                clearInterval(this.intervalID);
-                this.intervalID = null;
+            if (this.chart) {
+                if (this.svg && this.svg.parentElement && this.svg.parentElement.offsetHeight !== 0 && this.intervalID) {
+                    if (this.chart && this.chart.update) this.chart.update();
+                    clearInterval(this.intervalID);
+                    this.intervalID = null;
+                }
+                select(window).on("mouseout." + this.chart.id(), () => {
+                    setTimeout(() => {
+                        this.chart.tooltip.hidden(true);
+                        this.chart.interactiveLayer.tooltip.hidden(true);
+                    }, 1000);
+                });
+                select(window).on("touchstart." + this.chart.id(), () => {
+                    setTimeout(() => {
+                        this.chart.tooltip.hidden(true);
+                        this.chart.interactiveLayer.tooltip.hidden(true);
+                    }, 1000);
+                });
+
+                select(window).on("touchend." + this.chart.id(), () => {
+                    setTimeout(() => {
+                        this.chart.tooltip.hidden(true);
+                        this.chart.interactiveLayer.tooltip.hidden(true);
+                    }, 1000);
+                });
             }
-
-            select(window).on("mouseout." + this.chart.id(), () => {
-                setTimeout(() => {
-                this.chart.tooltip.hidden(true);
-                this.chart.interactiveLayer.tooltip.hidden(true);
-                }, 1000);
-            });
-            select(window).on("touchstart." + this.chart.id(), () => {
-                setTimeout(() => {
-                this.chart.tooltip.hidden(true);
-                this.chart.interactiveLayer.tooltip.hidden(true);
-                }, 1000);
-            });
-
-            select(window).on("touchend." + this.chart.id(), () => {
-                setTimeout(() => {
-                this.chart.tooltip.hidden(true);
-                this.chart.interactiveLayer.tooltip.hidden(true);
-                }, 1000);
-            });
-
         }, 100);
     }
 

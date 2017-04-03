@@ -33,7 +33,7 @@ module.exports = {
         ], {
             copyUnmodified: true
         }),
-        new ExtractTextPlugin({ filename: "src/com/mendix/widget/custom/timeseries/ui/Timeseries.css" }),
+        new ExtractTextPlugin({ filename: "src/com/mendix/widget/custom/timeseries/ui/TimeSeries.css" }),
         new webpack.LoaderOptionsPlugin({
             debug: true
         })

@@ -29,7 +29,7 @@ Atleast one series is required, with its data source
     * XPath - For "XPath" source, add an XPath constraint in the `Source - XPath` tab.
     * Microflow - For "Microflow" source, add a data source microflow in the `Source - Microflow` tab.
 #### Sample domain model and configuration
-<img src="https://raw.githubusercontent.com/flockofbirds/time-series/feature/Mx7Wrapper/assets/Setup.png" width="900px" height="500px" />
+<img src="./assets/Setup.png" width="900px" height="500px" />
 
 ## Issues, suggestions and feature requests
 We are actively maintaining this widget, please report any issues or suggestion for improvement at https://github.com/mendixlabs/time-series/issues.
