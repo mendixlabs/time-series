@@ -57,11 +57,11 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     componentDidMount() {
         // Add height and display styles to react wrapper
         // Avoided use of clientHeight because content-area varies depending on styling.
-        const wrapperElement = this.svg.parentElement && this.svg.parentElement.parentElement
-            && this.svg.parentElement.parentElement;
-        if (this.props.heightUnit === "percentageOfParent" && wrapperElement) {
-            wrapperElement.style.height = "100%";
-            wrapperElement.style.display = "flex";
+        const reactWrapper = this.svg.parentElement && this.svg.parentElement.parentElement
+            && this.svg.parentElement.parentElement.parentElement;
+        if (this.props.heightUnit === "percentageOfParent" && reactWrapper) {
+            reactWrapper.style.height = "100%";
+            reactWrapper.style.display = "flex";
         }
 
         addGraph(() => this.renderChart(), this.chartEvents);

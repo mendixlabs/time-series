@@ -1,6 +1,11 @@
 export default ModelProps;
 
-export interface ModelProps {
+interface CommonProps {
+    class?: string;
+    style?: string;
+}
+
+export interface ModelProps extends CommonProps {
     xAxisLabel?: string;
     xAxisFormat?: string;
     yAxisLabel?: string;

@@ -1,4 +1,4 @@
-import { max, min, time } from "d3";
+import { time } from "d3";
 import { Component, DOM, createElement } from "react";
 
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
@@ -23,34 +23,39 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
     };
 
     render() {
-        const props = this.props;
-        const datum = this.processDatum(props.seriesConfig, props.dataStore);
-        const customForceY = [ Number(props.yAxisDomainMinimum), Number(props.yAxisDomainMaximum) ];
-        const xFormat = props.xAxisFormat || "dd-MM-yyyy";
+        const datum = this.processDatum(this.props.seriesConfig, this.props.dataStore);
+        const forceY = [];
+        if (this.props.yAxisDomainMaximum) {
+            forceY.push(Number(this.props.yAxisDomainMaximum));
+        }
+        if (this.props.yAxisDomainMinimum) {
+            forceY.push(Number(this.props.yAxisDomainMinimum));
+        }
+        const xFormat = this.props.xAxisFormat || "dd-MM-yyyy";
         const chart: Nvd3LineChartProps = {
                 chartProps: {
                     xAxis: {
-                        axisLabel: props.xAxisLabel,
+                        axisLabel: this.props.xAxisLabel,
                         showMaxMin: true,
                         tickFormat: value =>
                             window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat })
                     },
                     xScale: time.scale(),
                     yAxis: {
-                        axisLabel: props.yAxisLabel,
+                        axisLabel: this.props.yAxisLabel,
                         tickFormat: value =>
                             new Intl.NumberFormat("en-US", {
-                                maximumFractionDigits: props.yAxisFormatDecimalPrecision,
+                                maximumFractionDigits: this.props.yAxisFormatDecimalPrecision,
                                 minimumFractionDigits: 0
                             }).format(value)
                     }
                 },
-                forceY: this.getYAxisBoundaries(datum, customForceY),
+                forceY,
                 datum,
-                height: props.height,
-                heightUnit: props.heightUnit,
-                width: props.width,
-                widthUnit: props.widthUnit
+                height: this.props.height,
+                heightUnit: this.props.heightUnit,
+                width: this.props.width,
+                widthUnit: this.props.widthUnit
 
             };
         if (!datum.length) {
@@ -70,20 +75,6 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         })).filter(config => config.values.length);
     }
 
-    // This function returns the minimum and maximum y-axis values
-    private getYAxisBoundaries(datum: Series[], customForceY: number[]): number[] {
-        const yLimit = { minimum: 0, maximum: 0 };
-        const customYLimit = { min: customForceY[0], max: customForceY[1] };
-        const dataMinimumY = min(datum, (seriesData) => min(seriesData.values, (dataPoint: DataPoint) => dataPoint.y));
-        const dataMaximumY = max(datum, (seriesData) => max(seriesData.values, (dataPoint: DataPoint) => dataPoint.y));
-        yLimit.minimum = customYLimit.min < dataMinimumY ? customYLimit.min : dataMinimumY;
-        yLimit.maximum = customYLimit.max > dataMaximumY ? customYLimit.max : dataMaximumY;
-        const paddingY = (yLimit.maximum - yLimit.minimum) * 0.05;
-        yLimit.minimum = yLimit.minimum === customYLimit.min ? customYLimit.min : yLimit.minimum - paddingY;
-        yLimit.maximum = yLimit.maximum === customYLimit.max ? customYLimit.max : yLimit.maximum + paddingY;
-
-        return [ yLimit.minimum, yLimit.maximum ];
-    }
 }
 
 export { TimeSeries, TimeSeriesProps, Series };

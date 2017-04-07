@@ -15,6 +15,8 @@ interface TimeSeriesContainerState {
     isLoaded?: boolean;
 }
 
+type MxObjectsCallback = (mxObjects: mendix.lib.MxObject[]) => void;
+
 class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeriesContainerState> {
     private subscriptionHandle: number;
     private dataStore: DataStore;
@@ -29,10 +31,12 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
     }
 
     render() {
-        return this.state.alertMessage
-            ? createElement(Alert, { message: this.state.alertMessage })
-            : this.state.isLoaded
-                ? createElement(TimeSeries, {
+        if (this.state.alertMessage) {
+            return createElement(Alert, { message: this.state.alertMessage });
+        } else if (this.state.isLoaded) {
+            return createElement("div",
+                { style: this.parseStyle(this.props.style), class: this.props.class },
+                createElement(TimeSeries, {
                     dataStore: this.state.dataStore,
                     height: this.props.height,
                     heightUnit: this.props.heightUnit,
@@ -44,9 +48,9 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                     yAxisDomainMaximum: this.props.yAxisDomainMaximum,
                     yAxisDomainMinimum: this.props.yAxisDomainMinimum,
                     yAxisFormatDecimalPrecision: this.props.yAxisFormatDecimalPrecision,
-                    yAxisLabel: this.props.yAxisLabel
-                })
-                : DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "Loading...");
+                    yAxisLabel: this.props.yAxisLabel }));
+        }
+        return DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "Loading...");
     }
 
     componentWillReceiveProps(nextProps: TimeSeriesContainerProps) {
@@ -88,22 +92,22 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
 
     }
 
-    private fetchData(contextObject: mendix.lib.MxObject) {
-        if (contextObject) {
+    private fetchData(mxObject: mendix.lib.MxObject) {
+        if (mxObject) {
             const chain = this.props.seriesConfig.map(series => (chainCallback: () => void) => {
-                const processResults = (data: mendix.lib.MxObject[]) => {
-                    this.dataStore.series[series.name] = this.setDataFromObjects(data, series);
+                const processResults: MxObjectsCallback = mxObjects => {
+                    this.dataStore.series[series.name] = this.setDataFromObjects(mxObjects, series);
                     chainCallback();
                 };
 
                 if (series.sourceType === "xpath") {
                     const constraint = series.entityConstraint
-                        ? series.entityConstraint.replace("[%CurrentObject%]", contextObject.getGuid())
+                        ? series.entityConstraint.replace("[%CurrentObject%]", mxObject.getGuid())
                         : "";
                     const XPath = "//" + series.entity + constraint;
                     this.fetchByXPath(series, XPath, processResults);
                 } else if (series.sourceType === "microflow" && series.dataSourceMicroflow) {
-                    this.fetchByMicroflow(contextObject.getGuid(), series.dataSourceMicroflow, processResults);
+                    this.fetchByMicroflow(mxObject.getGuid(), series.dataSourceMicroflow, processResults);
                 }
             });
             lang.collect(chain, () => {
@@ -114,7 +118,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         }
     }
 
-    private fetchByMicroflow(guid: string, actionname: string, callback: (object: mendix.lib.MxObject[]) => void) {
+    private fetchByMicroflow(guid: string, actionname: string, callback: MxObjectsCallback) {
         mx.ui.action(actionname, {
             callback,
             error: error => this.setState({
@@ -128,7 +132,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         });
     }
 
-    private fetchByXPath(seriesConfig: SeriesConfig, xpath: string, callback: (object: mendix.lib.MxObject[]) => void) {
+    private fetchByXPath(seriesConfig: SeriesConfig, xpath: string, callback: MxObjectsCallback) {
         window.mx.data.get({
             callback,
             error: error => this.setState({
@@ -142,24 +146,42 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         });
     }
 
-    private setDataFromObjects(objects: mendix.lib.MxObject[], seriesConfig: SeriesConfig): DataPoint[] {
-        return objects.map((itemObject): DataPoint => ({
+    private setDataFromObjects(mxObjects: mendix.lib.MxObject[], seriesConfig: SeriesConfig): DataPoint[] {
+        return mxObjects.map((itemObject): DataPoint => ({
             x: itemObject.get(seriesConfig.xAttribute) as number,
             y: parseFloat(itemObject.get(seriesConfig.yAttribute) as string)
         }));
+    }
+
+    private parseStyle(style_ = ""): {[key: string]: string} {
+        try {
+            const style = `width:100%;${style_.replace(/\n|\s/g, "").replace(/(-.)/g,
+                (match) => match[1].toUpperCase())}`;
+
+            return style.split(";").reduce<{[key: string]: string}>((styleObject, line) => {
+                const pair = line.split(":");
+                if (pair.length === 2) {
+                    styleObject[pair[0]] = pair[1];
+                }
+                return styleObject;
+            }, {});
+        } catch (error) {
+            console.log("Failed to parse style", style_, error);
+        }
+        return {};
     }
 
     private resetDataStore() {
         this.dataStore = { series: { } };
     }
 
-    private resetSubscription(contextObject: mendix.lib.MxObject) {
+    private resetSubscription(mxObject: mendix.lib.MxObject) {
         this.unSubscribe();
 
-        if (contextObject) {
+        if (mxObject) {
             this.subscriptionHandle = window.mx.data.subscribe({
-                callback: () => this.fetchData(contextObject),
-                guid: contextObject.getGuid()
+                callback: () => this.fetchData(mxObject),
+                guid: mxObject.getGuid()
             });
         }
 
