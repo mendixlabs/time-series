@@ -28,7 +28,7 @@ export interface SeriesConfig {
 
 export type WidthUnit = "percentage" | "pixels";
 
-export type HeightUnit = "percentage" | "pixels";
+export type HeightUnit = "percentageOfWidth" | "percentageOfParent" | "pixels";
 
 export type DataSource = "xpath" | "microflow";
 

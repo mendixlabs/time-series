@@ -90,10 +90,10 @@ describe("TimeSeries", () => {
         it("should render correctly", () => {
             const chartProps: TimeSeriesProps = {
                 dataStore: data,
-                height: 500,
-                heightUnit: "percentage",
+                height: 75,
+                heightUnit: "percentageOfWidth",
                 seriesConfig: config,
-                width: 900,
+                width: 100,
                 widthUnit: "percentage",
                 yAxisDomainMaximum: "1000",
                 yAxisDomainMinimum: "0"

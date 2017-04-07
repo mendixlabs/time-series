@@ -3,6 +3,7 @@ import { LineChart, Nvd3ResizeHandler, addGraph, models, utils } from "nvd3";
 import { Component, DOM } from "react";
 
 import { Series } from "./TimeSeries";
+import { HeightUnit, WidthUnit } from "../TimeSeries";
 
 import "nvd3/build/nv.d3.css";
 
@@ -12,8 +13,8 @@ interface Nvd3LineChartProps {
     width: number;
     chartProps: ChartProps;
     datum: Series[];
-    heightUnit: "percentage" | "pixels";
-    widthUnit: "percentage" | "pixels";
+    heightUnit: HeightUnit;
+    widthUnit: WidthUnit;
 }
 
 interface ChartProps {
@@ -36,18 +37,34 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     private intervalID: number | null;
 
     render() {
-        const style = {
-            paddingBottom : this.props.heightUnit === "percentage" ? `${this.props.height}%` : this.props.height,
-            width: this.props.widthUnit === "percentage" ? `${this.props.width}%` : this.props.width
+        const style: {paddingBottom?: string; width: string, height?: string} = {
+            width: this.props.widthUnit === "percentage" ? `${this.props.width}%` : `${this.props.width}`
         };
 
+        if (this.props.heightUnit === "percentageOfWidth") {
+            style.paddingBottom = `${this.props.height}%`;
+        } else if (this.props.heightUnit === "pixels") {
+            style.paddingBottom = `${this.props.height}`;
+        } else if (this.props.heightUnit === "percentageOfParent") {
+            style.height = `${this.props.height}%`;
+        }
+
         return DOM.div({ className: "widget-time-series nv-chart", style },
-            DOM.svg({ ref: node => this.svg = node } )
+            DOM.svg({ ref: node => this.svg = node })
         );
     }
 
     componentDidMount() {
-        addGraph(() => this.renderChart());
+        // Add height and display styles to react wrapper
+        // Avoided use of clientHeight because content-area varies depending on styling.
+        const wrapperElement = this.svg.parentElement && this.svg.parentElement.parentElement
+            && this.svg.parentElement.parentElement;
+        if (this.props.heightUnit === "percentageOfParent" && wrapperElement) {
+            wrapperElement.style.height = "100%";
+            wrapperElement.style.display = "flex";
+        }
+
+        addGraph(() => this.renderChart(), this.chartEvents);
         this.fixChartRendering();
     }
 
@@ -60,7 +77,6 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private renderChart() {
-
         this.chart = this.chart || models.lineChart();
         this.configureChart(this.chart, this.props.chartProps);
 
@@ -84,33 +100,35 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         return this.chart;
     }
 
+    private chartEvents(chart: LineChart) {
+        select(window).on("mouseout." + chart.id(), () => {
+            setTimeout(() => {
+                chart.tooltip.hidden(true);
+                chart.interactiveLayer.tooltip.hidden(true);
+            }, 1000);
+        });
+
+        select(window).on("touchstart." + chart.id(), () => {
+            setTimeout(() => {
+                chart.tooltip.hidden(true);
+                chart.interactiveLayer.tooltip.hidden(true);
+            }, 1000);
+        });
+
+        select(window).on("touchend." + chart.id(), () => {
+            setTimeout(() => {
+                chart.tooltip.hidden(true);
+                chart.interactiveLayer.tooltip.hidden(true);
+            }, 1000);
+        });
+    }
+
     private fixChartRendering() {
         this.intervalID = setInterval(() => {
-            if (this.chart) {
-                if (this.svg && this.svg.parentElement && this.svg.parentElement.offsetHeight !== 0 && this.intervalID) {
-                    if (this.chart && this.chart.update) this.chart.update();
-                    clearInterval(this.intervalID);
-                    this.intervalID = null;
-                }
-                select(window).on("mouseout." + this.chart.id(), () => {
-                    setTimeout(() => {
-                        this.chart.tooltip.hidden(true);
-                        this.chart.interactiveLayer.tooltip.hidden(true);
-                    }, 1000);
-                });
-                select(window).on("touchstart." + this.chart.id(), () => {
-                    setTimeout(() => {
-                        this.chart.tooltip.hidden(true);
-                        this.chart.interactiveLayer.tooltip.hidden(true);
-                    }, 1000);
-                });
-
-                select(window).on("touchend." + this.chart.id(), () => {
-                    setTimeout(() => {
-                        this.chart.tooltip.hidden(true);
-                        this.chart.interactiveLayer.tooltip.hidden(true);
-                    }, 1000);
-                });
+            if (this.svg && this.svg.parentElement && this.svg.parentElement.offsetHeight !== 0 && this.intervalID) {
+                if (this.chart && this.chart.update) this.chart.update();
+                clearInterval(this.intervalID);
+                this.intervalID = null;
             }
         }, 100);
     }
