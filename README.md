@@ -6,7 +6,7 @@ Plot and track your data across different time periods on a chart.
 * Multiple series in one graph
 * Date formatting on x-axis (eg: dd/MM/yyyy, MMM-yyyy). See all patterns [here](http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) 
 * Formatting of numbers on y-axis (decimal precision)
-* Guidelines and floating tooltips
+* Guidelines and floating tool tips
 * Automatic and custom line colouring eg: # green, #00FF00, rgb(0,255,0)
 * Filling of series area
 
@@ -49,16 +49,16 @@ To set up the development environment, run:
 
 Create a folder named `dist` in the project root.
 
-Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Changes to the widget code shall be automatically pushed to this test project.
+Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Or get the test project from https://github.com/mendixlabs/time-series/releases/download/1.0.0/TestTimeSeries.mpk. When Grunt is running changes to the widget code shall be automatically pushed to this test project.
 
-To automatically compile, bundle and push code changes to the running test project, run:
+To automatically compile, bundle and push code changes to the running Mendix test project, run:
 
     > grunt
 
-To run the project unit tests with code coverage, results can be found at `dist/testresults/coverage/index.html`, run:
+To run the unit tests with code coverage, results can be found at `dist/testresults/coverage/index.html`, run:
 
     > npm test
 
-or run the test continuously during development:
+or run the unit tests continuously during development:
 
     > karma start
