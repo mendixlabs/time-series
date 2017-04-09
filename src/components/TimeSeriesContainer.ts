@@ -1,6 +1,7 @@
 import * as lang from "mendix/lang";
 import { Component, DOM, createElement } from "react";
 
+import { CustomWrapper } from "./CustomWrapper";
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { Alert } from "./Alert";
 import { TimeSeries } from "./TimeSeries";
@@ -34,8 +35,8 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         if (this.state.alertMessage) {
             return createElement(Alert, { message: this.state.alertMessage });
         } else if (this.state.isLoaded) {
-            return createElement("div",
-                { style: this.parseStyle(this.props.style), class: this.props.class },
+            return createElement(CustomWrapper,
+                { style: this.props.style, class: this.props.class },
                 createElement(TimeSeries, {
                     dataStore: this.state.dataStore,
                     height: this.props.height,
@@ -153,23 +154,23 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         }));
     }
 
-    private parseStyle(style_ = ""): {[key: string]: string} {
-        try {
-            const style = `width:100%;${style_.replace(/\n|\s/g, "").replace(/(-.)/g,
-                (match) => match[1].toUpperCase())}`;
+    // private parseStyle(style_ = ""): {[key: string]: string} {
+    //     try {
+    //         const style = `width:100%;${style_.replace(/\n|\s/g, "").replace(/(-.)/g,
+    //             (match) => match[1].toUpperCase())}`;
 
-            return style.split(";").reduce<{[key: string]: string}>((styleObject, line) => {
-                const pair = line.split(":");
-                if (pair.length === 2) {
-                    styleObject[pair[0]] = pair[1];
-                }
-                return styleObject;
-            }, {});
-        } catch (error) {
-            console.log("Failed to parse style", style_, error);
-        }
-        return {};
-    }
+    //         return style.split(";").reduce<{[key: string]: string}>((styleObject, line) => {
+    //             const pair = line.split(":");
+    //             if (pair.length === 2) {
+    //                 styleObject[pair[0]] = pair[1];
+    //             }
+    //             return styleObject;
+    //         }, {});
+    //     } catch (error) {
+    //         console.log("Failed to parse style", style_, error);
+    //     }
+    //     return {};
+    // }
 
     private resetDataStore() {
         this.dataStore = { series: { } };
