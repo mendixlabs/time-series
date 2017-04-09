@@ -154,24 +154,6 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         }));
     }
 
-    // private parseStyle(style_ = ""): {[key: string]: string} {
-    //     try {
-    //         const style = `width:100%;${style_.replace(/\n|\s/g, "").replace(/(-.)/g,
-    //             (match) => match[1].toUpperCase())}`;
-
-    //         return style.split(";").reduce<{[key: string]: string}>((styleObject, line) => {
-    //             const pair = line.split(":");
-    //             if (pair.length === 2) {
-    //                 styleObject[pair[0]] = pair[1];
-    //             }
-    //             return styleObject;
-    //         }, {});
-    //     } catch (error) {
-    //         console.log("Failed to parse style", style_, error);
-    //     }
-    //     return {};
-    // }
-
     private resetDataStore() {
         this.dataStore = { series: { } };
     }

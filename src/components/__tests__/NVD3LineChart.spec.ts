@@ -40,7 +40,7 @@ describe("NVD3LineChart", () => {
 
     it("should render a structure correctly with pixels", () => {
         expect(renderChart).toBeElement(
-            DOM.div({ className: "widget-time-series nv-chart", style: { paddingBottom: 20, width: 50 } },
+            DOM.div({ className: "widget-time-series nv-chart", style: { paddingBottom: "20", width: "50" } },
                 DOM.svg()
             )
         );
@@ -50,7 +50,7 @@ describe("NVD3LineChart", () => {
         chartProps.heightUnit = "percentageOfWidth";
         chartProps.widthUnit = "percentage";
         expect(renderChart).toBeElement(
-            DOM.div({ className: "widget-time-series nv-chart", style: { paddingBottom: 20, width: 50 } },
+            DOM.div({ className: "widget-time-series nv-chart", style: { paddingBottom: "20", width: "50" } },
                 DOM.svg()
             )
         );
