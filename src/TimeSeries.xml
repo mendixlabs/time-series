@@ -99,11 +99,6 @@
                 </property>
             </properties>
         </property>
-        <property key="width" type="integer" defaultValue="100">
-            <caption>Chart width</caption>
-            <category>Appearance</category>
-            <description>Width of the chart</description>
-        </property>
         <property key="widthUnit" type="enumeration" defaultValue="percentage">
             <caption>Width unit</caption>
             <category>Appearance</category>
@@ -113,20 +108,25 @@
                 <enumerationValue key="pixels">Pixels</enumerationValue>
             </enumerationValues>
         </property>
-        <property key="height" type="integer" defaultValue="75">
-            <caption>Chart height</caption>
+        <property key="width" type="integer" defaultValue="100">
+            <caption>Chart width</caption>
             <category>Appearance</category>
-            <description>Height of the chart</description>
+            <description>Width of the chart</description>
         </property>
         <property key="heightUnit" type="enumeration" defaultValue="percentageOfWidth">
             <caption>Height unit</caption>
             <category>Appearance</category>
-            <description/>
+            <description>'Percentage of width' is the aspect ratio, 'Pixels' is absolute, Warning 'Percentage of parent' only work when parent has a absolute height, else is not displayed</description>
             <enumerationValues>
                 <enumerationValue key="percentageOfWidth">Percentage of width</enumerationValue>
                 <enumerationValue key="pixels">Pixels</enumerationValue>
                 <enumerationValue key="percentageOfParent">Percentage of Parent</enumerationValue>
             </enumerationValues>
+        </property>
+        <property key="height" type="integer" defaultValue="75">
+            <caption>Chart height</caption>
+            <category>Appearance</category>
+            <description>Height of the chart</description>
         </property>
     </properties>
 </widget>
