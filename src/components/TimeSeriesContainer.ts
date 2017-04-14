@@ -49,7 +49,9 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                     yAxisDomainMaximum: this.props.yAxisDomainMaximum,
                     yAxisDomainMinimum: this.props.yAxisDomainMinimum,
                     yAxisFormatDecimalPrecision: this.props.yAxisFormatDecimalPrecision,
-                    yAxisLabel: this.props.yAxisLabel }));
+                    yAxisLabel: this.props.yAxisLabel
+                })
+            );
         }
         return DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "Loading...");
     }
@@ -141,6 +143,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                 dataStore: { series: {} }
             }),
             filter: {
+                attributes: [ seriesConfig.xAttribute, seriesConfig.yAttribute ],
                 sort: [ [ seriesConfig.xAttribute, "asc" ] ]
             },
             xpath

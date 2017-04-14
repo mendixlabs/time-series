@@ -33,31 +33,31 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         }
         const xFormat = this.props.xAxisFormat || "dd-MM-yyyy";
         const chart: Nvd3LineChartProps = {
-                chartProps: {
-                    xAxis: {
-                        axisLabel: this.props.xAxisLabel,
-                        showMaxMin: true,
-                        tickFormat: value =>
-                            window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat })
-                    },
-                    xScale: time.scale(),
-                    yAxis: {
-                        axisLabel: this.props.yAxisLabel,
-                        tickFormat: value =>
-                            new Intl.NumberFormat("en-US", {
-                                maximumFractionDigits: this.props.yAxisFormatDecimalPrecision,
-                                minimumFractionDigits: 0
-                            }).format(value)
-                    }
+            chartProps: {
+                xAxis: {
+                    axisLabel: this.props.xAxisLabel,
+                    showMaxMin: true,
+                    tickFormat: value =>
+                        window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat })
                 },
-                forceY,
-                datum,
-                height: this.props.height,
-                heightUnit: this.props.heightUnit,
-                width: this.props.width,
-                widthUnit: this.props.widthUnit
+                xScale: time.scale(),
+                yAxis: {
+                    axisLabel: this.props.yAxisLabel,
+                    tickFormat: value =>
+                        new Intl.NumberFormat("en-US", {
+                            maximumFractionDigits: this.props.yAxisFormatDecimalPrecision,
+                            minimumFractionDigits: 0
+                        }).format(value)
+                }
+            },
+            forceY,
+            datum,
+            height: this.props.height,
+            heightUnit: this.props.heightUnit,
+            width: this.props.width,
+            widthUnit: this.props.widthUnit
 
-            };
+        };
         if (!datum.length) {
             return DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "No Data");
         }

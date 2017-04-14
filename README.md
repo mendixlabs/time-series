@@ -26,7 +26,7 @@ Atleast one series is required, with its data source
  - `Name` - The name of the series, it will appear in the chart's legend.
  - `Data entity` - The entity containing the data points for x-axis and y-axis (it has the x and y attributes). In this example its the <b>Point</b> entity.
  - `Source`
-    * XPath - For "XPath" source, add an XPath constraint in the `Source - XPath` tab.
+    * XPath - For "XPath" source, add an XPath constraint in the `Source - XPath` tab. Not the XPath are more efficient in large data sets.
     * Microflow - For "Microflow" source, add a data source microflow in the `Source - Microflow` tab.
 #### Sample domain model and configuration
 <img src="./assets/Setup.png" width="900px" height="500px" />
