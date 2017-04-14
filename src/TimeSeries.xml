@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="com.mendix.widget.custom.timeseries.TimeSeries" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>Time series</name>
+    <description>Renders a time series chart</description>
+    <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTM0A1t6AAABHElEQVQ4T2MAgv+kAPI0/PoO5REBGFgYGf5XSPz/8BwqQAiAbVhdAEI4wO+//1ff/p9z8L/N2v88MyEagMYXC2Ba8vnn/4pj/yXm/XdY97/73P/DT0EiYA1AsLbk/4yA/39+g1WCwPHn/xUW/i849P/xZ6gIBMA0AJXODgEhsJ72M/9l5v/f/QgkgwZgGoAArOdPu/HiaX1h8y49/wIVRgNIGv6DbE+bc2hPc/SfanmQr6Z4/N9U8//6bqg0GCA0bL4P8l/NCVCwgMDn1/8vbQZp6LX532bw/8J6sChYA9D2mF3/VRaDwgE7uLn/f7/D/w4TYEgyMDCxaCwBGfwdEUI4wLZmYBSDbACGLrHgwnqQBiiHOADSQAJgYAAAseFsUHNH1EQAAAAASUVORK5CYII=</icon>
+    <properties>
+        <property key="xAxisLabel" type="string" required="false">
+            <caption>X-axis label</caption>
+            <category>X-axis</category>
+            <description>Label for the x-axis (horizontal)</description>
+        </property>
+        <property key="xAxisFormat" type="string" required="false" defaultValue="dd-MM-yyyy">
+            <caption>X-axis date format</caption>
+            <category>X-axis</category>
+            <description>X-axis date format e.g. dd-MM-yyyy, dd/MM</description>
+        </property>
+        <property key="yAxisLabel" type="string" required="false">
+            <caption>Y-axis label</caption>
+            <category>Y-axis</category>
+            <description>Label for the y-axis (vertical)</description>
+        </property>
+        <property key="yAxisFormatDecimalPrecision" type="integer" defaultValue="2">
+            <caption>Decimal precision</caption>
+            <category>Y-axis</category>
+            <description/>
+        </property>
+        <property key="yAxisDomainMinimum" type="string" required="false">
+            <caption>Minimum value</caption>
+            <category>Y-axis</category>
+            <description>Optional, forces the axis to include this value, can be positive or negative number eg: -50, 50, 0.5</description>
+        </property>
+        <property key="yAxisDomainMaximum" type="string" required="false">
+            <caption>Maximum value</caption>
+            <category>Y-axis</category>
+            <description>Optional, forces the axis to include this value, can be a positive or negative number eg: -50, 50, 0.5</description>
+        </property>
+        <property key="seriesConfig" type="object" isList="true">
+            <caption>Series</caption>
+            <category>Series configuration</category>
+            <description>Add a series and configure its properties</description>
+            <properties>
+                <property key="name" type="string">
+                    <caption>Name</caption>
+                    <category>Data source</category>
+                    <description>Used in the legend and tooltip</description>
+                </property>
+                <property key="entity" type="entity" pathType="reference" isPath="optional">
+                    <caption>Data entity</caption>
+                    <category>Data source</category>
+                    <description>The entity containing series points</description>
+                </property>
+                <property key="sourceType" type="enumeration" defaultValue="xpath">
+                    <caption>Source</caption>
+                    <category>Data source</category>
+                    <description>Type of source</description>
+                    <enumerationValues>
+                        <enumerationValue key="xpath">XPath</enumerationValue>
+                        <enumerationValue key="microflow">Microflow</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="xAttribute" type="attribute" entityProperty="entity">
+                    <caption>X-axis date attribute</caption>
+                    <category>Data source</category>
+                    <description>Attribute containing x-axis dates</description>
+                    <attributeTypes>
+                        <attributeType name="DateTime"/>
+                    </attributeTypes>
+                </property>
+               <property key="yAttribute" type="attribute" entityProperty="entity">
+                    <caption>Y-axis data attribute</caption>
+                    <category>Data source</category>
+                    <description>Attribute containing y-axis data</description>
+                    <attributeTypes>
+                        <attributeType name="Decimal"/>
+                        <attributeType name="Long"/>
+                        <attributeType name="Integer"/>
+                    </attributeTypes>
+                </property>
+                <property key="entityConstraint" type="entityConstraint" entityProperty="entity" required="false">
+                    <caption>Constraint</caption>
+                    <category>Source - XPath</category>
+                    <description>Constraint on the data from the data entity</description>
+                </property>
+                <property key="dataSourceMicroflow" type="microflow" required="false">
+                    <caption>Microflow </caption>
+                    <category>Source - microflow</category>
+                    <description>Returns a series' coordinates</description>
+                    <returnType type="Object" entityProperty="entity" isList="true"/>
+                </property>
+                <property key="color" type="string" required="false">
+                    <caption>Color</caption>
+                    <category>Appearance</category>
+                    <description>Color of the line in HTML colors eg: # green, #00FF00, rgb(0,255,0)</description>
+                </property>
+                <property key="fill" type="boolean" defaultValue="false">
+                    <caption>Fill area</caption>
+                    <category>Appearance</category>
+                    <description>Fill area between data-point and x-axis</description>
+                </property>
+            </properties>
+        </property>
+        <property key="widthUnit" type="enumeration" defaultValue="percentage">
+            <caption>Width unit</caption>
+            <category>Appearance</category>
+            <description/>
+            <enumerationValues>
+                <enumerationValue key="percentage">Percentage</enumerationValue>
+                <enumerationValue key="pixels">Pixels</enumerationValue>
+            </enumerationValues>
+        </property>
+        <property key="width" type="integer" defaultValue="100">
+            <caption>Chart width</caption>
+            <category>Appearance</category>
+            <description>Width of the chart</description>
+        </property>
+        <property key="heightUnit" type="enumeration" defaultValue="percentageOfWidth">
+            <caption>Height unit</caption>
+            <category>Appearance</category>
+            <description>'Percentage of width' is the aspect ratio, 'Pixels' is absolute, Warning 'Percentage of parent' only work when parent has a absolute height, else is not displayed</description>
+            <enumerationValues>
+                <enumerationValue key="percentageOfWidth">Percentage of width</enumerationValue>
+                <enumerationValue key="pixels">Pixels</enumerationValue>
+                <enumerationValue key="percentageOfParent">Percentage of Parent</enumerationValue>
+            </enumerationValues>
+        </property>
+        <property key="height" type="integer" defaultValue="75">
+            <caption>Chart height</caption>
+            <category>Appearance</category>
+            <description>Height of the chart</description>
+        </property>
+    </properties>
+</widget>
