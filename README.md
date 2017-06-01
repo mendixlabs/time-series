@@ -1,58 +1,64 @@
-# Time Series
+# Time series
+Plot and track your data across different time periods on a chart.
 
-Plot and track your data across different time periods on an nv.d3 powered chart.
-
-## Features and limitations
-
-* Date formatting on x-axis
-* Formatting of numbers on y-axis
-* Interactive guidelines
-* Different line color
+## Features
+* Plot numeric data date on a time line
+* Multiple series in one graph
+* Date formatting on x-axis (eg: dd/MM/yyyy, MMM-yyyy). See all patterns [here](http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) 
+* Formatting of numbers on y-axis (decimal precision)
+* Guidelines and floating tool tips
+* Automatic and custom line colouring eg: # green, #00FF00, rgb(0,255,0)
 * Filling of series area
 
 ## Dependencies
+* Mendix 7.1
 
-* Mendix 6
+## Demo project
+https://timeseriestest.mxapps.io/
 
-## Properties
-* X-axis
-  * X-axis label; Label for the x-axis
-  * X-axis time format; Formats of date on x-axis (use NVD3 date formatting)
-  * Enable stagger-labels; Display values on x-axis so they all fit
-* Y-axis
-  * Y-axis label; Label for the y-axis
-  * Y-axis data format; Format of data on y-axis
-* Series config
-  * Data series
-     - Data source
-        - Data entity; The entity containing series points
-        - SourceType; XPath or microflow
-        - X-axis data; Attribute containing dates for x-axis
-        - Y-axis data; Attribute containing data for y-axis
-        - Series key; Used in the legend to interact with the chart
-     - XPath
-        - Constraint; Constraint on the data from data-entity
-     - Source - microflow
-        - Data source microflow; Returns a series' coordinates
-     - Appearance
-        - Series color; Color of the series line in the chart
-        - Fill series area; Should series area be filled
-* Appearance
-  * Chart width; Width of the chart
-  * Width unit; Measurement for width pixels or auto
-  * Chart height; Height of the chart
-  * Height unit; Measurement for height pixels or auto
+## Usage
+This widget requires a context.
 
-## Source
+### Series Configuration
+Atleast one series is required, with its data source
 
-Source and [sample project](https://github.com/mendixlabs/time-series/tree/master/test) at GitHub
+#### Data source
+ - `Name` - The name of the series, it will appear in the chart's legend.
+ - `Data entity` - The entity containing the data points for x-axis and y-axis (it has the x and y attributes). In this example its the <b>Point</b> entity.
+ - `Source`
+    * XPath - For "XPath" source, add an XPath constraint in the `Source - XPath` tab. Not the XPath are more efficient in large data sets.
+    * Microflow - For "Microflow" source, add a data source microflow in the `Source - Microflow` tab.
+#### Sample domain model and configuration
+<img src="./assets/Setup.png" width="900px" height="500px" />
 
-Please contribute fixes and extensions at
-https://github.com/mendixlabs/time-series/
+## Issues, suggestions and feature requests
+We are actively maintaining this widget, please report any issues or suggestion for improvement at https://github.com/mendixlabs/time-series/issues.
 
+## Development
+Prerequisite: Install git, node package manager, webpack CLI, grunt CLI, Karma CLI
 
-## Known bugs
+To contribute, fork and clone.
 
-Please report any issues via the github issue tracker:
-https://github.com/mendixlabs/time-series/issues 
+    > git clone https://github.com/mendixlabs/time-series.git
 
+The code is in typescript. Use a typescript IDE of your choice, like Visual Studio Code or WebStorm.
+
+To set up the development environment, run:
+
+    > npm install
+
+Create a folder named `dist` in the project root.
+
+Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Or get the test project from https://github.com/mendixlabs/time-series/releases/download/1.0.0/TestTimeSeries.mpk. When Grunt is running changes to the widget code shall be automatically pushed to this test project.
+
+To automatically compile, bundle and push code changes to the running Mendix test project, run:
+
+    > grunt
+
+To run the unit tests with code coverage, results can be found at `dist/testresults/coverage/index.html`, run:
+
+    > npm test
+
+or run the unit tests continuously during development:
+
+    > karma start

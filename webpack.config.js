@@ -1,36 +1,40 @@
-var webpack = require("webpack");
-var CopyWebpackPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
+const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    entry: "./src/TimeSeries/widget/TimeSeries.tsx",
+    entry: "./src/components/TimeSeriesContainer.ts",
     output: {
-        path: __dirname + "/dist/tmp",
-        filename: "src/TimeSeries/widget/TimeSeries.js",
-        libraryTarget:  "umd",
-        umdNamedDefine: true,
-        library: "TimeSeries.widget.TimeSeries"
+        path: path.resolve(__dirname, "dist/tmp"),
+        filename: "src/com/mendix/widget/custom/timeseries/TimeSeries.js",
+        libraryTarget: "umd"
     },
     resolve: {
-        extensions: [ "", ".ts", ".tsx", ".js", ".json" ]
+        extensions: [ ".ts", ".js", ".json" ],
+        alias: { "tests": path.resolve(__dirname, "./tests") }
     },
-    errorDetails: true,
     module: {
-        loaders: [
-            { test: /\.tsx?$/, loaders: [ "ts-loader" ] },
-            { test: /\.json$/, loader: "json" }
+        rules: [
+            { test: /\.ts$/, use: "ts-loader" },
+            { test: /\.css$/, loader: ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                use: "css-loader"
+            }) }
         ]
     },
     devtool: "source-map",
-    externals: [ "mxui/widget/_WidgetBase", "mendix/lang", "dojo/_base/declare" ],
+    externals: [ "mendix/lang", "react", "react-dom" ],
     plugins: [
         new CopyWebpackPlugin([
             { from: "src/**/*.js" },
-            { from: "src/**/*.xml" },
-            { from: "src/**/*.css" },
-
+            { from: "src/**/*.xml" }
         ], {
             copyUnmodified: true
+        }),
+        new ExtractTextPlugin({ filename: "src/com/mendix/widget/custom/timeseries/ui/TimeSeries.css" }),
+        new webpack.LoaderOptionsPlugin({
+            debug: true
         })
-    ],
-    watch: true
+    ]
 };
