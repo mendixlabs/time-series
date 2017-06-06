@@ -3,6 +3,7 @@ import { Component, DOM, createElement } from "react";
 
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
+import * as dateFormat from "dateformat";
 
 import "../ui/TimeSeries.css";
 
@@ -15,6 +16,8 @@ interface Series {
 
 interface TimeSeriesProps extends ModelProps {
     dataStore: DataStore;
+    class: string;
+    style: object;
 }
 
 class TimeSeries extends Component<TimeSeriesProps, {}> {
@@ -31,14 +34,14 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         if (this.props.yAxisDomainMinimum) {
             forceY.push(Number(this.props.yAxisDomainMinimum));
         }
-        const xFormat = this.props.xAxisFormat || "dd-MM-yyyy";
+        const xFormat = this.props.xAxisFormat || "dd-MM-YYYY";
         const chart: Nvd3LineChartProps = {
             chartProps: {
                 xAxis: {
                     axisLabel: this.props.xAxisLabel,
                     showMaxMin: true,
                     tickFormat: value =>
-                        window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat })
+                        dateFormat(value, xFormat)
                 },
                 xScale: time.scale(),
                 yAxis: {
@@ -50,8 +53,8 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                         }).format(value)
                 }
             },
-            forceY,
             datum,
+            forceY,
             height: this.props.height,
             heightUnit: this.props.heightUnit,
             width: this.props.width,
@@ -61,7 +64,10 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         if (!datum.length) {
             return DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "No Data");
         }
-        return createElement (NVD3LineChart, chart);
+        return DOM.div({
+            className: this.props.class,
+            style: this.props.style
+        }, createElement(NVD3LineChart, chart));
     }
 
     private processDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {

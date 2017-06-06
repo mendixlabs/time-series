@@ -1,22 +1,28 @@
 "use strict";
 const webpack = require("webpack");
 const webpackConfig = require("./webpack.config");
-const webpackConfigRelease = {};
-const plugins = webpackConfig.plugins.slice(0);
-plugins.push(new webpack.optimize.UglifyJsPlugin());
-Object.assign(webpackConfigRelease, webpackConfig, {
+const webpackConfigRelease = [ {}, {} ];
+const widgetPlugins = webpackConfig[0].plugins.slice();
+widgetPlugins.push(new webpack.optimize.UglifyJsPlugin());
+Object.assign(webpackConfigRelease[0], webpackConfig[0], {
     devtool: false,
-    plugins: plugins
+    plugins: widgetPlugins
+});
+const previewPlugins = webpackConfig[1].plugins.slice();
+previewPlugins.push(new webpack.optimize.UglifyJsPlugin());
+Object.assign(webpackConfigRelease[1], webpackConfig[1], {
+    devtool: false,
+    plugins: previewPlugins
 });
 
-module.exports = function (grunt) {
-    var pkg = grunt.file.readJSON("package.json");
+module.exports = function(grunt) {
+    const pkg = grunt.file.readJSON("package.json");
     grunt.initConfig({
 
         watch: {
             updateWidgetFiles: {
                 files: [ "./dist/tmp/src/**/*" ],
-                tasks: [ "webpack:develop", "compress:dist", "copy:distDeployment", "copy:mpk" ],
+                tasks: [ "webpack:develop", "file_append", "compress:dist", "copy:distDeployment", "copy:mpk" ],
                 options: {
                     debounceDelay: 250,
                     livereload: true
@@ -62,9 +68,21 @@ module.exports = function (grunt) {
                 } ]
             },
             source: {
-                files: [
-                    { dest: "./dist/tmp/src", cwd: "./src/", src: [ "**/*", "!**/*.ts", "!**/*.css" ], expand: true }
-                ]
+                files: [ {
+                    dest: "./dist/tmp/src",
+                    cwd: "./src/",
+                    src: [ "**/*", "!**/*.ts", "!**/*.css" ],
+                    expand: true
+                } ]
+            }
+        },
+
+        file_append: {
+            addSourceURL: {
+                files: [ {
+                    append: "\n\n//# sourceURL=TimeSeries.webmodeler.js\n",
+                    input: "dist/tmp/src/TimeSeries.webmodeler.js"
+                } ]
             }
         },
 
@@ -92,18 +110,19 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-file-append");
     grunt.loadNpmTasks("grunt-webpack");
 
     grunt.registerTask("default", [ "clean build", "watch" ]);
     grunt.registerTask(
         "clean build",
         "Compiles all the assets and copies the files to the dist directory.",
-        [ "checkDependencies", "clean:build", "webpack:develop", "compress:dist", "copy:mpk" ]
+        [ "checkDependencies", "clean:build", "webpack:develop", "file_append", "compress:dist", "copy:mpk" ]
     );
     grunt.registerTask(
         "release",
         "Compiles all the assets and copies the files to the dist directory. Minified without source mapping",
-        [ "checkDependencies", "clean:build", "webpack:release", "compress:dist", "copy:mpk" ]
+        [ "checkDependencies", "clean:build", "webpack:release", "file_append", "compress:dist", "copy:mpk" ]
     );
     grunt.registerTask("build", [ "clean build" ]);
 };

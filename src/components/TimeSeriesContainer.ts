@@ -1,13 +1,14 @@
 import * as lang from "mendix/lang";
 import { Component, DOM, createElement } from "react";
 
-import { CustomWrapper } from "./CustomWrapper";
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { Alert } from "./Alert";
 import { TimeSeries } from "./TimeSeries";
 
-interface TimeSeriesContainerProps extends ModelProps {
+export interface TimeSeriesContainerProps extends ModelProps {
+    class: string;
     mxObject: mendix.lib.MxObject;
+    style: string;
 }
 
 interface TimeSeriesContainerState {
@@ -26,7 +27,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         super(props);
         this.fetchData = this.fetchData.bind(this);
         this.state = {
-            alertMessage: this.validateProps(),
+            alertMessage: TimeSeriesContainer.validateProps(this.props),
             dataStore: { series: {} }
         };
     }
@@ -35,13 +36,17 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         if (this.state.alertMessage) {
             return createElement(Alert, { message: this.state.alertMessage });
         } else if (this.state.isLoaded) {
-            return createElement(CustomWrapper,
-                { style: this.props.style, class: this.props.class },
+            return DOM.div({
+                    className: this.props.class,
+                    style: TimeSeriesContainer.parseStyle(this.props.style)
+                },
                 createElement(TimeSeries, {
+                    class: this.props.class,
                     dataStore: this.state.dataStore,
                     height: this.props.height,
                     heightUnit: this.props.heightUnit,
                     seriesConfig: this.props.seriesConfig,
+                    style: TimeSeriesContainer.parseStyle(this.props.style),
                     width: this.props.width,
                     widthUnit: this.props.widthUnit,
                     xAxisFormat: this.props.xAxisFormat,
@@ -66,9 +71,9 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         this.unSubscribe();
     }
 
-    private validateProps(): string {
+    public static validateProps(props: TimeSeriesContainerProps): string {
         let errorMessage = "";
-        const incorrectSeriesNames = this.props.seriesConfig
+        const incorrectSeriesNames = props.seriesConfig
             .filter(series => series.sourceType === "microflow" && !series.dataSourceMicroflow)
             .map(incorrect => incorrect.name)
             .join(", ");
@@ -79,16 +84,16 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         }
 
         try {
-            window.mx.parser.formatValue(new Date(), "datetime", { datePattern: this.props.xAxisFormat || "" });
+            window.mx.parser.formatValue(new Date(), "datetime", { datePattern: props.xAxisFormat || "" });
         } catch (error) {
-            errorMessage += `Formatting for the x-axis : (${this.props.xAxisFormat}) is invalid \n\n`;
+            errorMessage += `Formatting for the x-axis : (${props.xAxisFormat}) is invalid \n\n`;
         }
 
-        if (this.props.yAxisDomainMinimum && isNaN(Number(this.props.yAxisDomainMinimum))) {
-            errorMessage += `Y-axis Domain minimum value (${this.props.yAxisDomainMinimum}) is not a number`;
+        if (props.yAxisDomainMinimum && isNaN(Number(props.yAxisDomainMinimum))) {
+            errorMessage += `Y-axis Domain minimum value (${props.yAxisDomainMinimum}) is not a number`;
         }
-        if (this.props.yAxisDomainMaximum && isNaN(Number(this.props.yAxisDomainMaximum))) {
-            errorMessage += `Y-axis Domain maximum value (${this.props.yAxisDomainMaximum}) is not a number`;
+        if (props.yAxisDomainMaximum && isNaN(Number(props.yAxisDomainMaximum))) {
+            errorMessage += `Y-axis Domain maximum value (${props.yAxisDomainMaximum}) is not a number`;
         }
 
         return errorMessage && `Configuration error :\n\n ${errorMessage}`;
@@ -177,6 +182,24 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         if (this.subscriptionHandle) {
             window.mx.data.unsubscribe(this.subscriptionHandle);
         }
+    }
+
+    public static parseStyle(style = ""): { [key: string]: string } {
+        try {
+            return `width:100%; ${style}`.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
+                const pair = line.split(":");
+                if (pair.length === 2) {
+                    const name = pair[0].trim().replace(/(-.)/g, match => match[1].toUpperCase());
+                    styleObject[name] = pair[1].trim();
+                }
+                return styleObject;
+            }, {});
+        } catch (error) {
+            // tslint:disable-next-line no-console
+            console.error("Failed to parse style", style, error);
+        }
+
+        return {};
     }
 }
 

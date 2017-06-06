@@ -1,7 +1,7 @@
 {
   "name": "time-series",
   "widgetName": "TimeSeries",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Time series chart",
   "copyright": "Mendix BV",
   "scripts": {
@@ -20,6 +20,7 @@
     "@types/classnames": "0.0.32",
     "@types/core-js": "0.9.36",
     "@types/d3": "^3.5.36",
+    "@types/dateformat": "^1.0.1",
     "@types/enzyme": "^2.7.4",
     "@types/jasmine": "^2.5.41",
     "@types/karma": "^0.13.33",
@@ -28,7 +29,7 @@
     "@types/react-dom": "^0.14.23",
     "check-dependencies": "^1.0.1",
     "copy-webpack-plugin": "^4.0.1",
-    "css-loader": "^0.27.3",
+    "css-loader": "^0.28.1",
     "enzyme": "^2.7.1",
     "extract-text-webpack-plugin": "^2.1.0",
     "grunt": "1.0.1",
@@ -37,6 +38,7 @@
     "grunt-contrib-compress": "^1.4.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-file-append": "0.0.7",
     "grunt-newer": "^1.1.1",
     "grunt-webpack": "^2.0.1",
     "istanbul": "^0.4.3",
@@ -52,21 +54,24 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.2",
     "mendix-client": "git+https://github.com/FlockOfBirds/Mendix-client-typing.git",
+    "raw-loader": "^0.5.1",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2",
     "react-addons-test-utils": "^15.4.2",
+    "react-dom": "^15.4.2",
     "remap-istanbul": "^0.9.0",
     "source-map-loader": "^0.2.0",
-    "style-loader": "^0.13.2",
+    "style-loader": "^0.17.0",
     "ts-loader": "^2.0.1",
-    "tslint": "^4.5.1",
-    "tslint-eslint-rules": "^3.3.0",
+    "tslint": "^5.2.0",
+    "tslint-eslint-rules": "^4.0.0",
     "typescript": "^2.2.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.2.0"
   },
   "dependencies": {
     "d3": "^3.4.4",
+    "dateformat": "^2.0.0",
+    "moment": "^2.18.1",
     "nvd3": "^1.8.5"
   }
 }
