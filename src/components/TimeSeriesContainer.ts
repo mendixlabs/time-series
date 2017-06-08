@@ -1,9 +1,10 @@
-import * as lang from "mendix/lang";
 import { Component, DOM, createElement } from "react";
 
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { Alert } from "./Alert";
 import { TimeSeries } from "./TimeSeries";
+
+import * as async from "async";
 
 export interface TimeSeriesContainerProps extends ModelProps {
     class: string;
@@ -102,23 +103,23 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
 
     private fetchData(mxObject: mendix.lib.MxObject) {
         if (mxObject) {
-            const chain = this.props.seriesConfig.map(series => (chainCallback: () => void) => {
-                const processResults: MxObjectsCallback = mxObjects => {
-                    this.dataStore.series[series.name] = this.setDataFromObjects(mxObjects, series);
-                    chainCallback();
+            async.each(this.props.seriesConfig, (series1: SeriesConfig, callback:(error?: Error) => {}) => {
+                const processResults1: MxObjectsCallback = mxObjects => {
+                    this.dataStore.series[series1.name] = this.setDataFromObjects(mxObjects, series1);
+                    callback();
                 };
-
-                if (series.sourceType === "xpath") {
-                    const constraint = series.entityConstraint
-                        ? series.entityConstraint.replace("[%CurrentObject%]", mxObject.getGuid())
+                if (series1.sourceType === "xpath") {
+                    const constraint = series1.entityConstraint
+                        ? series1.entityConstraint.replace("[%CurrentObject%]", mxObject.getGuid())
                         : "";
-                    const XPath = "//" + series.entity + constraint;
-                    this.fetchByXPath(series, XPath, processResults);
-                } else if (series.sourceType === "microflow" && series.dataSourceMicroflow) {
-                    this.fetchByMicroflow(mxObject.getGuid(), series.dataSourceMicroflow, processResults);
+                    const XPath = "//" + series1.entity + constraint;
+                    this.fetchByXPath(series1, XPath, processResults1);
+                } else if (series1.sourceType === "microflow" && series1.dataSourceMicroflow) {
+                    this.fetchByMicroflow(mxObject.getGuid(), series1.dataSourceMicroflow, processResults1);
                 }
-            });
-            lang.collect(chain, () => {
+            }, (error?: Error) => {
+                // tslint:disable-next-line no-console
+                if(error) console.error(error.message);
                 this.setState({ dataStore: this.dataStore, isLoaded: true });
             });
         } else {
@@ -168,14 +169,12 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
 
     private resetSubscription(mxObject: mendix.lib.MxObject) {
         this.unSubscribe();
-
         if (mxObject) {
             this.subscriptionHandle = window.mx.data.subscribe({
                 callback: () => this.fetchData(mxObject),
                 guid: mxObject.getGuid()
             });
         }
-
     }
 
     private unSubscribe() {

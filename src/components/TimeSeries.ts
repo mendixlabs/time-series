@@ -3,7 +3,6 @@ import { Component, DOM, createElement } from "react";
 
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
-import * as dateFormat from "dateformat";
 
 import "../ui/TimeSeries.css";
 
@@ -34,14 +33,14 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         if (this.props.yAxisDomainMinimum) {
             forceY.push(Number(this.props.yAxisDomainMinimum));
         }
-        const xFormat = this.props.xAxisFormat || "dd-MM-YYYY";
+        const xFormat = this.props.xAxisFormat || "dd-MM-yyyy";
         const chart: Nvd3LineChartProps = {
             chartProps: {
                 xAxis: {
                     axisLabel: this.props.xAxisLabel,
                     showMaxMin: true,
                     tickFormat: value =>
-                        dateFormat(value, xFormat)
+                         window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat })
                 },
                 xScale: time.scale(),
                 yAxis: {
