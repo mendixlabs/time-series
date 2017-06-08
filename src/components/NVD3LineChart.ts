@@ -101,6 +101,8 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private chartEvents(chart: LineChart) {
+        // Setup hide events for tool tip based on timer.
+        // This bugs of NVD3 is showing in iOS, in some cases they stay.
         select(window).on("mouseout." + chart.id(), () => {
             setTimeout(() => {
                 chart.tooltip.hidden(true);
