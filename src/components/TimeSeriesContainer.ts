@@ -191,7 +191,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
 
     public static parseStyle(style = ""): { [key: string]: string } {
         try {
-            return `width:100%; ${style}`.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
+            return style.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
                 const pair = line.split(":");
                 if (pair.length === 2) {
                     const name = pair[0].trim().replace(/(-.)/g, match => match[1].toUpperCase());
