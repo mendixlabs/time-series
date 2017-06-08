@@ -107,23 +107,23 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
 
     private fetchData(mxObject: mendix.lib.MxObject) {
         if (mxObject) {
-            async.each(this.props.seriesConfig, (series1: SeriesConfig, callback: (error?: Error) => {}) => {
-                const processResults1: MxObjectsCallback = mxObjects => {
-                    this.dataStore.series[series1.name] = this.setDataFromObjects(mxObjects, series1);
+            async.each(this.props.seriesConfig, (series: SeriesConfig, callback: (error?: Error) => {}) => {
+                const processResults: MxObjectsCallback = mxObjects => {
+                    this.dataStore.series[series.name] = this.setDataFromObjects(mxObjects, series);
                     callback();
                 };
-                if (series1.sourceType === "xpath") {
-                    const constraint = series1.entityConstraint
-                        ? series1.entityConstraint.replace("[%CurrentObject%]", mxObject.getGuid())
+                if (series.sourceType === "xpath") {
+                    const constraint = series.entityConstraint
+                        ? series.entityConstraint.replace("[%CurrentObject%]", mxObject.getGuid())
                         : "";
-                    const XPath = "//" + series1.entity + constraint;
-                    this.fetchByXPath(series1, XPath, processResults1);
-                } else if (series1.sourceType === "microflow" && series1.dataSourceMicroflow) {
-                    this.fetchByMicroflow(mxObject.getGuid(), series1.dataSourceMicroflow, processResults1);
+                    const XPath = "//" + series.entity + constraint;
+                    this.fetchByXPath(series, XPath, processResults);
+                } else if (series.sourceType === "microflow" && series.dataSourceMicroflow) {
+                    this.fetchByMicroflow(mxObject.getGuid(), series.dataSourceMicroflow, processResults);
                 }
             }, (error?: Error) => {
-                // tslint:disable-next-line no-console
                 if (error) {
+                // tslint:disable-next-line no-console
                     console.error(error.message);
                 }
                 this.setState({ dataStore: this.dataStore, isLoaded: true });

@@ -67,7 +67,7 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         return DOM.div({
             className: this.props.class,
             // Width 100% for sizing the container.
-            style: { width : "100%", ...this.props.style }
+            style: { width: "100%", ... this.props.style }
         }, createElement(NVD3LineChart, chart));
     }
 
