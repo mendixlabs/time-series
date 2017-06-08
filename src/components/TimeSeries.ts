@@ -17,6 +17,7 @@ interface TimeSeriesProps extends ModelProps {
     dataStore: DataStore;
     class: string;
     style: object;
+    formatter: (value: any, type: string, props?: any) => string;
 }
 
 class TimeSeries extends Component<TimeSeriesProps, {}> {
@@ -40,7 +41,7 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                     axisLabel: this.props.xAxisLabel,
                     showMaxMin: true,
                     tickFormat: value =>
-                         window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat })
+                         this.props.formatter(value, "datetime", { datePattern: xFormat })
                 },
                 xScale: time.scale(),
                 yAxis: {

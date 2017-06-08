@@ -44,6 +44,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                 createElement(TimeSeries, {
                     class: this.props.class,
                     dataStore: this.state.dataStore,
+                    formatter: window.mx.parser.formatValue,
                     height: this.props.height,
                     heightUnit: this.props.heightUnit,
                     seriesConfig: this.props.seriesConfig,
@@ -85,7 +86,10 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         }
 
         try {
-            window.mx.parser.formatValue(new Date(), "datetime", { datePattern: props.xAxisFormat || "" });
+            // Can not test the parses in the webmodeler as global mx is not available.
+            if (window.mx) {
+                window.mx.parser.formatValue(new Date(), "datetime", { datePattern: props.xAxisFormat || "" });
+            }
         } catch (error) {
             errorMessage += `Formatting for the x-axis : (${props.xAxisFormat}) is invalid \n\n`;
         }
@@ -103,7 +107,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
 
     private fetchData(mxObject: mendix.lib.MxObject) {
         if (mxObject) {
-            async.each(this.props.seriesConfig, (series1: SeriesConfig, callback:(error?: Error) => {}) => {
+            async.each(this.props.seriesConfig, (series1: SeriesConfig, callback: (error?: Error) => {}) => {
                 const processResults1: MxObjectsCallback = mxObjects => {
                     this.dataStore.series[series1.name] = this.setDataFromObjects(mxObjects, series1);
                     callback();
@@ -119,7 +123,9 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                 }
             }, (error?: Error) => {
                 // tslint:disable-next-line no-console
-                if(error) console.error(error.message);
+                if (error) {
+                    console.error(error.message);
+                }
                 this.setState({ dataStore: this.dataStore, isLoaded: true });
             });
         } else {
