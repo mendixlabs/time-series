@@ -66,3 +66,18 @@ export function getPreviewCss() {
     css += require("nvd3/build/nv.d3.css");
     return css;
 }
+
+export function getVisibleProperties(valueMap: any, visibilityMap: any) {
+    valueMap.seriesConfig.forEach((config: any, index: number) => {
+        if (config.sourceType === "xpath") {
+            visibilityMap.seriesConfig[index].dataSourceMicroflow = false;
+            visibilityMap.seriesConfig[index].entityConstraint = true;
+        }
+        if (config.sourceType === "microflow") {
+            visibilityMap.seriesConfig[index].dataSourceMicroflow = true;
+            visibilityMap.seriesConfig[index].entityConstraint = false;
+        }
+    });
+
+    return visibilityMap;
+}
