@@ -15,6 +15,9 @@ interface Series {
 
 interface TimeSeriesProps extends ModelProps {
     dataStore: DataStore;
+    class: string;
+    style: object;
+    formatter: (value: any, type: string, props?: any) => string;
 }
 
 class TimeSeries extends Component<TimeSeriesProps, {}> {
@@ -38,7 +41,7 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                     axisLabel: this.props.xAxisLabel,
                     showMaxMin: true,
                     tickFormat: value =>
-                        window.mx.parser.formatValue(value, "datetime", { datePattern: xFormat })
+                         this.props.formatter(value, "datetime", { datePattern: xFormat })
                 },
                 xScale: time.scale(),
                 yAxis: {
@@ -50,8 +53,8 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
                         }).format(value)
                 }
             },
-            forceY,
             datum,
+            forceY,
             height: this.props.height,
             heightUnit: this.props.heightUnit,
             width: this.props.width,
@@ -61,7 +64,11 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         if (!datum.length) {
             return DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "No Data");
         }
-        return createElement (NVD3LineChart, chart);
+        return DOM.div({
+            className: this.props.class,
+            // Width 100% for sizing the container.
+            style: { width: "100%", ... this.props.style }
+        }, createElement(NVD3LineChart, chart));
     }
 
     private processDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {

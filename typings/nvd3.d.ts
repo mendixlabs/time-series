@@ -11,3 +11,5 @@ declare module "nvd3" {
         windowResize(listener: (ev: Event) => any): Nvd3ResizeHandler;
     }
 }
+
+declare module "*.css";

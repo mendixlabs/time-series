@@ -58,10 +58,15 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         // Add height and display styles to react wrapper
         // Avoided use of clientHeight because content-area varies depending on styling.
         const reactWrapper = this.svg && this.svg.parentElement && this.svg.parentElement.parentElement
+            && this.svg.parentElement.parentElement.parentElement
             && this.svg.parentElement.parentElement.parentElement && this.svg.parentElement.parentElement.parentElement;
         if (this.props.heightUnit === "percentageOfParent" && reactWrapper) {
             reactWrapper.style.height = "100%";
             reactWrapper.style.display = "flex";
+            // hack: height on ReactCustomWidgetWrapper
+            if(reactWrapper.parentElement) {
+                reactWrapper.parentElement.style.height = "100%";
+            }
         }
 
         addGraph(() => this.renderChart(), this.chartEvents);
@@ -101,6 +106,8 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private chartEvents(chart: LineChart) {
+        // Setup hide events for tool tip based on timer.
+        // This bugs of NVD3 is showing in iOS, in some cases they stay.
         select(window).on("mouseout." + chart.id(), () => {
             setTimeout(() => {
                 chart.tooltip.hidden(true);
@@ -124,6 +131,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     }
 
     private fixChartRendering() {
+        // Fix issue in tab view the dirty way
         this.intervalID = setInterval(() => {
             if (this.svg && this.svg.parentElement && this.svg.parentElement.offsetHeight !== 0 && this.intervalID) {
                 if (this.chart && this.chart.update) this.chart.update();

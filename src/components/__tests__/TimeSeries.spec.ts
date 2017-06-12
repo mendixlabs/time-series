@@ -20,12 +20,26 @@ describe("TimeSeries", () => {
             ]
         }
     };
+    const formatDate = (datetime: Date | number | string) => {
+        const date = new Date(datetime);
+        let month = "" + (date.getMonth() + 1);
+        let day = "" + date.getDate();
+        const year = date.getFullYear();
+
+        if (month.length < 2) month = "0" + month;
+        if (day.length < 2) day = "0" + day;
+
+        return [ year, month, day ].join("-");
+    };
 
     const createProps: TimeSeriesProps = {
+        class: "",
         dataStore,
+        formatter: formatDate,
         height: 500,
         heightUnit: "pixels",
         seriesConfig,
+        style: {},
         width: 900,
         widthUnit: "pixels",
         xAxisFormat: "yyyy",
@@ -51,10 +65,13 @@ describe("TimeSeries", () => {
 
     it("should render chart component without data", () => {
         const nonDataProps: TimeSeriesProps = {
+            class:"",
             dataStore : { series: {} },
+            formatter: formatDate,
             height: 500,
             heightUnit: "pixels",
             seriesConfig,
+            style:{},
             width: 900,
             widthUnit: "pixels",
             xAxisFormat: "yyyy",
@@ -68,18 +85,16 @@ describe("TimeSeries", () => {
 
     describe("with multi-series", () => {
         const data: DataStore = { series: {
-            data1: [
-                    { x: getDate("24-Apr-2007"), y: 93.24 },
-                    { x: getDate("2-Jan-2008"), y: 194.84 },
-                    { x: getDate("1-Jan-2009"), y: 85.35 },
-                    { x: getDate("1-Jan-2010"), y: 210.73 }
-                ],
-            data2: [
-                    { x: getDate("23-Apr-2007"), y: 103.24 },
-                    { x: getDate("2-Jan-2008"), y: 204.84 },
-                    { x: getDate("2-Jan-2009"), y: 95.35 },
-                    { x: getDate("2-Jan-2010"), y: 220.73 }
-                ]
+            data1: [ { x: getDate("24-Apr-2007"), y: 93.24 },
+                { x: getDate("2-Jan-2008"), y: 194.84 },
+                { x: getDate("1-Jan-2009"), y: 85.35 },
+                { x: getDate("1-Jan-2010"), y: 210.73 }
+            ],
+            data2: [ { x: getDate("23-Apr-2007"), y: 103.24 },
+                { x: getDate("2-Jan-2008"), y: 204.84 },
+                { x: getDate("2-Jan-2009"), y: 95.35 },
+                { x: getDate("2-Jan-2010"), y: 220.73 }
+            ]
         }};
 
         const config = [
@@ -89,10 +104,13 @@ describe("TimeSeries", () => {
 
         it("should render correctly", () => {
             const chartProps: TimeSeriesProps = {
+                class: "",
                 dataStore: data,
+                formatter: formatDate,
                 height: 75,
                 heightUnit: "percentageOfWidth",
                 seriesConfig: config,
+                style: {},
                 width: 100,
                 widthUnit: "percentage",
                 yAxisDomainMaximum: "1000",
@@ -102,7 +120,6 @@ describe("TimeSeries", () => {
             const lineChartProps = shallow(createElement(TimeSeries, chartProps)).find(NVD3LineChart).props();
 
             expect(lineChartProps.datum.length).toBe(2);
-
         });
     });
 });

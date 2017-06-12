@@ -36,7 +36,7 @@
         </property>
         <property key="seriesConfig" type="object" isList="true">
             <caption>Series</caption>
-            <category>Series configuration</category>
+            <category>Data</category>
             <description>Add a series and configure its properties</description>
             <properties>
                 <property key="name" type="string">
@@ -58,6 +58,17 @@
                         <enumerationValue key="microflow">Microflow</enumerationValue>
                     </enumerationValues>
                 </property>
+                <property key="entityConstraint" type="entityConstraint" entityProperty="entity" required="false">
+                    <caption>Source XPath Constraint</caption>
+                    <category>Data source</category>
+                    <description>Constraint on the data from the data entity</description>
+                </property>
+                <property key="dataSourceMicroflow" type="microflow" required="false">
+                    <caption>Source microflow</caption>
+                    <category>Data source</category>
+                    <description>Returns a series' coordinates</description>
+                    <returnType type="Object" entityProperty="entity" isList="true"/>
+                </property>
                 <property key="xAttribute" type="attribute" entityProperty="entity">
                     <caption>X-axis date attribute</caption>
                     <category>Data source</category>
@@ -75,17 +86,6 @@
                         <attributeType name="Long"/>
                         <attributeType name="Integer"/>
                     </attributeTypes>
-                </property>
-                <property key="entityConstraint" type="entityConstraint" entityProperty="entity" required="false">
-                    <caption>Constraint</caption>
-                    <category>Source - XPath</category>
-                    <description>Constraint on the data from the data entity</description>
-                </property>
-                <property key="dataSourceMicroflow" type="microflow" required="false">
-                    <caption>Microflow </caption>
-                    <category>Source - microflow</category>
-                    <description>Returns a series' coordinates</description>
-                    <returnType type="Object" entityProperty="entity" isList="true"/>
                 </property>
                 <property key="color" type="string" required="false">
                     <caption>Color</caption>
