@@ -1,11 +1,6 @@
 export default ModelProps;
 
-interface CommonProps {
-    class?: string;
-    style?: string;
-}
-
-export interface ModelProps extends CommonProps {
+export interface ModelProps {
     xAxisLabel?: string;
     xAxisFormat?: string;
     yAxisLabel?: string;
@@ -45,3 +40,5 @@ export interface DataPoint {
 export interface DataStore {
     series: { [key: string]: DataPoint[] };
 }
+
+declare module "*.css";

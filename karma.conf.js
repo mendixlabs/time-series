@@ -1,4 +1,4 @@
-var webpackConfig = require("./webpack.config");
+var webpackConfig = require("./webpack.config")[0];
 const path = require("path");
 Object.assign(webpackConfig, {
     devtool: "inline-source-map",
@@ -6,8 +6,7 @@ Object.assign(webpackConfig, {
         "react/lib/ExecutionEnvironment",
         "react/lib/ReactContext",
         "react/addons",
-        "jsdom",
-        "mendix/lang"
+        "jsdom"
     ]
 });
 
