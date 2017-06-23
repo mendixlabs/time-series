@@ -102,7 +102,6 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         }
 
         return errorMessage && `Configuration error :\n\n ${errorMessage}`;
-
     }
 
     private fetchData(mxObject: mendix.lib.MxObject) {

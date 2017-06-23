@@ -1,7 +1,7 @@
-import { Component, createElement } from "react";
+import { Component, DOM, createElement } from "react";
 
 import { Alert } from "./components/Alert";
-import { TimeSeries } from "./components/TimeSeries";
+import { TimeSeries, TimeSeriesProps } from "./components/TimeSeries";
 import { DataStore } from "./TimeSeries";
 import TimeSeriesContainer, { TimeSeriesContainerProps } from "./components/TimeSeriesContainer";
 
@@ -11,11 +11,16 @@ declare function require(name: string): string;
 export class preview extends Component<TimeSeriesContainerProps, {}> {
 
     render() {
-        const alertMessage = TimeSeriesContainer.validateProps(this.props);
-        if (alertMessage) {
-            return createElement(Alert, { message: alertMessage });
-        } else {
-            return createElement(TimeSeries, {
+        const message = this.validateProps(this.props);
+        return DOM.div({},
+            createElement(TimeSeries, this.getProps(message)),
+            createElement(Alert, { message })
+        );
+    }
+
+    private getProps(alertMessage: string): TimeSeriesProps {
+        if(!alertMessage) {
+            return {
                 class: this.props.class,
                 dataStore: this.getData(this.props),
                 formatter: this.formatDate,
@@ -31,7 +36,28 @@ export class preview extends Component<TimeSeriesContainerProps, {}> {
                 yAxisDomainMinimum: this.props.yAxisDomainMinimum,
                 yAxisFormatDecimalPrecision: this.props.yAxisFormatDecimalPrecision,
                 yAxisLabel: this.props.yAxisLabel
-            });
+            };
+        } else {
+            return {
+                class: "",
+                dataStore: this.getData(this.props),
+                formatter: this.formatDate,
+                height: 75,
+                heightUnit: "percentageOfWidth",
+                seriesConfig: !this.props.seriesConfig.length
+                // tslint:disable-next-line max-line-length
+                    ? [ { entity: "dummyEntity", fill: false, name: "Serie", sourceType: "xpath", xAttribute: "xAtt", yAttribute: "yAtt" } ]
+                    : this.props.seriesConfig,
+                style: TimeSeriesContainer.parseStyle(this.props.style),
+                width: 75,
+                widthUnit: "percentage",
+                xAxisFormat: "2",
+                xAxisLabel: "x-axis",
+                yAxisDomainMaximum: undefined,
+                yAxisDomainMinimum: undefined,
+                yAxisFormatDecimalPrecision: undefined,
+                yAxisLabel: "y-axis"
+            };
         }
     }
 
@@ -44,20 +70,51 @@ export class preview extends Component<TimeSeriesContainerProps, {}> {
         if (month.length < 2) month = "0" + month;
         if (day.length < 2) day = "0" + day;
 
-        return [ year, month, day ].join("-");
+        return [ day, month, year ].join("-");
     }
 
     private getData(props: TimeSeriesContainerProps): DataStore {
         const dataStore: DataStore = { series: { } };
-        props.seriesConfig.map((series, index) => {
-            dataStore.series[series.name] = [
-                { x: new Date(2017, 2, 15).getTime(), y: 100 + (20 * index) },
-                { x: new Date(2017, 3, 15).getTime(), y: 400 + (20 * index) },
-                { x: new Date(2017, 4, 15).getTime(), y: 200 + (20 * index) },
-                { x: new Date(2017, 5, 15).getTime(), y: 350 + (20 * index) }
+        if(props.seriesConfig.length) {
+            props.seriesConfig.map((series, index) => {
+                dataStore.series[series.name] = [
+                    { x: new Date(2017, 2, 15).getTime(), y: 100 + (20 * index) },
+                    { x: new Date(2017, 3, 15).getTime(), y: 400 + (20 * index) },
+                    { x: new Date(2017, 4, 15).getTime(), y: 200 + (20 * index) },
+                    { x: new Date(2017, 5, 15).getTime(), y: 350 + (20 * index) }
+                ];
+            });
+        } else {
+            dataStore.series.Serie =[
+                { x: new Date(2017, 2, 15).getTime(), y: 100 },
+                { x: new Date(2017, 3, 15).getTime(), y: 400 },
+                { x: new Date(2017, 4, 15).getTime(), y: 200 },
+                { x: new Date(2017, 5, 15).getTime(), y: 350 }
             ];
-        });
+        }
         return dataStore;
+    }
+
+    private validateProps(props: TimeSeriesContainerProps) {
+        let errorMessage = TimeSeriesContainer.validateProps(props);
+        // web modeler validations
+        const yAxisPrecision = !! (props.yAxisFormatDecimalPrecision && props.yAxisFormatDecimalPrecision < 0);
+        if ( isNaN(Number(props.yAxisFormatDecimalPrecision)) || yAxisPrecision ) {
+            errorMessage += `Y-axis decimal precision is invalid`;
+        }
+        if (!props.seriesConfig || !props.seriesConfig.length) {
+            errorMessage += `One or more data series should be added`;
+        } else {
+            props.seriesConfig.forEach((config, index) => {
+                const errorMsg: string[] = [];
+                if(!config.name) errorMsg.push(`serie name`);
+                if(!config.entity) errorMsg.push(`data entity`);
+                if(!config.xAttribute) errorMsg.push(`X-axis date attribute`);
+                if(!config.yAttribute) errorMsg.push(`Y-axis data attribute`);
+                errorMessage += errorMsg.length ? `serie '${index}' is missing ${errorMsg.join(",")}\n` : "";
+            });
+        }
+        return errorMessage;
     }
 }
 

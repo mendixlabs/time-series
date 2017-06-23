@@ -7,7 +7,7 @@ Plot and track your data across different time periods on a chart.
 * Date formatting on x-axis (eg: dd/MM/yyyy, MMM-yyyy). See all patterns [here](http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html) 
 * Formatting of numbers on y-axis (decimal precision)
 * Guidelines and floating tool tips
-* Automatic and custom line colouring eg: # green, #00FF00, rgb(0,255,0)
+* Automatic and custom line colouring eg: green, #00FF00, rgb(0,255,0)
 * Filling of series area
 
 ## Dependencies
@@ -29,7 +29,7 @@ Atleast one series is required, with its data source
     * XPath - For "XPath" source, add an XPath constraint in the `Source - XPath` tab. Not the XPath are more efficient in large data sets.
     * Microflow - For "Microflow" source, add a data source microflow in the `Source - Microflow` tab.
 #### Sample domain model and configuration
-<img src="https://raw.githubusercontent.com/mendixlabs/time-series/V1.1.0/assets/Setup.png" width="900px" height="500px" />
+<img src="./assets/Setup.png" width="900px" height="500px" />
 
 ## Issues, suggestions and feature requests
 We are actively maintaining this widget, please report any issues or suggestion for improvement at https://github.com/mendixlabs/time-series/issues.
@@ -49,7 +49,7 @@ To set up the development environment, run:
 
 Create a folder named `dist` in the project root.
 
-Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Or get the test project from https://github.com/mendixlabs/time-series/releases/download/V1.1.0/TestTimeSeries.mpk. When Grunt is running changes to the widget code shall be automatically pushed to this test project.
+Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Or get the test project from https://github.com/mendixlabs/time-series/releases/download/V1.2.0/TestTimeSeries.mpk. When Grunt is running changes to the widget code shall be automatically pushed to this test project.
 
 To automatically compile, bundle and push code changes to the running Mendix test project, run:
 
