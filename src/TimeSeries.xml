@@ -54,7 +54,7 @@
                     <category>Data source</category>
                     <description>Type of source</description>
                     <enumerationValues>
-                        <enumerationValue key="xpath">XPath</enumerationValue>
+                        <enumerationValue key="xpath">Database</enumerationValue>
                         <enumerationValue key="microflow">Microflow</enumerationValue>
                     </enumerationValues>
                 </property>
