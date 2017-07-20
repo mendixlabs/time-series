@@ -49,7 +49,7 @@ To set up the development environment, run:
 
 Create a folder named `dist` in the project root.
 
-Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Or get the test project from https://github.com/mendixlabs/time-series/releases/download/V1.2.0/TestTimeSeries.mpk. When Grunt is running changes to the widget code shall be automatically pushed to this test project.
+Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Or get the test project from https://github.com/mendixlabs/time-series/releases/download/V1.2.1/TestTimeSeries.mpk. When Grunt is running changes to the widget code shall be automatically pushed to this test project.
 
 To automatically compile, bundle and push code changes to the running Mendix test project, run:
 
