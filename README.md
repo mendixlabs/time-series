@@ -29,7 +29,7 @@ Atleast one series is required, with its data source
     * XPath - For "XPath" source, add an XPath constraint in the `Source - XPath` tab. Not the XPath are more efficient in large data sets.
     * Microflow - For "Microflow" source, add a data source microflow in the `Source - Microflow` tab.
 #### Sample domain model and configuration
-<img src="./assets/Setup.png" width="900px" height="500px" />
+![Sample domain model and configuration](/assets/Setup.png)
 
 ## Issues, suggestions and feature requests
 We are actively maintaining this widget, please report any issues or suggestion for improvement at https://github.com/mendixlabs/time-series/issues.
@@ -49,7 +49,7 @@ To set up the development environment, run:
 
 Create a folder named `dist` in the project root.
 
-Create a Mendix test project in the dist folder and rename its root folder to `dist/MxTestProject`. Or get the test project from https://github.com/mendixlabs/time-series/releases/download/V1.2.1/TestTimeSeries.mpk. When Grunt is running changes to the widget code shall be automatically pushed to this test project.
+Create a Mendix test project in the dist folder and rename its root folder to MxTestProject. Changes to the widget code shall be automatically pushed to this test project. Or get the test project from [https://github.com/mendixlabs/time-seriesreleases/latest](https://github.com/mendixlabs/time-series/releases/latest)
 
 To automatically compile, bundle and push code changes to the running Mendix test project, run:
 
