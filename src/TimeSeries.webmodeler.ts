@@ -12,10 +12,22 @@ export class preview extends Component<TimeSeriesContainerProps, {}> {
 
     render() {
         const message = this.validateProps(this.props);
+
         return DOM.div({},
             createElement(TimeSeries, this.getProps(message)),
             createElement(Alert, { message })
         );
+    }
+
+    componentDidMount() {
+        this.setUpEvents();
+    }
+
+    componentWillUnmount() {
+        const modelerIFrame = this.getIframe();
+        if (modelerIFrame) {
+            modelerIFrame.contentWindow.removeEventListener("resize", this.onResizeIframe);
+        }
     }
 
     private getProps(alertMessage: string): TimeSeriesProps {
@@ -116,12 +128,25 @@ export class preview extends Component<TimeSeriesContainerProps, {}> {
         }
         return errorMessage;
     }
+
+    private setUpEvents() {
+        const modelerIFrame = this.getIframe();
+        if (modelerIFrame) {
+            modelerIFrame.contentWindow.addEventListener("resize", this.onResizeIframe);
+        }
+    }
+
+    private getIframe(): HTMLIFrameElement {
+        return document.getElementsByClassName("t-page-editor-iframe")[0] as HTMLIFrameElement;
+    }
+
+    private onResizeIframe() {
+        window.dispatchEvent(new Event("resize"));
+    }
 }
 
 export function getPreviewCss() {
-    let css = require("./ui/TimeSeries.css");
-    css += require("nvd3/build/nv.d3.css");
-    return css;
+    return require("./ui/TimeSeries.css") + require("nvd3/build/nv.d3.css");
 }
 
 export function getVisibleProperties(valueMap: any, visibilityMap: any) {
