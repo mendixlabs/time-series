@@ -1,5 +1,5 @@
 import { time } from "d3";
-import { Component, DOM, createElement } from "react";
+import { Component, createElement } from "react";
 
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { NVD3LineChart, Nvd3LineChartProps } from "./NVD3LineChart";
@@ -62,9 +62,9 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
 
         };
         if (!datum.length) {
-            return DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "No Data");
+            return createElement("div", { className: "widget-time-series nvd3 nv-noData" }, "No Data");
         }
-        return DOM.div({
+        return createElement("div", {
             className: this.props.class,
             // Width 100% for sizing the container.
             style: { width: "100%", ... this.props.style }

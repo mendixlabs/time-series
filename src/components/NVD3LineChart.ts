@@ -1,6 +1,6 @@
 import { select, time } from "d3";
 import { LineChart, Nvd3ResizeHandler, addGraph, models, utils } from "nvd3";
-import { Component, DOM } from "react";
+import { Component, createElement } from "react";
 
 import { Series } from "./TimeSeries";
 import { HeightUnit, WidthUnit } from "../TimeSeries";
@@ -33,7 +33,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     static defaultProps: Partial<Nvd3LineChartProps> = { datum: [] };
     private chart: LineChart;
     private resizeHandler: Nvd3ResizeHandler;
-    private svg: SVGElement;
+    private svg: Element;
     private intervalID: number | null;
 
     render() {
@@ -49,8 +49,8 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             style.height = `${this.props.height}%`;
         }
 
-        return DOM.div({ className: "widget-time-series nv-chart", style },
-            DOM.svg({ ref: node => this.svg = node })
+        return createElement("div", { className: "widget-time-series nv-chart", style },
+            createElement("svg", { ref: node => this.svg = node })
         );
     }
 

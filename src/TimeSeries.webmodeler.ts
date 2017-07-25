@@ -1,4 +1,4 @@
-import { Component, DOM, createElement } from "react";
+import { Component, createElement } from "react";
 
 import { Alert } from "./components/Alert";
 import { TimeSeries, TimeSeriesProps } from "./components/TimeSeries";
@@ -13,7 +13,7 @@ export class preview extends Component<TimeSeriesContainerProps, {}> {
     render() {
         const message = this.validateProps(this.props);
 
-        return DOM.div({},
+        return createElement("div", {},
             createElement(TimeSeries, this.getProps(message)),
             createElement(Alert, { message })
         );

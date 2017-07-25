@@ -1,4 +1,4 @@
-import { Component, DOM, createElement } from "react";
+import { Component, createElement } from "react";
 
 import { DataPoint, DataStore, ModelProps, SeriesConfig } from "../TimeSeries";
 import { Alert } from "./Alert";
@@ -37,7 +37,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
         if (this.state.alertMessage) {
             return createElement(Alert, { message: this.state.alertMessage });
         } else if (this.state.isLoaded) {
-            return DOM.div({
+            return createElement("div", {
                     className: this.props.class,
                     style: TimeSeriesContainer.parseStyle(this.props.style)
                 },
@@ -60,7 +60,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                 })
             );
         }
-        return DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "Loading...");
+        return createElement("div", { className: "widget-time-series nvd3 nv-noData" }, "Loading...");
     }
 
     componentWillReceiveProps(nextProps: TimeSeriesContainerProps) {
