@@ -1,5 +1,5 @@
 import { ShallowWrapper, shallow } from "enzyme";
-import { DOM, createElement } from "react";
+import { createElement } from "react";
 import { time } from "d3";
 import * as nv from "nvd3"; // TODO: Check if this actually works
 
@@ -40,8 +40,9 @@ describe("NVD3LineChart", () => {
 
     it("should render a structure correctly with pixels", () => {
         expect(renderChart).toBeElement(
-            DOM.div({ className: "widget-time-series nv-chart", style: { paddingBottom: "20", width: "50" } },
-                DOM.svg()
+            createElement("div",
+                { className: "widget-time-series nv-chart", style: { paddingBottom: "20", width: "50" } },
+                createElement("svg")
             )
         );
     });
@@ -50,8 +51,9 @@ describe("NVD3LineChart", () => {
         chartProps.heightUnit = "percentageOfWidth";
         chartProps.widthUnit = "percentage";
         expect(renderChart).toBeElement(
-            DOM.div({ className: "widget-time-series nv-chart", style: { paddingBottom: "20", width: "50" } },
-                DOM.svg()
+            createElement("div",
+                { className: "widget-time-series nv-chart", style: { paddingBottom: "20", width: "50" } },
+                createElement("svg")
             )
         );
     });
