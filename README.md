@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/mendixlabs/time-series.svg?branch=master)](https://travis-ci.org/mendixlabs/time-series)
+[![Dependency Status](https://david-dm.org/mendixlabs/time-series.svg)](https://david-dm.org/mendixlabs/time-series)
+[![Dev Dependency Status](https://david-dm.org/mendixlabs/time-series.svg#info=devDependencies)](https://david-dm.org/mendixlabs/time-series#info=devDependencies)
+[![codecov](https://codecov.io/gh/mendixlabs/time-series/branch/master/graph/badge.svg)](https://codecov.io/gh/mendixlabs/time-series)
+
 # Time series
 Plot and track your data across different time periods on a chart.
 
