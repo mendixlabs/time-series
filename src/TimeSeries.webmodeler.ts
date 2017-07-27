@@ -31,7 +31,7 @@ export class preview extends Component<TimeSeriesContainerProps, {}> {
     }
 
     private getProps(alertMessage: string): TimeSeriesProps {
-        if(!alertMessage) {
+        if (!alertMessage) {
             return {
                 class: this.props.class,
                 dataStore: this.getData(this.props),
@@ -87,7 +87,7 @@ export class preview extends Component<TimeSeriesContainerProps, {}> {
 
     private getData(props: TimeSeriesContainerProps): DataStore {
         const dataStore: DataStore = { series: { } };
-        if(props.seriesConfig.length) {
+        if (props.seriesConfig.length) {
             props.seriesConfig.map((series, index) => {
                 dataStore.series[series.name] = [
                     { x: new Date(2017, 2, 15).getTime(), y: 100 + (20 * index) },
@@ -97,7 +97,7 @@ export class preview extends Component<TimeSeriesContainerProps, {}> {
                 ];
             });
         } else {
-            dataStore.series.Serie =[
+            dataStore.series.Serie = [
                 { x: new Date(2017, 2, 15).getTime(), y: 100 },
                 { x: new Date(2017, 3, 15).getTime(), y: 400 },
                 { x: new Date(2017, 4, 15).getTime(), y: 200 },
@@ -119,10 +119,10 @@ export class preview extends Component<TimeSeriesContainerProps, {}> {
         } else {
             props.seriesConfig.forEach((config, index) => {
                 const errorMsg: string[] = [];
-                if(!config.name) errorMsg.push(`serie name`);
-                if(!config.entity) errorMsg.push(`data entity`);
-                if(!config.xAttribute) errorMsg.push(`X-axis date attribute`);
-                if(!config.yAttribute) errorMsg.push(`Y-axis data attribute`);
+                if (!config.name) errorMsg.push(`serie name`);
+                if (!config.entity) errorMsg.push(`data entity`);
+                if (!config.xAttribute) errorMsg.push(`X-axis date attribute`);
+                if (!config.yAttribute) errorMsg.push(`Y-axis data attribute`);
                 errorMessage += errorMsg.length ? `serie '${index}' is missing ${errorMsg.join(",")}\n` : "";
             });
         }

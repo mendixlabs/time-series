@@ -106,7 +106,15 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
 
     private fetchData(mxObject: mendix.lib.MxObject) {
         if (mxObject) {
-            async.each(this.props.seriesConfig, (series: SeriesConfig, callback: (error?: Error) => {}) => {
+            const asyncCallback: ErrorCallback<Error> = (error?: Error) => {
+                if (error) {
+                // tslint:disable-next-line no-console
+                    console.error(error.message);
+                }
+                this.setState({ dataStore: this.dataStore, isLoaded: true });
+            };
+
+            async.each(this.props.seriesConfig, (series: SeriesConfig, callback: () => void) => {
                 const processResults: MxObjectsCallback = mxObjects => {
                     this.dataStore.series[series.name] = this.setDataFromObjects(mxObjects, series);
                     callback();
@@ -120,13 +128,7 @@ class TimeSeriesContainer extends Component<TimeSeriesContainerProps, TimeSeries
                 } else if (series.sourceType === "microflow" && series.dataSourceMicroflow) {
                     this.fetchByMicroflow(mxObject.getGuid(), series.dataSourceMicroflow, processResults);
                 }
-            }, (error?: Error) => {
-                if (error) {
-                // tslint:disable-next-line no-console
-                    console.error(error.message);
-                }
-                this.setState({ dataStore: this.dataStore, isLoaded: true });
-            });
+            }, asyncCallback);
         } else {
             this.setState({ dataStore: this.dataStore, isLoaded: true });
         }

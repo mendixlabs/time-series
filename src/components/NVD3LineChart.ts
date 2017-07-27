@@ -33,7 +33,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     static defaultProps: Partial<Nvd3LineChartProps> = { datum: [] };
     private chart: LineChart;
     private resizeHandler: Nvd3ResizeHandler;
-    private svg: Element;
+    private svg: SVGElement;
     private intervalID: number | null;
 
     render() {
@@ -50,7 +50,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
         }
 
         return createElement("div", { className: "widget-time-series nv-chart", style },
-            createElement("svg", { ref: node => this.svg = node })
+            createElement("svg", { ref: node => this.svg = node as SVGElement })
         );
     }
 
