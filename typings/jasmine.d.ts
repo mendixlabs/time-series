@@ -4,7 +4,7 @@ declare namespace jasmine {
     }
 
     interface MatchersUtil {}
-    export var matchersUtil: MatchersUtil;
+    export const matchersUtil: MatchersUtil;
 }
 
 declare module "*.css";

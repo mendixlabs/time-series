@@ -64,7 +64,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             reactWrapper.style.height = "100%";
             reactWrapper.style.display = "flex";
             // hack: height on ReactCustomWidgetWrapper
-            if(reactWrapper.parentElement) {
+            if (reactWrapper.parentElement) {
                 reactWrapper.parentElement.style.height = "100%";
             }
         }
