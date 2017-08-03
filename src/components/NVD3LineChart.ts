@@ -1,6 +1,6 @@
 import { select, time } from "d3";
 import { LineChart, Nvd3ResizeHandler, addGraph, models, utils } from "nvd3";
-import { Component, DOM } from "react";
+import { Component, createElement } from "react";
 
 import { Series } from "./TimeSeries";
 import { HeightUnit, WidthUnit } from "../TimeSeries";
@@ -49,8 +49,8 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             style.height = `${this.props.height}%`;
         }
 
-        return DOM.div({ className: "widget-time-series nv-chart", style },
-            DOM.svg({ ref: node => this.svg = node })
+        return createElement("div", { className: "widget-time-series nv-chart", style },
+            createElement("svg", { ref: node => this.svg = node as SVGElement })
         );
     }
 
@@ -64,7 +64,7 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
             reactWrapper.style.height = "100%";
             reactWrapper.style.display = "flex";
             // hack: height on ReactCustomWidgetWrapper
-            if(reactWrapper.parentElement) {
+            if (reactWrapper.parentElement) {
                 reactWrapper.parentElement.style.height = "100%";
             }
         }

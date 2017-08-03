@@ -1,5 +1,5 @@
 import { shallow } from "enzyme";  // enzyme's api doesn't provide innerHTML for svg. use "React.addons.TestUtils"
-import { DOM, createElement } from "react";
+import { createElement } from "react";
 
 import { DataStore, SeriesConfig } from "../../TimeSeries";
 import { TimeSeries, TimeSeriesProps } from "../TimeSeries";
@@ -65,13 +65,13 @@ describe("TimeSeries", () => {
 
     it("should render chart component without data", () => {
         const nonDataProps: TimeSeriesProps = {
-            class:"",
+            class: "",
             dataStore : { series: {} },
             formatter: formatDate,
             height: 500,
             heightUnit: "pixels",
             seriesConfig,
-            style:{},
+            style: {},
             width: 900,
             widthUnit: "pixels",
             xAxisFormat: "yyyy",
@@ -80,7 +80,9 @@ describe("TimeSeries", () => {
             yAxisLabel: "y-axis"
         };
         const emptyChart = shallow(createElement(TimeSeries, nonDataProps));
-        expect(emptyChart).toBeElement(DOM.div({ className: "widget-time-series nvd3 nv-noData" }, "No Data"));
+        expect(emptyChart).toBeElement(createElement("div",
+            { className: "widget-time-series nvd3 nv-noData" }, "No Data"
+        ));
     });
 
     describe("with multi-series", () => {
