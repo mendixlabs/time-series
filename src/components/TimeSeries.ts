@@ -64,11 +64,7 @@ class TimeSeries extends Component<TimeSeriesProps, {}> {
         if (!datum.length) {
             return createElement("div", { className: "widget-time-series nvd3 nv-noData" }, "No Data");
         }
-        return createElement("div", {
-            className: this.props.class,
-            // Width 100% for sizing the container.
-            style: { width: "100%", ... this.props.style }
-        }, createElement(NVD3LineChart, chart));
+        return createElement(NVD3LineChart, chart);
     }
 
     private processDatum(seriesConfig: SeriesConfig[], dataStore: DataStore): Series[] {

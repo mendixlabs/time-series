@@ -38,13 +38,13 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
 
     render() {
         const style: {paddingBottom?: string; width: string, height?: string} = {
-            width: this.props.widthUnit === "percentage" ? `${this.props.width}%` : `${this.props.width}`
+            width: this.props.widthUnit === "percentage" ? `${this.props.width}%` : `${this.props.width}px`
         };
 
         if (this.props.heightUnit === "percentageOfWidth") {
             style.paddingBottom = `${this.props.height}%`;
         } else if (this.props.heightUnit === "pixels") {
-            style.paddingBottom = `${this.props.height}`;
+            style.paddingBottom = `${this.props.height}px`;
         } else if (this.props.heightUnit === "percentageOfParent") {
             style.height = `${this.props.height}%`;
         }
@@ -57,16 +57,11 @@ class NVD3LineChart extends Component<Nvd3LineChartProps, {}> {
     componentDidMount() {
         // Add height and display styles to react wrapper
         // Avoided use of clientHeight because content-area varies depending on styling.
-        const reactWrapper = this.svg && this.svg.parentElement && this.svg.parentElement.parentElement
-            && this.svg.parentElement.parentElement.parentElement
-            && this.svg.parentElement.parentElement.parentElement && this.svg.parentElement.parentElement.parentElement;
+        const reactWrapper = this.svg && this.svg.parentElement && this.svg.parentElement.parentElement;
+
         if (this.props.heightUnit === "percentageOfParent" && reactWrapper) {
             reactWrapper.style.height = "100%";
             reactWrapper.style.display = "flex";
-            // hack: height on ReactCustomWidgetWrapper
-            if (reactWrapper.parentElement) {
-                reactWrapper.parentElement.style.height = "100%";
-            }
         }
 
         addGraph(() => this.renderChart(), this.chartEvents);
